@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('booking_opsional', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->string('no_hp', 20)->nullable();
-            $table->enum('peran', ['admin', 'user'])->default('user');
+            $table->foreignId('booking_id')->constrained('booking')->onDelete('cascade');
+            $table->foreignId('paket_detail_id')->constrained('paket_detail')->onDelete('cascade');
+            $table->decimal('harga_tambahan', 12, 2)->default(0);
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('booking_opsional');
     }
 };
