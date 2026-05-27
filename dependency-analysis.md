@@ -3,18 +3,18 @@
 
 ---
 
-### Package 1 — maatwebsite/excel
+### Package 1 — phpoffice/phpspreadsheet
 
 | 5W+1H | Penjelasan |
-|-------|------------|
-| What | maatwebsite/excel (Laravel Excel) |
-| Why | Dibutuhkan untuk menghasilkan file laporan dalam format Excel seperti rekap data booking dan laporan keuangan payment tanpa membuat fungsi spreadsheet dari awal |
-| Who | Admin sistem |
-| When | Saat admin melakukan export laporan booking atau laporan keuangan per periode |
+| ----- | ---------- |
+| What  | phpoffice/phpspreadsheet |
+| Why   | Dibutuhkan untuk menghasilkan file laporan dalam format Excel (.xlsx) seperti rekap data booking dan laporan keuangan. Dipilih sebagai pengganti maatwebsite/excel yang tidak kompatibel dengan PHP 8.5.3 |
+| Who   | Admin sistem |
+| When  | Saat admin melakukan export laporan booking atau laporan keuangan per periode |
 | Where | Modul laporan admin |
-| How | Install via Composer dan dipanggil pada controller laporan untuk menghasilkan file .xlsx |
+| How   | Install via Composer, gunakan class Spreadsheet dari namespace PhpOffice\PhpSpreadsheet pada controller laporan untuk menghasilkan file .xlsx |
 
-**Referensi:** https://docs.laravel-excel.com/3.1/getting-started/
+**Referensi:** https://phpspreadsheet.readthedocs.io/
 
 ---
 
