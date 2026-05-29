@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,9 +10,7 @@ class KategoriBarang extends Model
 
     protected $table = 'kategori_barang';
 
-    protected $fillable = [
-        'nama_kategori',
-    ];
+    protected $fillable = ['nama', 'deskripsi']; // ← nama_kategori → nama
 
     public function barangs()
     {

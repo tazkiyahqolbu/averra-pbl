@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,27 +9,15 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    protected $fillable = [
-        'nama',
-        'email',
-        'password',
-        'no_hp',
-        'peran',
-    ];
+    protected $fillable = ['nama', 'email', 'password', 'no_hp', 'peran'];
 
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    protected $hidden = ['password', 'remember_token'];
 
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password'          => 'hashed',
-    ];
+    protected $casts = ['password' => 'hashed']; // ← hapus email_verified_at (kolom tidak ada)
 
-    public function bookings()
+    public function pemesanans()
     {
-        return $this->hasMany(Booking::class);
+        return $this->hasMany(Pemesanan::class);
     }
 
     public function testimonies()
@@ -41,5 +28,10 @@ class User extends Authenticatable
     public function pengembalianDicatat()
     {
         return $this->hasMany(PengembalianBarang::class, 'dicatat_oleh');
+    }
+
+    public function pembayaranDiverifikasi()
+    {
+        return $this->hasMany(Pembayaran::class, 'diverifikasi_oleh');
     }
 }

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,12 +11,8 @@ class Testimoni extends Model
     protected $table = 'testimoni';
 
     protected $fillable = [
-        'user_id',
-        'booking_id',
-        'isi_testimoni',
-        'rating',
-        'dibalas',
-        'dipublikasikan',
+        'user_id', 'pemesanan_id',  // ← booking_id → pemesanan_id
+        'isi_testimoni', 'rating', 'dibalas', 'dipublikasikan',
     ];
 
     protected $casts = [
@@ -30,9 +25,9 @@ class Testimoni extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function booking()
+    public function pemesanan()
     {
-        return $this->belongsTo(Booking::class);
+        return $this->belongsTo(Pemesanan::class, 'pemesanan_id');
     }
 
     public function fotos()

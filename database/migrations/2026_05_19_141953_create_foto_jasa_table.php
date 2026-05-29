@@ -13,11 +13,13 @@ return new class extends Migration
     {
         Schema::create('foto_jasa', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('jasa_id')->constrained('jasa')->onDelete('cascade');
-            $table->string('url_foto');
+            $table->foreignId('jasa_id')->constrained('jasa')->cascadeOnDelete();
+            $table->string('foto_path');
             $table->string('keterangan')->nullable();
-            $table->unsignedInteger('urutan')->default(1);
+            $table->unsignedSmallInteger('urutan')->default(1);
             $table->timestamps();
+
+            $table->index(['jasa_id', 'urutan']);
         });
     }
 

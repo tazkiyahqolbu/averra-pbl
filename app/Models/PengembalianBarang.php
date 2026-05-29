@@ -1,9 +1,9 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class PengembalianBarang extends Model
 {
@@ -12,16 +12,12 @@ class PengembalianBarang extends Model
     protected $table = 'pengembalian_barang';
 
     protected $fillable = [
-        'booking_detail_id',
-        'tanggal_kembali_aktual',
-        'kondisi',
-        'catatan_kerusakan',
-        'foto_bukti',
-        'denda_keterlambatan',
-        'denda_kerusakan',
-        'total_denda',
-        'status_denda',
-        'dicatat_oleh',
+        'detail_pemesanan_id',           // ← booking_detail_id → detail_pemesanan_id
+        'tanggal_kembali_aktual', 'kondisi',
+        'catatan_kerusakan', 'foto_bukti_path', // ← foto_bukti → foto_bukti_path
+        'status_pengembalian',           // ← field baru
+        'denda_keterlambatan', 'denda_kerusakan',
+        'total_denda', 'status_denda', 'dicatat_oleh',
     ];
 
     protected $casts = [
@@ -31,13 +27,20 @@ class PengembalianBarang extends Model
         'total_denda'            => 'decimal:2',
     ];
 
-    public function bookingDetail()
+    public function detailPemesanan()
     {
-        return $this->belongsTo(BookingDetail::class);
+        return $this->belongsTo(DetailPemesanan::class, 'detail_pemesanan_id');
     }
 
     public function pencatat()
     {
         return $this->belongsTo(User::class, 'dicatat_oleh');
+    }
+
+    public function getFotoBuktiUrlAttribute(): ?string
+    {
+        return $this->foto_bukti_path
+            ? Storage::url($this->foto_bukti_path)
+            : null;
     }
 }

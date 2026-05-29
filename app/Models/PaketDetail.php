@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,19 +11,14 @@ class PaketDetail extends Model
     protected $table = 'paket_detail';
 
     protected $fillable = [
-        'paket_id',
-        'jasa_id',
-        'nama_item',
-        'jumlah',
-        'tipe',
-        'harga_tambahan',
-        'keterangan',
+        'paket_id', 'jasa_id', 'nama_item',
+        'jumlah', 'tipe', 'harga_tambahan', 'keterangan',
     ];
 
     protected $casts = [
-        'jasa_id'        => 'integer',
         'jumlah'         => 'integer',
         'harga_tambahan' => 'decimal:2',
+        // ← hapus cast jasa_id sebagai integer, tidak perlu
     ];
 
     public function paket()
@@ -34,11 +28,11 @@ class PaketDetail extends Model
 
     public function jasa()
     {
-        return $this->belongsTo(Jasa::class)->withDefault();
+        return $this->belongsTo(Jasa::class); // ← withDefault() dihapus
     }
 
-    public function bookingOpsionals()
+    public function opsionalPemesanans()
     {
-        return $this->hasMany(BookingOpsional::class);
+        return $this->hasMany(OpsionalPemesanan::class); // ← bookingOpsionals → opsionalPemesanans
     }
 }

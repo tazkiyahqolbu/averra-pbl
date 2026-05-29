@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama');
             $table->text('deskripsi')->nullable();
-            $table->string('url_ikon')->nullable();
+            $table->string('ikon_path')->nullable();
             $table->timestamps();
         });
     }

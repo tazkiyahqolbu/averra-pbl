@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,18 +10,12 @@ class ZonaLokasi extends Model
 
     protected $table = 'zona_lokasi';
 
-    protected $fillable = [
-        'nama_zona',
-        'keterangan',
-        'biaya',
-    ];
+    protected $fillable = ['nama_zona', 'keterangan', 'biaya'];
 
-    protected $casts = [
-        'biaya' => 'decimal:2',
-    ];
+    protected $casts = ['biaya' => 'decimal:2'];
 
-    public function bookings()
+    public function pemesanans()
     {
-        return $this->hasMany(Booking::class, 'zona_id');
+        return $this->hasMany(Pemesanan::class, 'zona_id'); // ← bookings → pemesanans
     }
 }

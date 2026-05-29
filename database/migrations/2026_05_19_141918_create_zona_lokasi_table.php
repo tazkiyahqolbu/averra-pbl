@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama_zona');
             $table->text('keterangan')->nullable();
-            $table->decimal('biaya', 12, 2)->default(0);
+            $table->decimal('biaya', 15, 2)->default(0);
             $table->timestamps();
         });
     }

@@ -13,11 +13,13 @@ return new class extends Migration
     {
         Schema::create('foto_paket', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('paket_id')->constrained('paket')->onDelete('cascade');
-            $table->string('url_foto');
+            $table->foreignId('paket_id')->constrained('paket')->cascadeOnDelete();
+            $table->string('foto_path');
             $table->string('keterangan')->nullable();
             $table->unsignedInteger('urutan')->default(1);
             $table->timestamps();
+
+            $table->index(['paket_id', 'urutan']);
         });
     }
 

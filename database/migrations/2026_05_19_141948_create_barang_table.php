@@ -1,32 +1,29 @@
 <?php
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('barang', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('kategori_barang_id')->constrained('kategori_barang')->onDelete('cascade');
+            $table->foreignId('kategori_barang_id')
+                  ->constrained('kategori_barang')
+                  ->restrictOnDelete();
             $table->string('nama_barang');
             $table->text('deskripsi')->nullable();
-            $table->decimal('harga', 12, 2);
-            $table->unsignedInteger('stok')->default(0);
-            $table->string('url_thumbnail')->nullable();
-            $table->boolean('aktif')->default(true);
+            $table->decimal('harga', 15, 2);               // ← presisi 15
+            $table->decimal('nilai_barang', 15, 2)->default(0)
+                  ->comment('Nilai ganti rugi jika hilang/rusak berat');
+            $table->unsignedInteger('stok')->default(0)->index();
+            $table->string('thumbnail_path')->nullable();   // ← url_thumbnail → thumbnail_path
+            $table->boolean('aktif')->default(true)->index();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('barang');
