@@ -9,6 +9,15 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+
+     // Seeder statis (data master)
+        $this->call([
+            KategoriJasaSeeder::class,
+            KategoriPaketSeeder::class,
+            KategoriBarangSeeder::class,
+            ZonaLokasiSeeder::class,
+        ]);
+
         // Buat 1 akun admin
         User::factory()->admin()->create([
             'nama'  => 'Admin Sanggar',
