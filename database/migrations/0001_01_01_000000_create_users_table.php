@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('no_hp', 20)->nullable();
-            $table->enum('peran', ['admin', 'user'])->default('user')->index();
             $table->rememberToken();
             $table->timestamps();
         });
