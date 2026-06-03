@@ -18,13 +18,13 @@ class DatabaseSeeder extends Seeder
             ZonaLokasiSeeder::class,
         ]);
 
-        // Akun admin — role 'admin' otomatis dari factory admin()
+        // Akun demo admin
         User::factory()->admin()->create([
             'nama'  => 'Admin Sanggar',
             'email' => 'admin@rantiang.com',
         ]);
 
-        // Akun user biasa + assign role 'user'
+        // Akun demo user
         User::factory()->create([
             'nama'  => 'User Test',
             'email' => 'user@rantiang.com',
