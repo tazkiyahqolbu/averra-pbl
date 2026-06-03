@@ -8,4 +8,56 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+        
+    --color-primary: var(--color-rose-600);
+    --color-primary-foreground: var(--color-white);
+    --color-card: var(--color-white);
+    --color-border: var(--color-gray-200);
+    --color-muted-foreground: var(--color-gray-500);
+    --color-accent: var(--color-gray-100);
 }
+
+@utility bg-gradient-rose {
+  background-image: linear-gradient(135deg, var(--color-rose-400) 0%, var(--color-rose-600) 100%);
+}
+
+@utility bg-gradient-warm {
+  background-image: linear-gradient(135deg, var(--color-amber-50) 0%, var(--color-rose-50) 100%);
+}
+
+@utility shadow-petal {
+  box-shadow: 0 10px 30px -5px rgba(225, 29, 72, 0.15), 0 4px 12px -2px rgba(225, 29, 72, 0.08);
+}
+
+@utility shadow-soft {
+  box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.05), 0 2px 6px -2px rgba(0, 0, 0, 0.03);
+}
+
+@utility animate-scale-in {
+  animation: scale-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@utility animate-fade-in {
+  animation: fade-in 0.2s ease-out forwards;
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
