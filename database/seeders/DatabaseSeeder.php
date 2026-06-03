@@ -3,23 +3,31 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Seeder statis (data master) — RoleSeeder PALING ATAS
+        $this->call([
+            RoleSeeder::class,
+            KategoriJasaSeeder::class,
+            KategoriPaketSeeder::class,
+            KategoriBarangSeeder::class,
+            ZonaLokasiSeeder::class,
         ]);
+
+        // Akun admin — role 'admin' otomatis dari factory admin()
+        User::factory()->admin()->create([
+            'nama'  => 'Admin Sanggar',
+            'email' => 'admin@rantiang.com',
+        ]);
+
+        // Akun user biasa + assign role 'user'
+        User::factory()->create([
+            'nama'  => 'User Test',
+            'email' => 'user@rantiang.com',
+        ])->assignRole('user');
     }
 }
