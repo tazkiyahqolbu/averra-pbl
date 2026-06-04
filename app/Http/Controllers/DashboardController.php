@@ -54,8 +54,7 @@ class DashboardController extends Controller
         // Cek apakah user bisa submit testimoni (harus ada 1+ booking)
         $canSubmitTesti = Pemesanan::where('user_id', $user->id)->exists();
 
-        $view = $user->hasRole('admin') ? 'admin.dashboard' : 'dashboard';
-        return view($view, [
+        return view('dashboard', [
             'user' => $user,
             'bookings' => $bookings,
             'testimonials' => $testimonials,
