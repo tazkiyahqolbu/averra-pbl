@@ -11,11 +11,11 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout',   [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 // ── Rute User ─────────────────────────────────────────────────────────────────
-// Route::middleware('auth')->name('user.')->group(function () {
-//     Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard');
-// });
+Route::middleware('auth')->name('user.')->group(function () {
+    Route::get('/dashboard', fn () => view('user.dashboard.index'))->name('dashboard');
+});
 
 // ── Rute Admin ────────────────────────────────────────────────────────────────
-// Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-//     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
-// });
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', fn () => view('admin.dashboard.index'))->name('dashboard');
+});
