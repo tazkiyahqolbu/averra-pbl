@@ -32,7 +32,7 @@ Dengan adanya sistem ini, proses operasional sanggar menjadi lebih efektif, efis
 
 | Teknologi         | Keterangan          |
 | ----------------- | ------------------- |
-| Laravel 11        | Framework Backend   |
+| Laravel 13        | Framework Backend   |
 | PHP 8.3           | Bahasa Pemrograman  |
 | MySQL             | Database Relasional |
 | Blade + Alpine.js | Frontend            |
