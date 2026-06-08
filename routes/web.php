@@ -3,6 +3,9 @@
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
+// Redirect root ke login
+Route::get('/', fn () => redirect()->route('login'));
+
 // Autentikasi
 Route::get('/login',     [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login',    [AuthController::class, 'login']);
