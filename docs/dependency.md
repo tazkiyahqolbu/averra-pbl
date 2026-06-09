@@ -60,3 +60,33 @@
 | How | Install via Composer, tambahkan trait HasRoles pada Model User, gunakan assignRole() saat register dan middleware role:admin pada route admin |
 
 **Referensi:** https://spatie.be/docs/laravel-permission/v6/basic-usage/basic-usage
+
+---
+
+### Package 5 — tailwindcss + @tailwindcss/vite
+
+| 5W+1H | Penjelasan |
+|-------|------------|
+| What | tailwindcss + @tailwindcss/vite |
+| Why | Dibutuhkan untuk membangun tampilan antarmuka yang konsisten dan responsif menggunakan pendekatan utility-first CSS. @tailwindcss/vite adalah plugin resmi yang mengintegrasikan Tailwind CSS v4 dengan Vite sebagai build tool |
+| Who | Developer (frontend) |
+| When | Saat membangun atau mengubah tampilan halaman seperti form, tabel, kartu, dan layout dashboard |
+| Where | Seluruh halaman (views Blade) — admin, user, dan public |
+| How | Install via npm, daftarkan plugin @tailwindcss/vite pada vite.config.js, lalu tambahkan @import "tailwindcss" pada resources/css/app.css |
+
+**Referensi:** https://tailwindcss.com/docs/installation/using-vite
+
+---
+
+### Package 6 — alpinejs
+
+| 5W+1H | Penjelasan |
+|-------|------------|
+| What | alpinejs |
+| Why | Dibutuhkan untuk menambahkan interaktivitas pada halaman seperti dropdown menu, modal, toggle konten, dan validasi form sisi klien tanpa perlu framework JavaScript yang berat |
+| Who | Developer (frontend), user aplikasi, admin sistem |
+| When | Saat komponen UI memerlukan interaksi dinamis seperti membuka/menutup modal konfirmasi pembayaran, toggle sidebar, atau menampilkan preview foto |
+| Where | Seluruh halaman (views Blade) yang memiliki komponen interaktif |
+| How | Install via npm, import dan inisialisasi di resources/js/app.js menggunakan import Alpine from 'alpinejs', lalu gunakan directive x-data, x-show, x-on:click pada elemen HTML |
+
+**Referensi:** https://alpinejs.dev/start-here

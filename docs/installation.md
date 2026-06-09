@@ -48,6 +48,7 @@ Dependency utama yang digunakan:
 * Tailwind CSS 4
 * Vite 8
 * Laravel Vite Plugin
+* Alpine.js
 
 ```bash
 npm install
