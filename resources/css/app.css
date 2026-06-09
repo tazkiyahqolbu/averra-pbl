@@ -60,3 +60,11 @@
     opacity: 1;
   }
 }
+
+.admin-card {
+    @apply rounded-3xl bg-[#fffdf7] border border-[#decba5] shadow-sm;
+}
+
+.admin-badge {
+    @apply inline-flex rounded-full px-2.5 py-1 text-xs font-medium;
+}
