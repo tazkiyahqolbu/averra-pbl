@@ -28,6 +28,7 @@ use App\Http\Controllers\ForgotPasswordController;
 
 use Illuminate\Support\Facades\Route;
 
+
 Route::get('/', function () {
     $pakets = \App\Models\Paket::where('aktif', true)
         ->withCount('detailPemesanans')
