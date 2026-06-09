@@ -23,3 +23,18 @@ Route::middleware('auth')->name('user.')->group(function () {
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 });
+
+// Route preview untuk halaman admin jasa, dihapus setelah backend jasa selesai
+Route::get('/preview/admin/jasa', function () {
+    return view('admin.jasa.index');
+});
+
+Route::view(
+    '/preview/admin/jasa/create',
+    'admin.jasa.create'
+);
+
+Route::view(
+    '/preview/admin/jasa/edit',
+    'admin.jasa.edit'
+);

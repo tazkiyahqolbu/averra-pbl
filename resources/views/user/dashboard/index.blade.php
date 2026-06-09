@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 @extends('user.layouts.app')
 
 @section('content')
@@ -125,3 +126,6 @@
 
 </div>
 @endsection
+=======
+{{-- TODO: User Dashboard --}}
+>>>>>>> ae25e937e9f50b3490378fdadfebe33a5a10da75
