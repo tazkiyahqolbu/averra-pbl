@@ -16,7 +16,6 @@
         @include('admin.layouts.sidebar')
 
         <div class="flex min-h-screen flex-1 flex-col">
-            @include('admin.layouts.navbar')
 
             <main class="flex-1 p-6 lg:p-8">
                 @yield('content')
