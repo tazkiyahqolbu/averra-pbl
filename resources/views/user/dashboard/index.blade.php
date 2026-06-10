@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 @extends('user.layouts.app')
 
 @section('content')
@@ -10,13 +9,13 @@
             <p class="text-xs font-bold uppercase tracking-[0.2em] text-gold">USER</p>
             <h2 class="font-serif text-3xl font-bold text-maroon-deep">Dashboard Pelanggan</h2>
         </div>
-        
+
         <div class="flex items-center gap-3.5 sm:text-right sm:justify-end">
             <div class="text-left sm:text-right text-xs text-maroon-deep/60 font-light leading-relaxed order-2 sm:order-1">
-                <span class="font-semibold text-maroon-deep text-base block">{{ auth()->user()->nama ?? auth()->user()->name }}</span> 
+                <span class="font-semibold text-maroon-deep text-base block">{{ auth()->user()->nama ?? auth()->user()->name }}</span>
                 <span class="text-maroon-deep/70 text-xs block mt-0.5">{{ auth()->user()->no_hp ?? 'Pelanggan SILART' }}</span>
             </div>
-            
+
             <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-maroon-deep text-cream font-serif text-lg font-bold shadow-sm border border-gold/20 order-1 sm:order-2">
                 {{ mb_substr(auth()->user()->nama ?? auth()->user()->name ?? 'U', 0, 1) }}
             </div>
@@ -68,7 +67,7 @@
 
     {{-- 3. GRID UTAMA (Aksi Cepat & Tabel Pemesanan Terbaru) --}}
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-        
+
         <div class="rounded-3xl bg-white border border-maroon-deep/5 p-6 shadow-sm space-y-4">
             <h3 class="font-serif text-xl font-semibold text-maroon-deep border-b border-neutral-100 pb-3">Aksi Cepat</h3>
             <div class="flex flex-col gap-2.5">
@@ -89,7 +88,7 @@
                 <h3 class="font-serif text-xl font-semibold text-maroon-deep">Pemesanan Terbaru</h3>
                 <a href="{{ route('user.pemesanan') }}" class="text-xs font-semibold text-gold hover:underline transition">Lihat semua</a>
             </div>
-            
+
             <div class="overflow-x-auto rounded-2xl border border-neutral-100">
                 <table class="min-w-full text-sm text-left">
                     <thead class="bg-cream/30 text-maroon-deep font-medium border-b border-neutral-100">
@@ -126,6 +125,3 @@
 
 </div>
 @endsection
-=======
-{{-- TODO: User Dashboard --}}
->>>>>>> ae25e937e9f50b3490378fdadfebe33a5a10da75
