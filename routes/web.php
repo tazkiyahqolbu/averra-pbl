@@ -29,16 +29,16 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 });
 
 // Route preview untuk halaman admin jasa, dihapus setelah backend jasa selesai
-Route::get('/preview/admin/jasa', function () {
-    return view('admin.jasa.index');
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::view('/jasa', 'admin.jasa.index')->name('jasa.index');
+    Route::view('/jasa/create', 'admin.jasa.create')->name('jasa.create');
+    Route::view('/jasa/edit', 'admin.jasa.edit')->name('jasa.edit');
 });
 
-Route::view(
-    '/preview/admin/jasa/create',
-    'admin.jasa.create'
-);
 
-Route::view(
-    '/preview/admin/jasa/edit',
-    'admin.jasa.edit'
-);
+// Route preview untuk halaman admin paket, dihapus setelah backend paket selesai
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::view('/paket', 'admin.paket.index')->name('paket.index');
+    Route::view('/paket/create', 'admin.paket.create')->name('paket.create');
+    Route::view('/paket/edit', 'admin.paket.edit')->name('paket.edit');
+});
