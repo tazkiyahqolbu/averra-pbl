@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+
 
 // Redirect root ke login
 Route::get('/', fn () => redirect()->route('login'));
@@ -16,8 +18,10 @@ Route::post('/logout',   [AuthController::class, 'logout'])->name('logout')->mid
 
 // ── Rute User ─────────────────────────────────────────────────────────────────
 Route::middleware('auth')->name('user.')->group(function () {
-    Route::get('/dashboard', fn () => view('user.dashboard.index'))->name('dashboard');
+   Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
 });
+
 
 // ── Rute Admin ────────────────────────────────────────────────────────────────
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
