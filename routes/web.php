@@ -42,3 +42,8 @@ Route::view(
     '/preview/admin/jasa/edit',
     'admin.jasa.edit'
 );
+
+Route::get('/', function () {
+    return view('public.Beranda');
+});
+
