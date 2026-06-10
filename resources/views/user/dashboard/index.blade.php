@@ -71,13 +71,13 @@
         <div class="rounded-3xl bg-white border border-maroon-deep/5 p-6 shadow-sm space-y-4">
             <h3 class="font-serif text-xl font-semibold text-maroon-deep border-b border-neutral-100 pb-3">Aksi Cepat</h3>
             <div class="flex flex-col gap-2.5">
-                <a href="{{ route('user.pemesanan') }}" class="w-full inline-flex items-center gap-2 rounded-full border border-maroon-deep/10 bg-cream/20 px-5 py-3 text-sm text-maroon-deep font-medium transition hover:bg-cream hover:border-maroon-deep/30">
+                <a href="#" class="w-full inline-flex items-center gap-2 rounded-full border border-maroon-deep/10 bg-cream/20 px-5 py-3 text-sm text-maroon-deep font-medium transition hover:bg-cream hover:border-maroon-deep/30">
                     <i data-lucide="eye" class="h-4 w-4 text-gold"></i> Lihat Pemesanan
                 </a>
-                <a href="{{ route('user.pembayaran.upload') }}" class="w-full inline-flex items-center gap-2 rounded-full bg-maroon-deep px-5 py-3 text-sm text-cream font-medium transition hover:bg-black shadow-sm">
+                <a href="#" class="w-full inline-flex items-center gap-2 rounded-full bg-maroon-deep px-5 py-3 text-sm text-cream font-medium transition hover:bg-black shadow-sm">
                     <i data-lucide="upload-cloud" class="h-4 w-4 text-gold-soft"></i> Upload Pembayaran
                 </a>
-                <a href="{{ route('user.profile') }}" class="w-full inline-flex items-center gap-2 rounded-full border border-maroon-deep/10 bg-cream/20 px-5 py-3 text-sm text-maroon-deep font-medium transition hover:bg-cream hover:border-maroon-deep/30">
+                <a href="#" class="w-full inline-flex items-center gap-2 rounded-full border border-maroon-deep/10 bg-cream/20 px-5 py-3 text-sm text-maroon-deep font-medium transition hover:bg-cream hover:border-maroon-deep/30">
                     <i data-lucide="user" class="h-4 w-4 text-gold"></i> Profil Saya
                 </a>
             </div>
@@ -86,7 +86,7 @@
         <div class="rounded-3xl bg-white border border-maroon-deep/5 p-6 shadow-sm lg:col-span-2">
             <div class="flex items-center justify-between border-b border-neutral-100 pb-3 mb-4">
                 <h3 class="font-serif text-xl font-semibold text-maroon-deep">Pemesanan Terbaru</h3>
-                <a href="{{ route('user.pemesanan') }}" class="text-xs font-semibold text-gold hover:underline transition">Lihat semua</a>
+                <a href="#" class="text-xs font-semibold text-gold hover:underline transition">Lihat semua</a>
             </div>
 
             <div class="overflow-x-auto rounded-2xl border border-neutral-100">
