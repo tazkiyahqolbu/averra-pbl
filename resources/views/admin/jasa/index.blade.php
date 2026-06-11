@@ -3,41 +3,6 @@
 @section('title', 'Kelola Jasa')
 
 @section('content')
-@php
-    /**
-     * Data dummy untuk preview frontend.
-     * Nanti jika backend sudah siap, bagian ini bisa dihapus dan diganti dengan data dari controller.
-     */
-    $jasaItems = $jasaItems ?? [
-        [
-            'id' => 1,
-            'thumbnail_path' => null,
-            'nama_jasa' => 'Dekorasi Pernikahan',
-            'kategori' => 'Dekorasi',
-            'harga' => 5000000,
-            'maks_booking_harian' => 2,
-            'aktif' => true,
-        ],
-        [
-            'id' => 2,
-            'thumbnail_path' => null,
-            'nama_jasa' => 'Tari Pasambahan',
-            'kategori' => 'Pertunjukan Tari',
-            'harga' => 1500000,
-            'maks_booking_harian' => 4,
-            'aktif' => true,
-        ],
-        [
-            'id' => 3,
-            'thumbnail_path' => null,
-            'nama_jasa' => 'Band Akustik',
-            'kategori' => 'Musik',
-            'harga' => 2500000,
-            'maks_booking_harian' => 1,
-            'aktif' => false,
-        ],
-    ];
-@endphp
 
 <div class="admin-section">
     <div class="admin-page-header md:flex-row md:items-center md:justify-between">
@@ -107,8 +72,10 @@
                             </td>
 
                             <td class="admin-table-td">
-                                @if (!empty($item['thumbnail_path']))
-                                    <img src="{{ asset('storage/' . $item['thumbnail_path']) }}" alt="{{ $item['nama_jasa'] }}" class="admin-thumb">
+                                @if ($item->thumbnail_path)
+                                    <img src="{{ asset('storage/' . $item->thumbnail_path) }}"
+                                        alt="{{ $item->nama_jasa }}"
+                                        class="admin-thumb">
                                 @else
                                     <div class="admin-thumb flex items-center justify-center text-xs font-semibold text-[#7a5d58]">
                                         IMG
@@ -117,15 +84,15 @@
                             </td>
 
                             <td class="admin-table-td">
-                                <p class="font-semibold text-gray-900">{{ $item['nama_jasa'] }}</p>
+                                <p class="font-semibold text-gray-900">{{ $item->nama_jasa }}</p>
                             </td>
 
                             <td class="admin-table-td">
-                                {{ $item['kategori'] }}
+                                {{ $item->kategori->nama ?? '-' }}
                             </td>
 
                             <td class="admin-table-td font-semibold text-gray-900">
-                                Rp {{ number_format($item['harga'], 0, ',', '.') }}
+                                Rp {{ number_format($item->harga, 0, ',', '.') }}
                             </td>
 
                             <td class="admin-table-td">
@@ -133,7 +100,7 @@
                             </td>
 
                             <td class="admin-table-td">
-                                @if ($item['aktif'])
+                                @if ($item->aktif)
                                     <span class="badge-active">Aktif ✓</span>
                                 @else
                                     <span class="badge-inactive">Nonaktif</span>
@@ -142,8 +109,19 @@
 
                             <td class="admin-table-td">
                                 <div class="flex justify-end gap-2">
-                                    <a href="#" class="admin-btn-secondary px-3 py-2 text-xs">Edit</a>
-                                    <button type="button" class="admin-btn-danger px-3 py-2 text-xs">Hapus</button>
+                                    <a href="{{ route('admin.jasa.edit', $item->id) }}" class="admin-btn-secondary px-3 py-2 text-xs">Edit</a>
+                                    <form action="{{ route('admin.jasa.destroy', $item->id) }}"
+                                        method="POST"
+                                        onsubmit="return confirm('Yakin ingin menghapus jasa ini?')">
+
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button type="submit"
+                                                class="admin-btn-danger px-3 py-2 text-xs">
+                                            Hapus
+                                        </button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>
