@@ -12,12 +12,14 @@
             </p>
         </div>
 
-        <a href="#" class="admin-btn-secondary">
+        <a href="{{ url()->previous() }}" class="admin-btn-secondary">
             ← Kembali
         </a>
     </div>
 
-    <form action="#" method="POST" enctype="multipart/form-data" class="space-y-6">
+    <form action="{{ route('admin.jasa.store') }}"
+      method="POST"
+      enctype="multipart/form-data">
         @csrf
 
         <div class="admin-card p-6">
@@ -36,11 +38,12 @@
                     <label for="kategori_jasa_id" class="admin-label">Kategori Jasa <span class="text-red-600">*</span></label>
                     <select id="kategori_jasa_id" name="kategori_jasa_id" class="admin-select focus:admin-input-focus">
                         <option value="">Pilih kategori</option>
-                        <option value="1">Dekorasi</option>
-                        <option value="2">Pertunjukan Tari</option>
-                        <option value="3">Musik</option>
-                        <option value="4">MC</option>
-                        <option value="5">Makeup</option>
+
+                        @foreach($kategoris as $kategori)
+                            <option value="{{ $kategori->id }}">
+                                {{ $kategori->nama }}
+                            </option>
+                        @endforeach
                     </select>
                 </div>
 
@@ -104,7 +107,7 @@
         </div>
 
         <div class="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-            <a href="#" class="admin-btn-secondary">Batal</a>
+            <a href="{{ url()->previous() }}" class="admin-btn-secondary">Batal</a>
             <button type="submit" class="admin-btn-primary">Simpan Jasa</button>
         </div>
     </form>
