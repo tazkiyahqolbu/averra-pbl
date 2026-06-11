@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\JasaController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,17 +25,29 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 });
 
-// Route preview untuk halaman admin jasa, dihapus setelah backend jasa selesai
-Route::get('/preview/admin/jasa', function () {
-    return view('admin.jasa.index');
-});
+Route::middleware(['auth', 'role:admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
 
-Route::view(
-    '/preview/admin/jasa/create',
-    'admin.jasa.create'
-);
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])
+            ->name('dashboard');
 
-Route::view(
-    '/preview/admin/jasa/edit',
-    'admin.jasa.edit'
-);
+        Route::get('/jasa', [JasaController::class, 'index'])
+            ->name('jasa.index');
+
+        Route::get('/jasa/create', [JasaController::class, 'create'])
+            ->name('jasa.create');
+
+        Route::post('/jasa', [JasaController::class, 'store'])
+            ->name('jasa.store');
+
+        Route::get('/jasa/{id}/edit', [JasaController::class, 'edit'])
+            ->name('jasa.edit');
+
+        Route::put('/jasa/{id}', [JasaController::class, 'update'])
+            ->name('jasa.update');
+
+        Route::delete('/jasa/{id}', [JasaController::class, 'destroy'])
+            ->name('jasa.destroy');
+    });
