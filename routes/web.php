@@ -6,6 +6,9 @@ use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
+// Untuk Preview Frontend
+use App\Models\Barang;
+use App\Models\KategoriBarang;
 
 // Redirect root ke login
 Route::get('/', fn () => redirect()->route('login'));
@@ -55,3 +58,19 @@ Route::middleware(['auth', 'role:admin'])
         Route::delete('/jasa/{id}', [JasaController::class, 'destroy'])
             ->name('jasa.destroy');
     });
+
+
+// Untuk Preview Frontend (sementara pakai view statis)
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::view('/paket', 'admin.paket.index')->name('paket.index');
+    Route::view('/paket/create', 'admin.paket.create')->name('paket.create');
+    Route::view('/paket/edit', 'admin.paket.edit')->name('paket.edit');
+});
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::view('/barang', 'admin.barang.index')->name('barang.index');
+    Route::view('/barang/create', 'admin.barang.create')->name('barang.create');
+    Route::view('/barang/edit', 'admin.barang.edit')->name('barang.edit');
+
+    Route::view('/kategori', 'admin.kategori.index')->name('kategori.index');
+});
