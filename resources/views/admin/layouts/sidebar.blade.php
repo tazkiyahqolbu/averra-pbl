@@ -55,7 +55,11 @@
     </a>
 
     <a href="#" class="block rounded-lg px-4 py-2 hover:bg-white/10">
-        Kategori
+        Kategori Barang
+    </a>
+
+    <a href="#" class="block rounded-lg px-4 py-2 hover:bg-white/10">
+        Kategori Paket
     </a>
 
     <a href="#" class="block rounded-lg px-4 py-2 hover:bg-white/10">
