@@ -62,15 +62,26 @@ Route::middleware(['auth', 'role:admin'])
 
 // Untuk Preview Frontend (sementara pakai view statis)
 Route::prefix('admin')->name('admin.')->group(function () {
+
+    // Paket
     Route::view('/paket', 'admin.paket.index')->name('paket.index');
     Route::view('/paket/create', 'admin.paket.create')->name('paket.create');
     Route::view('/paket/edit', 'admin.paket.edit')->name('paket.edit');
-});
 
-Route::prefix('admin')->name('admin.')->group(function () {
+    // Barang
     Route::view('/barang', 'admin.barang.index')->name('barang.index');
     Route::view('/barang/create', 'admin.barang.create')->name('barang.create');
     Route::view('/barang/edit', 'admin.barang.edit')->name('barang.edit');
 
-    Route::view('/kategori', 'admin.kategori.index')->name('kategori.index');
+    // Kategori
+    Route::view('/kategori-paket', 'admin.kategori-paket.index')->name('kategori-paket.index');
+    Route::view('/kategori-barang', 'admin.kategori-barang.index')->name('kategori-barang.index');
+
+    // Pemesanan
+    Route::view('/pemesanan', 'admin.pemesanan.index')->name('pemesanan.index');
+    Route::view('/pemesanan/show', 'admin.pemesanan.show')->name('pemesanan.show');
+
+    // Pembayaran
+    Route::view('/pembayaran', 'admin.pembayaran.index')->name('pembayaran.index');
+    Route::view('/pembayaran/show', 'admin.pembayaran.show')->name('pembayaran.show');
 });

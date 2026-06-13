@@ -122,9 +122,9 @@
 
                             <td class="admin-table-td">
                                 @if ($item['aktif'])
-                                    <span class="badge-active">Aktif ✓</span>
+                                    <span class="badge-active">● Aktif</span>
                                 @else
-                                    <span class="badge-inactive">Nonaktif</span>
+                                    <span class="badge-inactive">● Nonaktif</span>
                                 @endif
                             </td>
 
