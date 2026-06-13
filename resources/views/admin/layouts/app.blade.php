@@ -6,6 +6,7 @@
     <title>Admin SILART</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
+@stack('scripts')
 <body class="bg-[#F8F3EA]">
     <div class="min-h-screen">
         @include('admin.layouts.sidebar')
