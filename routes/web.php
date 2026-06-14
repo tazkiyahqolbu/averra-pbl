@@ -76,6 +76,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Kategori
     Route::view('/kategori-paket', 'admin.kategori-paket.index')->name('kategori-paket.index');
     Route::view('/kategori-barang', 'admin.kategori-barang.index')->name('kategori-barang.index');
+    Route::view('/kategori-jasa', 'admin.kategori-jasa.index')->name('kategori-jasa.index');
 
     // Pemesanan
     Route::view('/pemesanan', 'admin.pemesanan.index')->name('pemesanan.index');
@@ -84,4 +85,18 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Pembayaran
     Route::view('/pembayaran', 'admin.pembayaran.index')->name('pembayaran.index');
     Route::view('/pembayaran/show', 'admin.pembayaran.show')->name('pembayaran.show');
+
+    // Galeri
+    Route::view('/galeri', 'admin.galeri.index')->name('galeri.index');
+    Route::view('/galeri/create', 'admin.galeri.create')->name('galeri.create');
+    Route::view('/galeri/edit', 'admin.galeri.edit')->name('galeri.edit');
+
+// Testimoni
+    Route::view('/testimoni', 'admin.testimoni.index')->name('testimoni.index');
+
+// Zona Lokasi
+    Route::view('/zona-lokasi', 'admin.zona-lokasi.index')->name('zona-lokasi.index');
+    Route::view('/zona-lokasi/create', 'admin.zona-lokasi.create')->name('zona-lokasi.create');
+    Route::view('/zona-lokasi/edit', 'admin.zona-lokasi.edit')->name('zona-lokasi.edit');
+
 });
