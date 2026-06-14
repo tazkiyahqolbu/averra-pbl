@@ -46,7 +46,7 @@
         Jasa
     </a>
 
-    <a href="#" class="block rounded-lg px-4 py-2 hover:bg-white/10">
+    <a href="{{ route('admin.paket.index')}}" class="block rounded-lg px-4 py-2 hover:bg-white/10">
     Paket
     </a>
 
@@ -58,7 +58,7 @@
         Kategori Barang
     </a>
 
-    <a href="#" class="block rounded-lg px-4 py-2 hover:bg-white/10">
+    <a href="{{ route('admin.kategori-paket.index')}}" class="block rounded-lg px-4 py-2 hover:bg-white/10">
         Kategori Paket
     </a>
 
