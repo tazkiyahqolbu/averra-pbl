@@ -3,37 +3,6 @@
 @section('title', 'Kelola Paket')
 
 @section('content')
-@php
-    $paketItems = $paketItems ?? [
-        [
-            'id' => 1,
-            'thumbnail_path' => null,
-            'nama_paket' => 'Paket Pernikahan Adat Minang',
-            'kategori' => 'Pernikahan',
-            'harga' => 8500000,
-            'keterangan_acara' => 'Akad dan resepsi',
-            'aktif' => true,
-        ],
-        [
-            'id' => 2,
-            'thumbnail_path' => null,
-            'nama_paket' => 'Paket Hiburan Tari',
-            'kategori' => 'Hiburan',
-            'harga' => 3500000,
-            'keterangan_acara' => 'Acara resmi dan hiburan',
-            'aktif' => true,
-        ],
-        [
-            'id' => 3,
-            'thumbnail_path' => null,
-            'nama_paket' => 'Paket Penyambutan Tamu',
-            'kategori' => 'Pertunjukan',
-            'harga' => 2500000,
-            'keterangan_acara' => 'Penyambutan tamu undangan',
-            'aktif' => false,
-        ],
-    ];
-@endphp
 
 <div class="admin-section">
     <div class="admin-page-header md:flex-row md:items-center md:justify-between">
@@ -109,20 +78,23 @@
                             </td>
 
                             <td class="admin-table-td">
-                                <p class="font-semibold text-gray-900">{{ $item['nama_paket'] }}</p>
+                                <p class="font-semibold text-gray-900">{{ $item->nama_paket }}</p>
                             </td>
-
-                            <td class="admin-table-td">{{ $item['kategori'] }}</td>
-
-                            <td class="admin-table-td font-semibold text-gray-900">
-                                Rp {{ number_format($item['harga'], 0, ',', '.') }}
-                            </td>
-
-                            <td class="admin-table-td">{{ $item['keterangan_acara'] }}</td>
 
                             <td class="admin-table-td">
-                                @if ($item['aktif'])
-                                    <span class="badge-active">● Aktif</span>
+                                {{ $item->kategori->nama ?? '-' }}
+                            </td>
+
+                            <td class="admin-table-td font-semibold text-gray-900">
+                                Rp {{ number_format($item->harga, 0, ',', '.') }}
+                            </td>
+
+                            <td class="admin-table-td">{{ $item->keterangan_acara }}</td>
+
+                            <td class="admin-table-td">
+                                @if ($item->aktif)
+                                    <span class="badge-active">Aktif ✓</span>
+
                                 @else
                                     <span class="badge-inactive">● Nonaktif</span>
                                 @endif
@@ -130,8 +102,19 @@
 
                             <td class="admin-table-td">
                                 <div class="flex justify-end gap-2">
-                                    <a href="{{ route('admin.paket.edit', $item['id']) }}" class="admin-btn-secondary px-3 py-2 text-xs">Edit</a>
-                                    <button type="button" class="admin-btn-danger px-3 py-2 text-xs">Hapus</button>
+                                    <a href="{{ route('admin.paket.edit', $item->id) }}" class="admin-btn-secondary px-3 py-2 text-xs">Edit</a>
+                                    <form action="{{ route('admin.paket.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus paket ini?')">
+
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button type="submit"
+                                                class="admin-btn-danger px-3 py-2 text-xs">
+
+                                            Hapus
+
+                                        </button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>

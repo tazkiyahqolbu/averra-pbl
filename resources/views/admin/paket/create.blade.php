@@ -17,7 +17,7 @@
         </a>
     </div>
 
-    <form action="#" method="POST" enctype="multipart/form-data" class="space-y-6">
+    <form action="{{ route('admin.paket.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
         @csrf
 
         <div class="admin-card p-6">
@@ -36,9 +36,11 @@
                     <label for="kategori_paket_id" class="admin-label">Kategori Paket <span class="text-red-600">*</span></label>
                     <select id="kategori_paket_id" name="kategori_paket_id" class="admin-select focus:admin-input-focus">
                         <option value="">Pilih kategori</option>
-                        <option value="1">Pernikahan</option>
-                        <option value="2">Hiburan</option>
-                        <option value="3">Pertunjukan</option>
+                        @foreach($kategoris as $kategori)
+                            <option value="{{ $kategori->id }}">
+                                {{ $kategori->nama }}
+                            </option>
+                        @endforeach
                     </select>
                 </div>
 

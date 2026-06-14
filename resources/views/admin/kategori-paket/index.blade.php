@@ -3,14 +3,7 @@
 @section('title', 'Kategori Paket')
 
 @section('content')
-@php
-    $kategoriPakets = [
-        ['nama' => 'Paket Pernikahan', 'deskripsi' => 'Paket lengkap untuk acara pernikahan', 'ikon_path' => null],
-        ['nama' => 'Paket Sunatan', 'deskripsi' => 'Paket lengkap untuk acara sunatan', 'ikon_path' => null],
-        ['nama' => 'Paket Ulang Tahun', 'deskripsi' => 'Paket hiburan untuk ulang tahun', 'ikon_path' => null],
-        ['nama' => 'Paket Acara Kantor', 'deskripsi' => 'Paket hiburan untuk acara perusahaan', 'ikon_path' => null],
-    ];
-@endphp
+
 
 <div class="admin-section">
     <div>
@@ -21,7 +14,7 @@
     <div class="admin-card p-6">
         <h2 class="mb-4 text-lg font-semibold text-gray-900">Tambah Kategori Paket</h2>
 
-            <form action="#" method="POST" enctype="multipart/form-data" class="grid gap-4 md:grid-cols-2">
+            <form action="{{ route('admin.kategori-paket.store') }}" method="POST" enctype="multipart/form-data" class="grid gap-4 md:grid-cols-2">
              @csrf
 
             <div>
@@ -40,7 +33,7 @@
             </div>
 
             <div class="md:col-span-2 flex justify-end">
-                <button type="button" class="admin-btn-primary">Simpan Kategori</button>
+                <button type="submit" class="admin-btn-primary">Simpan Kategori</button>
             </div>
             </form>
     </div>
@@ -68,27 +61,61 @@
                             <td class="admin-table-td">{{ $loop->iteration }}</td>
 
                             <td class="admin-table-td">
-                                <div class="admin-thumb flex items-center justify-center text-xs font-semibold text-[#7a5d58]">
-                                    IMG
-                                </div>
-                            </td>
+                        @if($kategori->ikon_path)
+
+                            <img
+                                src="{{ asset('storage/' . $kategori->ikon_path) }}"
+                                class="admin-thumb object-cover">
+
+                        @else
+
+                            <div class="admin-thumb flex items-center justify-center text-xs font-semibold text-[#7a5d58]">
+                                IMG
+                            </div>
+
+                        @endif
+
+                    </td>
 
                             <td class="admin-table-td font-semibold text-gray-900">
-                                {{ $kategori['nama'] }}
+                                {{ $kategori->nama   }}
                             </td>
 
                             <td class="admin-table-td">
-                                {{ $kategori['deskripsi'] }}
+                                {{ $kategori->deskripsi }}
                             </td>
 
                             <td class="admin-table-td text-right">
-                                <button type="button" onclick="openEditModal (
-                                    '{{ $kategori['nama'] }}',
-                                    '{{ $kategori['deskripsi'] }}',
-                                    '{{ $kategori['ikon_path'] ?? '' }}' )"
-                                    class="admin-btn-secondary px-4 py-2" >
+                                <button type="button"
+                                onclick="openEditModal(
+                                    '{{ $kategori->id }}',
+                                    '{{ $kategori->nama }}',
+                                    '{{ $kategori->deskripsi }}',
+                                    '{{ asset('storage/' . $kategori->ikon_path) }}'
+                                )"
+                                class="admin-btn-secondary px-4 py-2">
+
                                     Edit
+
                                 </button>
+
+                                <form
+                                    action="{{ route('admin.kategori-paket.destroy', $kategori->id) }}"
+                                    method="POST"
+                                    onsubmit="return confirm('Yakin ingin menghapus kategori ini?')">
+
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button
+                                        type="submit"
+                                        class="admin-btn-danger px-4 py-2">
+
+                                        Hapus
+
+                                    </button>
+
+                                </form>
                             </td>
                         </tr>
                     @endforeach
@@ -110,7 +137,7 @@
             </h2>
         </div>
 
-        <form action="#" method="POST" enctype="multipart/form-data" class="space-y-4 p-6">
+        <form id="editForm" method="POST" enctype="multipart/form-data" class="space-y-4 p-6">
             @csrf
             @method('PUT')
 
@@ -139,8 +166,7 @@
 
                 <div
                     id="editIkonPreview"
-                    class="admin-thumb-lg flex items-center justify-center text-xs font-semibold text-[#7a5d58]"
-                >
+                    class="admin-thumb-lg flex items-center justify-center text-xs font-semibold text-[#7a5d58]">
                     IMG
                 </div>
             </div>
@@ -169,7 +195,7 @@
                 </button>
 
                 <button
-                    type="button"
+                    type="submit"
                     class="admin-btn-primary"
                 >
                     Simpan Perubahan
@@ -181,21 +207,33 @@
 
 @push('scripts')
 <script>
-function openEditModal(nama, deskripsi, ikonPath = '') {
+function openEditModal(id, nama, deskripsi, ikonPath = '') {
+
     document.getElementById('editNamaKategori').value = nama;
+
     document.getElementById('editDeskripsiKategori').value = deskripsi;
+
+    document.getElementById('editForm').action =
+        "/admin/kategori-paket/" + id;
 
     const preview = document.getElementById('editIkonPreview');
 
     if (ikonPath) {
-        preview.innerHTML = `<img src="${ikonPath}" alt="${nama}" class="h-full w-full rounded-2xl object-cover">`;
+
+        preview.innerHTML =
+        `<img src="${ikonPath}"
+        class="h-full w-full rounded-2xl object-cover">`;
+
     } else {
+
         preview.innerHTML = 'IMG';
+
     }
 
     const modal = document.getElementById('editKategoriModal');
 
     modal.classList.remove('hidden');
+
     modal.classList.add('flex');
 }
 
