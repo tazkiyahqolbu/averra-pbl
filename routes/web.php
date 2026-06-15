@@ -11,7 +11,7 @@ use App\Models\Barang;
 use App\Models\KategoriBarang;
 
 // Redirect root ke login
-Route::get('/', fn () => redirect()->route('login'));
+Route::get('/', fn() => redirect()->route('login'));
 
 // Autentikasi
 Route::get('/login',     [AuthController::class, 'showLogin'])->name('login');
@@ -22,14 +22,7 @@ Route::post('/logout',   [AuthController::class, 'logout'])->name('logout')->mid
 
 // ── Rute User ─────────────────────────────────────────────────────────────────
 Route::middleware('auth')->name('user.')->group(function () {
-   Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-});
-
-
-// ── Rute Admin ────────────────────────────────────────────────────────────────
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
 
 Route::middleware(['auth', 'role:admin'])
@@ -61,8 +54,8 @@ Route::middleware(['auth', 'role:admin'])
 
 
 // Untuk Preview Frontend (sementara pakai view statis)
-Route::prefix('admin')->name('admin.')->group(function () {
-
+    Route::middleware(['auth', 'role:admin']) ->prefix('admin') ->name('admin.') ->group(function ()
+    {
     // Paket
     Route::view('/paket', 'admin.paket.index')->name('paket.index');
     Route::view('/paket/create', 'admin.paket.create')->name('paket.create');
@@ -86,17 +79,26 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::view('/pembayaran', 'admin.pembayaran.index')->name('pembayaran.index');
     Route::view('/pembayaran/show', 'admin.pembayaran.show')->name('pembayaran.show');
 
+    // Pengembalian
+    Route::view('/pengembalian', 'admin.pengembalian.index')->name('pengembalian.index');
+    Route::view('/pengembalian/show', 'admin.pengembalian.show')->name('pengembalian.show');
+
+    // Laporan
+    Route::view('/laporan', 'admin.laporan.index')->name('laporan.index');
+
     // Galeri
     Route::view('/galeri', 'admin.galeri.index')->name('galeri.index');
     Route::view('/galeri/create', 'admin.galeri.create')->name('galeri.create');
-    Route::view('/galeri/edit', 'admin.galeri.edit')->name('galeri.edit');
 
-// Testimoni
+    // Testimoni
     Route::view('/testimoni', 'admin.testimoni.index')->name('testimoni.index');
 
-// Zona Lokasi
+    // Zona Lokasi
     Route::view('/zona-lokasi', 'admin.zona-lokasi.index')->name('zona-lokasi.index');
-    Route::view('/zona-lokasi/create', 'admin.zona-lokasi.create')->name('zona-lokasi.create');
-    Route::view('/zona-lokasi/edit', 'admin.zona-lokasi.edit')->name('zona-lokasi.edit');
 
+    // Blokir Tanggal
+    Route::view('/blokir-tanggal', 'admin.blokir-tanggal.index')->name('blokir-tanggal.index');
+
+    // Profil Admin
+    Route::view('/akun', 'admin.akun.index')->name('akun.index');
 });
