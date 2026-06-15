@@ -3,76 +3,39 @@
 @section('title', 'Tambah Barang')
 
 @section('content')
-@php
-    $kategoriBarangs = ['Kostum Tari', 'Properti Tari', 'Properti Musik'];
-@endphp
-
-<div class="mx-auto max-w-4xl space-y-6">
+<div class="admin-section">
     <div>
-        <h1 class="text-2xl font-semibold text-gray-900">Tambah Barang</h1>
-        <p class="text-sm text-gray-500">Form tambah katalog kostum atau properti.</p>
+        <h1 class="admin-title text-3xl">Tambah Barang</h1>
+        <p class="admin-subtitle mt-1 text-sm">Lengkapi data barang sewa sesuai kebutuhan katalog dan pengembalian.</p>
     </div>
 
-    <form action="#" method="POST" enctype="multipart/form-data" class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-        @csrf
+    <form class="admin-card p-6 space-y-5">
+        <div class="grid gap-4 md:grid-cols-2">
+            <div><label class="admin-label">Nama Barang *</label><input type="text" class="admin-input" placeholder="Kamera Canon EOS R50"></div>
+            <div><label class="admin-label">Kategori *</label><select class="admin-select"><option>Pilih kategori</option><option>Kamera</option><option>Audio/Sound</option><option>Tenda & Venue</option><option>Perlengkapan</option></select></div>
+            <div><label class="admin-label">Harga Sewa (per hari) *</label><input type="text" class="admin-input" placeholder="Rp 200.000"></div>
+            <div><label class="admin-label">Nilai Barang *</label><input type="text" class="admin-input" placeholder="Rp 8.000.000"></div>
+            <div><label class="admin-label">Stok *</label><input type="number" class="admin-input" min="0" placeholder="3"></div>
+        </div>
 
-        <div class="grid gap-5 md:grid-cols-2">
-            <div>
-                <label class="mb-1 block text-sm font-medium text-gray-700">Nama Barang</label>
-                <input type="text" name="nama_barang" class="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm" placeholder="Contoh: Baju Tari Piring">
-            </div>
+        <div><label class="admin-label">Deskripsi</label><textarea class="admin-textarea" placeholder="Jelaskan spesifikasi dan kondisi barang..."></textarea></div>
 
-            <div>
-                <label class="mb-1 block text-sm font-medium text-gray-700">Kategori Barang</label>
-                <select name="kategori_barang_id" class="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm">
-                    <option value="">Pilih kategori</option>
-                    @foreach ($kategoriBarangs as $kategori)
-                        <option value="{{ $kategori }}">{{ $kategori }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div>
-                <label class="mb-1 block text-sm font-medium text-gray-700">Harga Sewa</label>
-                <input type="number" name="harga" class="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm" placeholder="150000">
-            </div>
-
-            <div>
-                <label class="mb-1 block text-sm font-medium text-gray-700">Nilai Barang</label>
-                <input type="number" name="nilai_barang" class="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm" placeholder="500000">
-            </div>
-
-            <div>
-                <label class="mb-1 block text-sm font-medium text-gray-700">Stok</label>
-                <input type="number" name="stok" class="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm" placeholder="10">
-            </div>
-
-            <div>
-                <label class="mb-1 block text-sm font-medium text-gray-700">Thumbnail</label>
-                <input type="file" name="thumbnail_path" class="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm">
-            </div>
-
-            <div class="md:col-span-2">
-                <label class="mb-1 block text-sm font-medium text-gray-700">Deskripsi</label>
-                <textarea name="deskripsi" rows="4" class="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm" placeholder="Tuliskan deskripsi barang..."></textarea>
-            </div>
-
-            <div class="md:col-span-2">
-                <label class="inline-flex items-center gap-2">
-                    <input type="checkbox" name="aktif" value="1" checked class="rounded border-gray-300 text-[#5A0B1A]">
-                    <span class="text-sm font-medium text-gray-700">Barang aktif ditampilkan</span>
-                </label>
+        <div>
+            <label class="admin-label">Status</label>
+            <div class="flex flex-wrap gap-3">
+                <label class="rounded-2xl border border-[#decba5] bg-[#fffdf7] px-4 py-3 text-sm"><input type="radio" name="status" checked> Aktif</label>
+                <label class="rounded-2xl border border-[#decba5] bg-[#fffdf7] px-4 py-3 text-sm"><input type="radio" name="status"> Nonaktif</label>
             </div>
         </div>
 
-        <div class="mt-6 flex justify-end gap-3">
-            <a href="{{ route('admin.barang.index') }}" class="rounded-xl border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50">
-                Kembali
-            </a>
+        <div class="grid gap-4 md:grid-cols-2">
+            <div><label class="admin-label">Foto Utama *</label><input type="file" class="admin-file"></div>
+            <div><label class="admin-label">Foto Tambahan</label><input type="file" class="admin-file" multiple></div>
+        </div>
 
-            <button type="submit" class="rounded-xl bg-[#5A0B1A] px-4 py-2 text-sm font-semibold text-white hover:bg-[#7B1C2E]">
-                Simpan
-            </button>
+        <div class="flex justify-end gap-3">
+            <a href="{{ route('admin.barang.index') }}" class="admin-btn-secondary">Batal</a>
+            <button type="button" class="admin-btn-primary">Simpan</button>
         </div>
     </form>
 </div>
