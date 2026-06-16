@@ -3,104 +3,55 @@
 @section('title', 'Detail Pembayaran')
 
 @section('content')
-@php
-    $pembayaran = [
-        'kode_transaksi' => 'TRX-20260613-001',
-        'kode_pemesanan' => 'PM-20260613-001',
-        'pelanggan' => 'Nur Aisyah',
-        'tahap' => 'dp',
-        'persen_dp' => 30,
-        'jumlah_bayar' => 1050000,
-        'dibayar_pada' => '2026-06-13 10:15:00',
-        'metode_pembayaran' => 'Transfer BRI',
-        'status' => 'menunggu',
-        'bukti_pembayaran_path' => null,
-        'catatan_penolakan' => null,
-    ];
-@endphp
-
-<section class="admin-section">
+<div class="admin-section">
     <div class="admin-page-header md:flex-row md:items-center md:justify-between">
         <div>
-            <p class="admin-subtitle text-sm font-semibold uppercase tracking-[0.25em]">Detail Pembayaran</p>
-            <h1 class="admin-title mt-2 text-3xl">{{ $pembayaran['kode_transaksi'] }}</h1>
-            <p class="admin-muted mt-2 text-sm">Cek nominal dan bukti pembayaran sebelum diverifikasi.</p>
+            <h1 class="admin-title text-3xl">#PAY-20260611-001</h1>
+            <p class="admin-subtitle mt-1 text-sm">Detail verifikasi bukti pembayaran pelanggan.</p>
         </div>
-        <a href="{{ route('admin.pembayaran.index') }}" class="admin-btn-secondary">Kembali</a>
+
+        <span class="badge-warning">Menunggu Verifikasi</span>
     </div>
 
-    <div class="grid gap-6 lg:grid-cols-3">
-        <div class="admin-card p-6 lg:col-span-2">
-            <h2 class="admin-title text-xl">Bukti Pembayaran</h2>
+    <div class="grid gap-5 xl:grid-cols-3">
+        <div class="admin-card p-5 xl:col-span-2">
+            <h2 class="admin-title mb-4 text-xl">Bukti Pembayaran</h2>
 
-            <div class="mt-5 admin-upload-box">
-                @if ($pembayaran['bukti_pembayaran_path'])
-                    <img src="{{ asset('storage/' . $pembayaran['bukti_pembayaran_path']) }}" alt="Bukti pembayaran" class="mx-auto max-h-[420px] rounded-2xl border border-[#decba5] object-contain">
-                @else
-                    <div class="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-[#f8f1e6] text-3xl">🧾</div>
-                    <p class="mt-4 font-semibold text-gray-900">Preview bukti pembayaran</p>
-                    <p class="admin-muted mt-1 text-sm">Nanti bagian ini akan menampilkan gambar dari <code>bukti_pembayaran_path</code>.</p>
-                @endif
+            <div class="flex min-h-[360px] items-center justify-center rounded-3xl border border-dashed border-[#decba5] bg-[#fff8ed]">
+                <div class="text-center">
+                    <p class="text-5xl">🖼️</p>
+                    <p class="mt-3 font-semibold text-gray-700">Preview bukti transfer</p>
+                    <p class="admin-muted text-sm">Nanti gambar asli dari upload customer tampil di sini.</p>
+                </div>
             </div>
         </div>
 
-        <div class="admin-card p-6">
-            <h2 class="admin-title text-xl">Ringkasan Pembayaran</h2>
-            <div class="mt-5 space-y-3 text-sm">
-                <div>
-                    <p class="admin-muted">Kode Pemesanan</p>
-                    <p class="font-semibold text-[#4a0f1a]">{{ $pembayaran['kode_pemesanan'] }}</p>
-                </div>
-                <div>
-                    <p class="admin-muted">Pelanggan</p>
-                    <p class="font-semibold text-gray-900">{{ $pembayaran['pelanggan'] }}</p>
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <p class="admin-muted">Tahap</p>
-                        <p class="font-semibold uppercase text-gray-900">{{ $pembayaran['tahap'] }}</p>
-                    </div>
-                    <div>
-                        <p class="admin-muted">DP</p>
-                        <p class="font-semibold text-gray-900">{{ $pembayaran['persen_dp'] ? $pembayaran['persen_dp'] . '%' : '-' }}</p>
-                    </div>
-                </div>
-                <div>
-                    <p class="admin-muted">Dibayar Pada</p>
-                    <p class="font-semibold text-gray-900">{{ \Carbon\Carbon::parse($pembayaran['dibayar_pada'])->translatedFormat('d M Y H:i') }} WIB</p>
-                </div>
-                <div>
-                    <p class="admin-muted">Metode</p>
-                    <p class="font-semibold text-gray-900">{{ $pembayaran['metode_pembayaran'] }}</p>
-                </div>
-                <div class="border-t border-[#decba5] pt-3">
-                    <p class="admin-muted">Jumlah Bayar</p>
-                    <p class="text-2xl font-bold text-[#4a0f1a]">Rp{{ number_format($pembayaran['jumlah_bayar'], 0, ',', '.') }}</p>
-                </div>
-                <div class="flex items-center justify-between gap-4">
-                    <span class="admin-muted">Status</span>
-                    <span class="badge-warning capitalize">{{ $pembayaran['status'] }}</span>
+        <div class="space-y-5">
+            <div class="admin-card p-5">
+                <h2 class="admin-title mb-4 text-xl">Informasi Pembayaran</h2>
+                <div class="space-y-3 text-sm">
+                    <p><span class="admin-muted">Pesanan</span><br><strong>#AVR-20260610-001 — Paket Gold Wedding</strong></p>
+                    <p><span class="admin-muted">Customer</span><br><strong>Tazkiyah Qolbu</strong></p>
+                    <p><span class="admin-muted">Tahap</span><br><strong>DP 50%</strong></p>
+                    <p><span class="admin-muted">Jumlah</span><br><strong>Rp 2.750.000</strong></p>
+                    <p><span class="admin-muted">Dikirim</span><br><strong>11 Juni 2026, 14.22</strong></p>
+                    <p><span class="admin-muted">Keterangan Customer</span><br><strong>Transfer via BCA</strong></p>
                 </div>
             </div>
 
-            <div class="mt-6 grid gap-3">
-                <button type="button" class="admin-btn-primary w-full">Terima Pembayaran</button>
-                <button type="button" class="admin-btn-danger w-full">Tolak Pembayaran</button>
+            <div class="admin-card p-5">
+                <h2 class="admin-title mb-4 text-xl">Aksi Admin</h2>
+
+                <label class="admin-label">Alasan Penolakan</label>
+                <textarea class="admin-textarea" placeholder="Wajib diisi jika bukti pembayaran ditolak..."></textarea>
+
+                <div class="mt-4 space-y-2">
+                    <button class="admin-btn-primary w-full">Verifikasi Pembayaran</button>
+                    <button class="admin-btn-danger w-full">Tolak Pembayaran</button>
+                    <a href="{{ route('admin.pembayaran.index') }}" class="admin-btn-secondary w-full">Kembali</a>
+                </div>
             </div>
         </div>
     </div>
-
-    <div class="admin-card p-6">
-        <h2 class="admin-title text-xl">Catatan Penolakan</h2>
-        <form class="mt-4 grid gap-4">
-            <div>
-                <label class="admin-label">Alasan jika pembayaran ditolak</label>
-                <textarea class="admin-textarea" placeholder="Contoh: nominal tidak sesuai atau bukti pembayaran kurang jelas."></textarea>
-            </div>
-            <div class="flex justify-end">
-                <button type="button" class="admin-btn-secondary">Simpan Catatan</button>
-            </div>
-        </form>
-    </div>
-</section>
+</div>
 @endsection
