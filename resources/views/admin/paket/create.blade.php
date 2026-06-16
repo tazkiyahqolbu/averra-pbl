@@ -9,21 +9,64 @@
         <p class="admin-subtitle mt-1 text-sm">Lengkapi data paket, isi paket, item opsional, dan foto katalog.</p>
     </div>
 
-    <form class="space-y-5">
-        <div class="admin-card p-6 space-y-5">
-            <div class="grid gap-4 md:grid-cols-2">
-                <div><label class="admin-label">Nama Paket *</label><input type="text" class="admin-input" placeholder="Paket Gold Wedding"></div>
-                <div><label class="admin-label">Kategori *</label><select class="admin-select"><option>Pilih kategori</option><option>Paket Pernikahan</option><option>Paket Hiburan</option></select></div>
-                <div><label class="admin-label">Harga *</label><input type="text" class="admin-input" placeholder="Rp 5.000.000"></div>
-                <div><label class="admin-label">Keterangan Acara</label><input type="text" class="admin-input" placeholder="Pernikahan / Hiburan / Pertunjukan"></div>
+    <form action="{{ route('admin.paket.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+        @csrf
+
+        <div class="admin-card p-6">
+            <div class="mb-6">
+                <h2 class="admin-title text-xl">Informasi Paket</h2>
+                <p class="admin-muted mt-1 text-sm">Isi data utama paket yang akan tampil pada katalog.</p>
             </div>
-            <div><label class="admin-label">Deskripsi</label><textarea class="admin-textarea" placeholder="Jelaskan detail paket..."></textarea></div>
-            <div><label class="admin-label">Catatan</label><textarea class="admin-textarea" placeholder="Ketentuan tambahan paket..."></textarea></div>
-            <div>
-                <label class="admin-label">Status</label>
-                <div class="flex flex-wrap gap-3">
-                    <label class="rounded-2xl border border-[#decba5] bg-[#fffdf7] px-4 py-3 text-sm"><input type="radio" name="status" checked> Aktif</label>
-                    <label class="rounded-2xl border border-[#decba5] bg-[#fffdf7] px-4 py-3 text-sm"><input type="radio" name="status"> Nonaktif</label>
+
+            <div class="grid gap-5 md:grid-cols-2">
+                <div>
+                    <label for="nama_paket" class="admin-label">Nama Paket <span class="text-red-600">*</span></label>
+                    <input id="nama_paket" name="nama_paket" type="text" class="admin-input focus:admin-input-focus" placeholder="Contoh: Paket Pernikahan Adat Minang">
+                </div>
+
+                <div>
+                    <label for="kategori_paket_id" class="admin-label">Kategori Paket <span class="text-red-600">*</span></label>
+                    <select id="kategori_paket_id" name="kategori_paket_id" class="admin-select focus:admin-input-focus">
+                        <option value="">Pilih kategori</option>
+                        @foreach($kategoris as $kategori)
+                            <option value="{{ $kategori->id }}">
+                                {{ $kategori->nama }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div>
+                    <label for="harga" class="admin-label">Harga <span class="text-red-600">*</span></label>
+                    <input id="harga" name="harga" type="number" min="0" class="admin-input focus:admin-input-focus" placeholder="Contoh: 8500000">
+                </div>
+
+                <div>
+                    <label for="keterangan_acara" class="admin-label">Keterangan Acara</label>
+                    <input id="keterangan_acara" name="keterangan_acara" type="text" class="admin-input focus:admin-input-focus" placeholder="Contoh: Akad dan resepsi">
+                </div>
+
+                <div class="md:col-span-2">
+                    <label for="deskripsi" class="admin-label">Deskripsi</label>
+                    <textarea id="deskripsi" name="deskripsi" class="admin-textarea focus:admin-input-focus" placeholder="Tuliskan deskripsi paket..."></textarea>
+                </div>
+
+                <div class="md:col-span-2">
+                    <label for="catatan" class="admin-label">Catatan</label>
+                    <textarea id="catatan" name="catatan" class="admin-textarea focus:admin-input-focus" placeholder="Catatan tambahan paket jika ada..."></textarea>
+                </div>
+
+                <div>
+                    <label for="thumbnail_path" class="admin-label">Thumbnail</label>
+                    <input id="thumbnail_path" name="thumbnail_path" type="file" accept="image/*" class="admin-file">
+                </div>
+
+                <div class="flex items-center gap-3 rounded-2xl border border-[#decba5] bg-[#fffdf7] p-4">
+                    <input id="aktif" name="aktif" type="checkbox" value="1" checked class="h-5 w-5 rounded border-[#decba5] text-[#7b1c2e]">
+                    <div>
+                        <label for="aktif" class="font-semibold text-[#4a0f1a]">Paket Aktif</label>
+                        <p class="admin-muted text-xs">Jika aktif, paket dapat ditampilkan pada katalog.</p>
+                    </div>
                 </div>
             </div>
         </div>
