@@ -5,17 +5,9 @@
 @section('content')
 
 <div class="admin-section">
-    <div class="admin-page-header md:flex-row md:items-center md:justify-between">
-        <div>
-            <h1 class="admin-title text-3xl">Edit Paket</h1>
-            <p class="admin-subtitle mt-1 text-sm">
-                Mengubah data paket, detail paket, thumbnail, dan foto paket.
-            </p>
-        </div>
-
-        <a href="{{ route('admin.paket.index') }}" class="admin-btn-secondary">
-            ← Kembali
-        </a>
+    <div>
+        <h1 class="admin-title text-3xl">Edit Paket</h1>
+        <p class="admin-subtitle mt-1 text-sm">Perbarui data paket, isi paket, item opsional, foto, dan status.</p>
     </div>
 
     <form action="{{ route('admin.paket.update', $paket->id) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
@@ -101,10 +93,12 @@
             </div>
         </div>
 
-        <div class="admin-card p-6">
-            <div class="mb-6">
-                <h2 class="admin-title text-xl">Detail Isi Paket</h2>
-                <p class="admin-muted mt-1 text-sm">Preview item yang termasuk dalam paket.</p>
+        <div class="admin-card p-6 space-y-4">
+            <h2 class="admin-title text-xl">Isi Paket</h2>
+            <div class="grid gap-3 md:grid-cols-4">
+                <select class="admin-select"><option>Jasa</option><option>Barang</option></select>
+                <select class="admin-select md:col-span-2"><option>Pilih item</option><option>MC Profesional</option><option>Dekorasi Pelaminan</option></select>
+                <input type="number" class="admin-input" placeholder="Qty">
             </div>
 
             <div class="space-y-5">
@@ -144,10 +138,12 @@
             </div>
         </div>
 
-        <div class="admin-card p-6">
-            <div class="mb-6">
-                <h2 class="admin-title text-xl">Foto Galeri Saat Ini</h2>
-                <p class="admin-muted mt-1 text-sm">Preview foto yang sudah terupload pada tabel foto_paket.</p>
+        <div class="admin-card p-6 space-y-4">
+            <h2 class="admin-title text-xl">Item Opsional</h2>
+            <div class="grid gap-3 md:grid-cols-3">
+                <select class="admin-select"><option>Pilih item opsional</option><option>Fotografer Extra</option><option>Dekorasi Outdoor</option></select>
+                <input type="text" class="admin-input" placeholder="Harga tambahan">
+                <button type="button" class="admin-btn-secondary">+ Tambah</button>
             </div>
 
             <div class="admin-gallery-grid">
@@ -183,22 +179,18 @@
                     </div>
                 @endforeach
             </div>
+        </div>
 
-            <div class="mt-6 border-t border-[#decba5] pt-6">
-                <h3 class="font-semibold text-[#4a0f1a]">Tambah Foto Baru</h3>
-                <div class="mt-4 admin-upload-box">
-                    <label for="foto_paket" class="block cursor-pointer">
-                        <span class="block text-base font-semibold text-[#4a0f1a]">Upload Foto Galeri Baru</span>
-                        <span class="admin-muted mt-1 block text-sm">Pilih satu atau beberapa gambar tambahan.</span>
-                        <input id="foto_paket" name="foto_paket[]" type="file" accept="image/*" multiple class="mt-4 w-full text-sm text-[#7a5d58]">
-                    </label>
-                </div>
+        <div class="admin-card p-6">
+            <div class="grid gap-4 md:grid-cols-2">
+                <div><label class="admin-label">Foto Utama *</label><input type="file" class="admin-file"></div>
+                <div><label class="admin-label">Foto Tambahan</label><input type="file" class="admin-file" multiple></div>
             </div>
         </div>
 
-        <div class="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+        <div class="flex justify-end gap-3">
             <a href="{{ route('admin.paket.index') }}" class="admin-btn-secondary">Batal</a>
-            <button type="submit" class="admin-btn-primary">Simpan Perubahan</button>
+            <button type="button" class="admin-btn-primary">Simpan Perubahan</button>
         </div>
     </form>
 </div>

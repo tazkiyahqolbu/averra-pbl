@@ -4,17 +4,9 @@
 
 @section('content')
 <div class="admin-section">
-    <div class="admin-page-header md:flex-row md:items-center md:justify-between">
-        <div>
-            <h1 class="admin-title text-3xl">Tambah Paket</h1>
-            <p class="admin-subtitle mt-1 text-sm">
-                Menambahkan data paket sesuai tabel paket, paket_detail, dan foto_paket.
-            </p>
-        </div>
-
-        <a href="{{ route('admin.paket.index') }}" class="admin-btn-secondary">
-            ← Kembali
-        </a>
+    <div>
+        <h1 class="admin-title text-3xl">Tambah Paket</h1>
+        <p class="admin-subtitle mt-1 text-sm">Lengkapi data paket, isi paket, item opsional, dan foto katalog.</p>
     </div>
 
     <form action="{{ route('admin.paket.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
@@ -79,61 +71,42 @@
             </div>
         </div>
 
-        <div class="admin-card p-6">
-            <div class="mb-6">
-                <h2 class="admin-title text-xl">Detail Isi Paket</h2>
-                <p class="admin-muted mt-1 text-sm">Mengikuti tabel paket_detail: nama_item, jumlah, tipe, harga_tambahan, dan keterangan.</p>
+        <div class="admin-card p-6 space-y-4">
+            <h2 class="admin-title text-xl">Isi Paket</h2>
+            <div class="grid gap-3 md:grid-cols-4">
+                <select class="admin-select"><option>Jasa</option><option>Barang</option></select>
+                <select class="admin-select md:col-span-2"><option>Pilih item</option><option>MC Profesional</option><option>Dekorasi Pelaminan</option></select>
+                <input type="number" class="admin-input" placeholder="Qty">
             </div>
+            <button type="button" class="admin-btn-secondary">+ Tambah Item</button>
+            <div class="space-y-2 text-sm">
+                <div class="flex justify-between rounded-2xl bg-[#fff8ed] p-3"><span>Fotografer 2 Orang x2</span><button class="font-semibold text-red-600">Hapus</button></div>
+                <div class="flex justify-between rounded-2xl bg-[#fff8ed] p-3"><span>MC Profesional x1</span><button class="font-semibold text-red-600">Hapus</button></div>
+            </div>
+        </div>
 
-            <div class="grid gap-5 md:grid-cols-2">
-                <div>
-                    <label class="admin-label">Nama Item</label>
-                    <input name="nama_item[]" type="text" class="admin-input focus:admin-input-focus" placeholder="Contoh: Tari Pasambahan">
-                </div>
-
-                <div>
-                    <label class="admin-label">Jumlah</label>
-                    <input name="jumlah[]" type="number" min="1" value="1" class="admin-input focus:admin-input-focus">
-                </div>
-
-                <div>
-                    <label class="admin-label">Tipe</label>
-                    <select name="tipe[]" class="admin-select focus:admin-input-focus">
-                        <option value="wajib">Wajib</option>
-                        <option value="opsional">Opsional</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="admin-label">Harga Tambahan</label>
-                    <input name="harga_tambahan[]" type="number" min="0" value="0" class="admin-input focus:admin-input-focus">
-                </div>
-
-                <div class="md:col-span-2">
-                    <label class="admin-label">Keterangan Item</label>
-                    <textarea name="keterangan[]" class="admin-textarea focus:admin-input-focus" placeholder="Keterangan item paket..."></textarea>
-                </div>
+        <div class="admin-card p-6 space-y-4">
+            <h2 class="admin-title text-xl">Item Opsional</h2>
+            <div class="grid gap-3 md:grid-cols-3">
+                <select class="admin-select"><option>Pilih item opsional</option><option>Fotografer Extra</option><option>Dekorasi Outdoor</option></select>
+                <input type="text" class="admin-input" placeholder="Harga tambahan">
+                <button type="button" class="admin-btn-secondary">+ Tambah</button>
+            </div>
+            <div class="space-y-2 text-sm">
+                <div class="flex justify-between rounded-2xl bg-[#fff8ed] p-3"><span>Fotografer Extra +Rp 300.000</span><button class="font-semibold text-red-600">Hapus</button></div>
             </div>
         </div>
 
         <div class="admin-card p-6">
-            <div class="mb-6">
-                <h2 class="admin-title text-xl">Foto Galeri Paket</h2>
-                <p class="admin-muted mt-1 text-sm">Mengikuti tabel foto_paket: foto_path, keterangan, dan urutan.</p>
-            </div>
-
-            <div class="admin-upload-box">
-                <label for="foto_paket" class="block cursor-pointer">
-                    <span class="block text-base font-semibold text-[#4a0f1a]">Upload Foto Galeri</span>
-                    <span class="admin-muted mt-1 block text-sm">Pilih satu atau beberapa gambar paket.</span>
-                    <input id="foto_paket" name="foto_paket[]" type="file" accept="image/*" multiple class="mt-4 w-full text-sm text-[#7a5d58]">
-                </label>
+            <div class="grid gap-4 md:grid-cols-2">
+                <div><label class="admin-label">Foto Utama *</label><input type="file" class="admin-file"></div>
+                <div><label class="admin-label">Foto Tambahan</label><input type="file" class="admin-file" multiple></div>
             </div>
         </div>
 
-        <div class="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+        <div class="flex justify-end gap-3">
             <a href="{{ route('admin.paket.index') }}" class="admin-btn-secondary">Batal</a>
-            <button type="submit" class="admin-btn-primary">Simpan Paket</button>
+            <button type="button" class="admin-btn-primary">Simpan</button>
         </div>
     </form>
 </div>

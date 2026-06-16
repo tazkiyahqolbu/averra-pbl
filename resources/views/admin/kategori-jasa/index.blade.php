@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Kategori Barang')
+@section('title', 'Kategori Jasa')
 
 @section('content')
 @php
@@ -14,8 +14,8 @@
 <div class="admin-section">
     <div class="admin-page-header md:flex-row md:items-center md:justify-between">
         <div>
-            <h1 class="admin-title text-3xl">Kategori Barang</h1>
-            <p class="admin-subtitle mt-1 text-sm">Kelola kategori untuk data barang.</p>
+            <h1 class="admin-title text-3xl">Kategori Jasa</h1>
+            <p class="admin-subtitle mt-1 text-sm">Kelola kategori untuk data jasa.</p>
         </div>
         <button class="admin-btn-primary">+ Tambah Kategori</button>
     </div>

@@ -3,125 +3,90 @@
 @section('title', 'Detail Pemesanan')
 
 @section('content')
-@php
-    $pemesanan = [
-        'kode_pemesanan' => 'PM-20260613-001',
-        'pelanggan' => 'Nur Aisyah',
-        'email' => 'aisyah@example.com',
-        'no_hp' => '081234567890',
-        'tanggal_pemesanan' => '2026-06-13',
-        'tanggal_pakai' => '2026-06-22',
-        'jenis' => 'acara',
-        'lokasi' => 'Padang',
-        'zona' => 'Dalam Kota Padang',
-        'ongkos_lokasi' => 0,
-        'catatan' => 'Acara pernikahan di gedung serbaguna. Butuh tim datang pukul 08.00 WIB.',
-        'total_harga' => 3500000,
-        'status' => 'menunggu',
-    ];
-
-    $details = [
-        ['jenis_item' => 'paket', 'nama' => 'Paket Pernikahan Adat Minang', 'jumlah' => 1, 'harga' => 3000000, 'subtotal' => 3000000],
-        ['jenis_item' => 'jasa', 'nama' => 'MC Acara', 'jumlah' => 1, 'harga' => 500000, 'subtotal' => 500000],
-    ];
-@endphp
-
-<section class="admin-section">
+<div class="admin-section">
     <div class="admin-page-header md:flex-row md:items-center md:justify-between">
         <div>
-            <p class="admin-subtitle text-sm font-semibold uppercase tracking-[0.25em]">Detail Pemesanan</p>
-            <h1 class="admin-title mt-2 text-3xl">{{ $pemesanan['kode_pemesanan'] }}</h1>
-            <p class="admin-muted mt-2 text-sm">Periksa detail pesanan sebelum dikonfirmasi atau ditolak.</p>
+            <h1 class="admin-title text-3xl">#AVR-20260610-001</h1>
+            <p class="admin-subtitle mt-1 text-sm">Detail pemesanan pelanggan dan aksi admin.</p>
         </div>
-        <a href="{{ route('admin.pemesanan.index') }}" class="admin-btn-secondary">Kembali</a>
+
+        <span class="badge-warning">Menunggu Konfirmasi</span>
     </div>
 
-    <div class="grid gap-6 lg:grid-cols-3">
-        <div class="admin-card p-6 lg:col-span-2">
-            <h2 class="admin-title text-xl">Informasi Pemesanan</h2>
-            <div class="mt-5 grid gap-4 md:grid-cols-2">
-                <div>
-                    <p class="admin-muted text-sm">Pelanggan</p>
-                    <p class="font-semibold text-gray-900">{{ $pemesanan['pelanggan'] }}</p>
+    <div class="grid gap-5 xl:grid-cols-3">
+        <div class="space-y-5 xl:col-span-2">
+            <div class="admin-card p-5">
+                <h2 class="admin-title mb-4 text-xl">Data Pemesan</h2>
+                <div class="grid gap-3 md:grid-cols-3">
+                    <p><span class="admin-muted text-sm">Nama</span><br><strong>Tazkiyah Qolbu</strong></p>
+                    <p><span class="admin-muted text-sm">Email</span><br><strong>tazkiyah@email.com</strong></p>
+                    <p><span class="admin-muted text-sm">No. HP</span><br><strong>081234567890</strong></p>
                 </div>
-                <div>
-                    <p class="admin-muted text-sm">No HP</p>
-                    <p class="font-semibold text-gray-900">{{ $pemesanan['no_hp'] }}</p>
+            </div>
+
+            <div class="admin-card p-5">
+                <h2 class="admin-title mb-4 text-xl">Detail Pesanan</h2>
+                <div class="grid gap-3 md:grid-cols-2">
+                    <p><span class="admin-muted text-sm">Jenis</span><br><strong>Acara</strong></p>
+                    <p><span class="admin-muted text-sm">Item</span><br><strong>Paket Gold Wedding</strong></p>
+                    <p><span class="admin-muted text-sm">Tanggal</span><br><strong>25 Juni 2026</strong></p>
+                    <p><span class="admin-muted text-sm">Lokasi</span><br><strong>Zona B — Jl. Contoh No.1, Padang</strong></p>
                 </div>
-                <div>
-                    <p class="admin-muted text-sm">Tanggal Pesan</p>
-                    <p class="font-semibold text-gray-900">{{ \Carbon\Carbon::parse($pemesanan['tanggal_pemesanan'])->translatedFormat('d M Y') }}</p>
-                </div>
-                <div>
-                    <p class="admin-muted text-sm">Tanggal Pakai</p>
-                    <p class="font-semibold text-gray-900">{{ \Carbon\Carbon::parse($pemesanan['tanggal_pakai'])->translatedFormat('d M Y') }}</p>
-                </div>
-                <div>
-                    <p class="admin-muted text-sm">Jenis</p>
-                    <p class="font-semibold capitalize text-gray-900">{{ str_replace('_', ' ', $pemesanan['jenis']) }}</p>
-                </div>
-                <div>
-                    <p class="admin-muted text-sm">Zona Lokasi</p>
-                    <p class="font-semibold text-gray-900">{{ $pemesanan['zona'] }}</p>
-                </div>
-                <div class="md:col-span-2">
-                    <p class="admin-muted text-sm">Lokasi</p>
-                    <p class="font-semibold text-gray-900">{{ $pemesanan['lokasi'] }}</p>
-                </div>
-                <div class="md:col-span-2">
+
+                <div class="mt-4">
                     <p class="admin-muted text-sm">Catatan</p>
-                    <p class="text-gray-700">{{ $pemesanan['catatan'] }}</p>
+                    <p class="rounded-2xl bg-[#fff8ed] p-4 text-sm text-gray-700">
+                        Tema rustic, outdoor.
+                    </p>
+                </div>
+            </div>
+
+            <div class="admin-card p-5">
+                <h2 class="admin-title mb-4 text-xl">Rincian Harga</h2>
+                <div class="space-y-3 text-sm">
+                    <div class="flex justify-between">
+                        <span>Paket Gold Wedding</span>
+                        <strong>Rp 5.000.000</strong>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Ongkos Lokasi Zona B</span>
+                        <strong>Rp 500.000</strong>
+                    </div>
+                    <hr class="admin-divider">
+                    <div class="flex justify-between text-lg">
+                        <strong>Total</strong>
+                        <strong>Rp 5.500.000</strong>
+                    </div>
+                    <p class="admin-muted text-sm">Metode Bayar: DP 50% (Rp 2.750.000) + Pelunasan</p>
                 </div>
             </div>
         </div>
 
-        <div class="admin-card p-6">
-            <h2 class="admin-title text-xl">Ringkasan</h2>
-            <div class="mt-5 space-y-3 text-sm">
-                <div class="flex justify-between gap-4">
-                    <span class="admin-muted">Status</span>
-                    <span class="badge-warning capitalize">{{ $pemesanan['status'] }}</span>
-                </div>
-                <div class="flex justify-between gap-4">
-                    <span class="admin-muted">Ongkos Lokasi</span>
-                    <span class="font-semibold">Rp{{ number_format($pemesanan['ongkos_lokasi'], 0, ',', '.') }}</span>
-                </div>
-                <div class="border-t border-[#decba5] pt-3 flex justify-between gap-4">
-                    <span class="admin-muted">Total Harga</span>
-                    <span class="text-lg font-bold text-[#4a0f1a]">Rp{{ number_format($pemesanan['total_harga'], 0, ',', '.') }}</span>
+        <div class="space-y-5">
+            <div class="admin-card p-5">
+                <h2 class="admin-title mb-4 text-xl">Riwayat Status</h2>
+                <div class="space-y-3 text-sm">
+                    <div class="rounded-2xl bg-[#fff8ed] p-3">
+                        <strong>10 Jun 2026 20.33</strong>
+                        <p class="admin-muted">Pesanan masuk</p>
+                    </div>
+                    <p class="admin-muted">Belum ada aksi admin.</p>
                 </div>
             </div>
 
-            <div class="mt-6 grid gap-3">
-                <button type="button" class="admin-btn-primary w-full">Konfirmasi Pemesanan</button>
-                <button type="button" class="admin-btn-danger w-full">Tolak Pemesanan</button>
+            <div class="admin-card p-5">
+                <h2 class="admin-title mb-4 text-xl">Aksi Admin</h2>
+
+                <label class="admin-label">Catatan untuk Customer</label>
+                <textarea class="admin-textarea" placeholder="Isi alasan jika pesanan ditolak atau pesan tambahan jika dikonfirmasi..."></textarea>
+
+                <div class="mt-4 space-y-2">
+                    <button class="admin-btn-primary w-full">Konfirmasi Pesanan</button>
+                    <button class="admin-btn-danger w-full">Tolak Pesanan</button>
+                    <a href="{{ route('admin.pemesanan.index') }}" class="admin-btn-secondary w-full">Kembali</a>
+                </div>
             </div>
         </div>
     </div>
-
-    <div class="admin-table-wrapper overflow-x-auto">
-        <table class="w-full min-w-[720px] border-collapse">
-            <thead class="bg-[#f8f1e6]">
-                <tr>
-                    <th class="admin-table-th">Item</th>
-                    <th class="admin-table-th">Jenis</th>
-                    <th class="admin-table-th">Jumlah</th>
-                    <th class="admin-table-th">Harga</th>
-                    <th class="admin-table-th text-right">Subtotal</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-[#decba5]">
-                @foreach ($details as $detail)
-                    <tr>
-                        <td class="admin-table-td font-semibold text-gray-900">{{ $detail['nama'] }}</td>
-                        <td class="admin-table-td capitalize">{{ $detail['jenis_item'] }}</td>
-                        <td class="admin-table-td">{{ $detail['jumlah'] }}</td>
-                        <td class="admin-table-td">Rp{{ number_format($detail['harga'], 0, ',', '.') }}</td>
-                        <td class="admin-table-td text-right font-semibold">Rp{{ number_format($detail['subtotal'], 0, ',', '.') }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-</section>
+</div>
 @endsection

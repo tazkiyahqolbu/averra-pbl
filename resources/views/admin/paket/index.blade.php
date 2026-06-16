@@ -8,41 +8,16 @@
     <div class="admin-page-header md:flex-row md:items-center md:justify-between">
         <div>
             <h1 class="admin-title text-3xl">Kelola Paket</h1>
-            <p class="admin-subtitle mt-1 text-sm">
-                Mengelola data paket, kategori paket, harga, thumbnail, dan status aktif.
-            </p>
+            <p class="admin-subtitle mt-1 text-sm">Mengelola paket layanan, isi paket, item opsional, harga, foto, dan status.</p>
         </div>
-
-        <a href="{{ route('admin.paket.create') }}" class="admin-btn-primary">
-            + Tambah Paket
-        </a>
+        <a href="{{ route('admin.paket.create') }}" class="admin-btn-primary">+ Tambah Paket</a>
     </div>
 
     <div class="admin-card p-5">
         <div class="grid gap-3 md:grid-cols-3">
-            <div>
-                <label for="search" class="admin-label">Cari Paket</label>
-                <input id="search" type="text" class="admin-input focus:admin-input-focus" placeholder="Contoh: Paket Pernikahan">
-            </div>
-
-            <div>
-                <label for="kategori" class="admin-label">Kategori</label>
-                <select id="kategori" class="admin-select focus:admin-input-focus">
-                    <option value="">Semua Kategori</option>
-                    <option>Pernikahan</option>
-                    <option>Hiburan</option>
-                    <option>Pertunjukan</option>
-                </select>
-            </div>
-
-            <div>
-                <label for="status" class="admin-label">Status</label>
-                <select id="status" class="admin-select focus:admin-input-focus">
-                    <option value="">Semua Status</option>
-                    <option value="1">Aktif</option>
-                    <option value="0">Nonaktif</option>
-                </select>
-            </div>
+            <div><label class="admin-label">Cari Paket</label><input type="text" class="admin-input" placeholder="Cari nama paket..."></div>
+            <div><label class="admin-label">Kategori</label><select class="admin-select"><option>Semua</option><option>Paket Pernikahan</option><option>Paket Hiburan</option></select></div>
+            <div><label class="admin-label">Status</label><select class="admin-select"><option>Semua</option><option>Aktif</option><option>Nonaktif</option></select></div>
         </div>
     </div>
 
