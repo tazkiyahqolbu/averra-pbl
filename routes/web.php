@@ -13,7 +13,7 @@ use App\Models\Barang;
 use App\Models\KategoriBarang;
 
 // Redirect root ke login
-Route::get('/', fn () => redirect()->route('login'));
+Route::get('/', fn() => redirect()->route('login'));
 
 // Autentikasi
 Route::get('/login',     [AuthController::class, 'showLogin'])->name('login');
@@ -24,14 +24,7 @@ Route::post('/logout',   [AuthController::class, 'logout'])->name('logout')->mid
 
 // ── Rute User ─────────────────────────────────────────────────────────────────
 Route::middleware('auth')->name('user.')->group(function () {
-   Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-});
-
-
-// ── Rute Admin ────────────────────────────────────────────────────────────────
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
 
 Route::middleware(['auth', 'role:admin'])
@@ -102,6 +95,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     // Kategori
     Route::view('/kategori-barang', 'admin.kategori-barang.index')->name('kategori-barang.index');
+    Route::view('/kategori-jasa', 'admin.kategori-jasa.index')->name('kategori-jasa.index');
 
     // Pemesanan
     Route::view('/pemesanan', 'admin.pemesanan.index')->name('pemesanan.index');
@@ -110,4 +104,27 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Pembayaran
     Route::view('/pembayaran', 'admin.pembayaran.index')->name('pembayaran.index');
     Route::view('/pembayaran/show', 'admin.pembayaran.show')->name('pembayaran.show');
+
+    // Pengembalian
+    Route::view('/pengembalian', 'admin.pengembalian.index')->name('pengembalian.index');
+    Route::view('/pengembalian/show', 'admin.pengembalian.show')->name('pengembalian.show');
+
+    // Laporan
+    Route::view('/laporan', 'admin.laporan.index')->name('laporan.index');
+
+    // Galeri
+    Route::view('/galeri', 'admin.galeri.index')->name('galeri.index');
+    Route::view('/galeri/create', 'admin.galeri.create')->name('galeri.create');
+
+    // Testimoni
+    Route::view('/testimoni', 'admin.testimoni.index')->name('testimoni.index');
+
+    // Zona Lokasi
+    Route::view('/zona-lokasi', 'admin.zona-lokasi.index')->name('zona-lokasi.index');
+
+    // Blokir Tanggal
+    Route::view('/blokir-tanggal', 'admin.blokir-tanggal.index')->name('blokir-tanggal.index');
+
+    // Profil Admin
+    Route::view('/akun', 'admin.akun.index')->name('akun.index');
 });

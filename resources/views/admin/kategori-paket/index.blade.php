@@ -122,8 +122,8 @@
                 </tbody>
             </table>
         </div>
+        <button class="admin-btn-primary">+ Tambah Kategori</button>
     </div>
-</div>
 
 <!-- Modal Edit -->
 <div
@@ -184,6 +184,7 @@
                     Kosongkan jika tidak ingin mengganti ikon/foto.
                 </p>
             </div>
+        </div>
 
             <div class="flex justify-end gap-3">
                 <button
@@ -201,7 +202,7 @@
                     Simpan Perubahan
                 </button>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 
