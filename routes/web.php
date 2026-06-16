@@ -3,6 +3,8 @@
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\JasaController;
 use App\Http\Controllers\User\DashboardController;
+use App\Http\Controllers\Admin\PaketController;
+use App\Http\Controllers\Admin\KategoriPaketController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
@@ -50,24 +52,48 @@ Route::middleware(['auth', 'role:admin'])
 
         Route::delete('/jasa/{id}', [JasaController::class, 'destroy'])
             ->name('jasa.destroy');
+
+        Route::get('/paket', [PaketController::class, 'index'])
+            ->name('paket.index');
+
+        Route::get('/paket/create', [PaketController::class, 'create'])
+            ->name('paket.create');
+
+        Route::post('/paket', [PaketController::class, 'store'])
+            ->name('paket.store');
+
+        Route::get('/paket/{id}/edit', [PaketController::class, 'edit'])
+            ->name('paket.edit');
+
+        Route::put('/paket/{id}', [PaketController::class, 'update'])
+            ->name('paket.update');
+
+        Route::delete('/paket/{id}', [PaketController::class, 'destroy'])
+            ->name('paket.destroy');
+
+        Route::get('/paket/foto/{id}/hapus', [PaketController::class, 'destroyFoto']
+            )->name('paket.foto.destroy');
+
+        Route::get('/kategori-paket', [KategoriPaketController::class, 'index']
+            )->name('kategori-paket.index');
+
+            Route::post('/kategori-paket', [KategoriPaketController::class, 'store']
+            )->name('kategori-paket.store');
+
+            Route::put('/kategori-paket/{id}', [KategoriPaketController::class, 'update']
+            )->name('kategori-paket.update');
+
+            Route::delete('/kategori-paket/{id}', [KategoriPaketController::class, 'destroy']
+            )->name('kategori-paket.destroy');
     });
 
+Route::prefix('admin')->name('admin.')->group(function () {
 
-// Untuk Preview Frontend (sementara pakai view statis)
-    Route::middleware(['auth', 'role:admin']) ->prefix('admin') ->name('admin.') ->group(function ()
-    {
-    // Paket
-    Route::view('/paket', 'admin.paket.index')->name('paket.index');
-    Route::view('/paket/create', 'admin.paket.create')->name('paket.create');
-    Route::view('/paket/edit', 'admin.paket.edit')->name('paket.edit');
-
-    // Barang
     Route::view('/barang', 'admin.barang.index')->name('barang.index');
     Route::view('/barang/create', 'admin.barang.create')->name('barang.create');
     Route::view('/barang/edit', 'admin.barang.edit')->name('barang.edit');
 
     // Kategori
-    Route::view('/kategori-paket', 'admin.kategori-paket.index')->name('kategori-paket.index');
     Route::view('/kategori-barang', 'admin.kategori-barang.index')->name('kategori-barang.index');
     Route::view('/kategori-jasa', 'admin.kategori-jasa.index')->name('kategori-jasa.index');
 

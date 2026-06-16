@@ -3,13 +3,6 @@
 @section('title', 'Kelola Paket')
 
 @section('content')
-@php
-    $paket = [
-        ['nama' => 'Paket Gold Wedding', 'kategori' => 'Paket Pernikahan', 'harga' => 'Rp 5.000.000', 'acara' => 'Pernikahan', 'status' => 'Aktif'],
-        ['nama' => 'Paket Silver Wedding', 'kategori' => 'Paket Pernikahan', 'harga' => 'Rp 3.500.000', 'acara' => 'Pernikahan', 'status' => 'Aktif'],
-        ['nama' => 'Paket Hiburan Budaya', 'kategori' => 'Paket Hiburan', 'harga' => 'Rp 2.500.000', 'acara' => 'Hiburan', 'status' => 'Nonaktif'],
-    ];
-@endphp
 
 <div class="admin-section">
     <div class="admin-page-header md:flex-row md:items-center md:justify-between">
@@ -28,28 +21,88 @@
         </div>
     </div>
 
-    <div class="space-y-4">
-        @foreach ($paket as $item)
-            <div class="admin-card p-5">
-                <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                    <div class="flex gap-4">
-                        <div class="admin-thumb flex items-center justify-center text-xl">📦</div>
-                        <div>
-                            <div class="flex flex-wrap items-center gap-2">
-                                <h2 class="font-heading text-xl font-bold text-gray-900">{{ $item['nama'] }}</h2>
-                                <span class="{{ $item['status'] === 'Aktif' ? 'badge-active' : 'badge-inactive' }}">{{ $item['status'] }}</span>
-                            </div>
-                            <p class="admin-muted mt-1 text-sm">Kategori: {{ $item['kategori'] }} | Acara: {{ $item['acara'] }}</p>
-                            <p class="mt-1 text-sm text-gray-700">Harga: <strong>{{ $item['harga'] }}</strong></p>
-                        </div>
-                    </div>
-                    <div class="flex gap-2">
-                        <a href="{{ route('admin.paket.edit') }}" class="admin-btn-secondary py-2">Edit</a>
-                        <button class="{{ $item['status'] === 'Aktif' ? 'admin-btn-danger' : 'admin-btn-primary' }} py-2">{{ $item['status'] === 'Aktif' ? 'Nonaktifkan' : 'Aktifkan' }}</button>
-                    </div>
-                </div>
-            </div>
-        @endforeach
+    <div class="admin-table-wrapper">
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse">
+                <thead class="border-b border-[#decba5] bg-[#f9f1e6]">
+                    <tr>
+                        <th class="admin-table-th w-16">#</th>
+                        <th class="admin-table-th">Thumbnail</th>
+                        <th class="admin-table-th">Nama Paket</th>
+                        <th class="admin-table-th">Kategori</th>
+                        <th class="admin-table-th">Harga</th>
+                        <th class="admin-table-th">Keterangan Acara</th>
+                        <th class="admin-table-th">Status</th>
+                        <th class="admin-table-th text-right">Aksi</th>
+                    </tr>
+                </thead>
+
+                <tbody class="divide-y divide-[#decba5]">
+                    @forelse ($paketItems as $index => $item)
+                        <tr class="hover:bg-[#f9f1e6]/50">
+                            <td class="admin-table-td font-semibold text-[#7a5d58]">{{ $index + 1 }}</td>
+
+                            <td class="admin-table-td">
+                                @if (!empty($item['thumbnail_path']))
+                                    <img src="{{ asset('storage/' . $item['thumbnail_path']) }}" alt="{{ $item['nama_paket'] }}" class="admin-thumb">
+                                @else
+                                    <div class="admin-thumb flex items-center justify-center text-xs font-semibold text-[#7a5d58]">
+                                        IMG
+                                    </div>
+                                @endif
+                            </td>
+
+                            <td class="admin-table-td">
+                                <p class="font-semibold text-gray-900">{{ $item->nama_paket }}</p>
+                            </td>
+
+                            <td class="admin-table-td">
+                                {{ $item->kategori->nama ?? '-' }}
+                            </td>
+
+                            <td class="admin-table-td font-semibold text-gray-900">
+                                Rp {{ number_format($item->harga, 0, ',', '.') }}
+                            </td>
+
+                            <td class="admin-table-td">{{ $item->keterangan_acara }}</td>
+
+                            <td class="admin-table-td">
+                                @if ($item->aktif)
+                                    <span class="badge-active">Aktif ✓</span>
+
+                                @else
+                                    <span class="badge-inactive">● Nonaktif</span>
+                                @endif
+                            </td>
+
+                            <td class="admin-table-td">
+                                <div class="flex justify-end gap-2">
+                                    <a href="{{ route('admin.paket.edit', $item->id) }}" class="admin-btn-secondary px-3 py-2 text-xs">Edit</a>
+                                    <form action="{{ route('admin.paket.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus paket ini?')">
+
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button type="submit"
+                                                class="admin-btn-danger px-3 py-2 text-xs">
+
+                                            Hapus
+
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="8" class="admin-table-td">
+                                <div class="admin-empty">Belum ada data paket.</div>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 @endsection
