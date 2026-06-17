@@ -56,8 +56,7 @@
                             class="mt-1 h-4 w-4 flex-shrink-0 text-gold">
                         </i>
 
-                        Jl. Bagindo Aziz Chan,
-                        Padang, Sumatera Barat
+                        Jl.Citra Jaya,Pampangan Nan XX,Kec,Lubuk Begalung, Kota Padang, Sumatera Barat 
                     </li>
                 </ul>
             </div>
