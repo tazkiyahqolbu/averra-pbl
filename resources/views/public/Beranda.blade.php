@@ -74,7 +74,7 @@ $gallery = [
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <body class="min-h-screen bg-[#FAF3E0] text-maroon antialiased selection:bg-gold/30">
 
-    @include('User.layouts.navbar')
+    @include('public.layouts.navbar')
 
     <section id="home" class="relative isolate flex h-screen items-center justify-center overflow-hidden">
         <div class="absolute inset-0 -z-20 bg-cover bg-center h-full w-full" style="background-image: linear-gradient(to bottom, rgba(29,21,21,0.85), rgba(32,22,22,0.75), rgba(29,21,21,0.95)), url('{{ asset('image/background.png') }}'); background-repeat: no-repeat; background-size: cover; background-position: center;"></div>
@@ -508,7 +508,7 @@ $gallery = [
     </div>
 </section>
 
-@include('User.layouts.footer')
+@include('public.layouts.footer')
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <script>
