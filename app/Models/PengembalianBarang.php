@@ -43,4 +43,20 @@ class PengembalianBarang extends Model
             ? Storage::url($this->foto_bukti_path)
             : null;
     }
+
+    // Alias untuk view compatibility
+    public function getTanggalKembaliJadwalAttribute()
+    {
+        return $this->detailPemesanan?->tanggal_kembali;
+    }
+
+    public function getDendaAttribute()
+    {
+        return $this->total_denda;
+    }
+
+    public function getCatatanAttribute()
+    {
+        return $this->catatan_kerusakan;
+    }
 }

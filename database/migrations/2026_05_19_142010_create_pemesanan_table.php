@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('lokasi')->nullable();
             $table->decimal('ongkos_lokasi', 15, 2)->default(0);
             $table->string('no_hp', 20);
+            $table->string('nama_pemesan')->nullable();
             $table->text('catatan')->nullable();
             $table->decimal('total_harga', 15, 2);
             $table->enum('status', [

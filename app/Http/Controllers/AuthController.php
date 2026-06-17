@@ -34,7 +34,7 @@ class AuthController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect()->route('user.dashboard')
+        return redirect()->route('user.dashboard.index')
             ->with('success', 'Pendaftaran berhasil, selamat datang!');
     }
 
@@ -57,7 +57,7 @@ class AuthController extends Controller
 
         /** @var User $user */
         $user = Auth::user();
-        $route = $user->hasRole('admin') ? 'admin.dashboard' : 'user.dashboard';
+        $route = $user->hasRole('admin') ? 'admin.dashboard' : 'user.dashboard.index';
 
         return redirect()->route($route);
     }
