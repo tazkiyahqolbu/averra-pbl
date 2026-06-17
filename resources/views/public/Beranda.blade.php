@@ -11,19 +11,19 @@ $services = [
 
 // 2. DATA KATALOG KOSTUM
 $costumes = [
-    ['img' => asset('foto/Resepsi.jpeg'), 'name' => 'Resepsi', 'cat' => 'Wedding'],
-    ['img' => asset('foto/Mc.jpeg'), 'name' => 'MC', 'cat' => 'Stage & MC'],
-    ['img' => asset('foto/Busana tari.jpeg'), 'name' => 'Busana Tari', 'cat' => 'Dance Attire'],
-    ['img' => asset('foto/Baju adat.jpeg'), 'name' => 'Busana Adat', 'cat' => 'Traditional Attire'],
+    ['img' => asset('image/Resepsi.jpeg'), 'name' => 'Resepsi', 'cat' => 'Wedding'],
+    ['img' => asset('image/MC.jpeg'), 'name' => 'MC', 'cat' => 'Stage & MC'],
+    ['img' => asset('image/Busana tari.jpeg'), 'name' => 'Busana Tari', 'cat' => 'Dance Attire'],
+    ['img' => asset('image/Baju adat.jpeg'), 'name' => 'Busana Adat', 'cat' => 'Traditional Attire'],
 ];
 
 // 3. DATA GALERI
 $gallery = [
-    ['img' => asset('foto/Akad & resepsi.jpeg'), 'span' => 'row-span-2', 'label' => 'Akad & Resepsi'],
-    ['img' => asset('foto/Tari piring.jpeg'), 'span' => 'row-span-2', 'label' => 'Tari Piring'],
-    ['img' => asset('foto/Tari Pasambahan.jpeg'), 'span' => 'row-span-2', 'label' => 'Tari Pasambahan'],
-    ['img' => asset('foto/Stage & MC.jpeg'), 'span' => 'row-span-2', 'label' => 'Stage & MC'],
-];  
+    ['img' => asset('image/Akad & Resepsi.jpeg'), 'span' => 'row-span-2', 'label' => 'Akad & Resepsi'],
+    ['img' => asset('image/Tari Piring.jpeg'), 'span' => 'row-span-2', 'label' => 'Tari Piring'],
+    ['img' => asset('image/Tari Pasambahan.jpeg'), 'span' => 'row-span-2', 'label' => 'Tari Pasambahan'],
+    ['img' => asset('image/Stage & MC.jpeg'), 'span' => 'row-span-2', 'label' => 'Stage & MC'],
+];
 @endphp
 
 <!DOCTYPE html>
@@ -74,10 +74,10 @@ $gallery = [
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <body class="min-h-screen bg-[#FAF3E0] text-maroon antialiased selection:bg-gold/30">
 
-    @include('public.layouts.navbar')
+    @include('User.layouts.navbar')
 
     <section id="home" class="relative isolate flex h-screen items-center justify-center overflow-hidden">
-        <div class="absolute inset-0 -z-20 bg-cover bg-center h-full w-full" style="background-image: linear-gradient(to bottom, rgba(29,21,21,0.85), rgba(32,22,22,0.75), rgba(29,21,21,0.95)), url('{{ asset('foto/background.png') }}'); background-repeat: no-repeat; background-size: cover; background-position: center;"></div>
+        <div class="absolute inset-0 -z-20 bg-cover bg-center h-full w-full" style="background-image: linear-gradient(to bottom, rgba(29,21,21,0.85), rgba(32,22,22,0.75), rgba(29,21,21,0.95)), url('{{ asset('image/background.png') }}'); background-repeat: no-repeat; background-size: cover; background-position: center;"></div>
         
         <div class="relative z-10 mx-auto max-w-4xl px-6 text-center">
             <div class="mx-auto mb-6 flex items-center justify-center gap-4">
@@ -106,6 +106,137 @@ $gallery = [
         </div>
     </section>
 
+<!-- SECTION 2: LAYANAN KAMI -->
+<section id="layanan" class="relative py-24 bg-maroon-deep text-cream overflow-hidden">
+    
+    <!-- Heading -->
+    <div class="mx-auto max-w-6xl px-6 text-center">
+        <p class="text-xs tracking-[0.4em] text-gold uppercase font-semibold">
+            — LAYANAN KAMI —
+        </p>
+
+        <h2 class="mt-2 text-4xl font-light text-cream sm:text-5xl font-serif">
+            Solusi Lengkap Acara Anda
+        </h2>
+
+        <div class="h-[1px] bg-gradient-to-r from-transparent via-gold to-transparent mx-auto mt-3 w-32"></div>
+    </div>
+
+    <!-- Cards -->
+    <div class="mt-14 mx-auto max-w-6xl px-6 flex flex-wrap justify-center gap-8">
+
+        <!-- Kartu 1: Paket Acara -->
+        <div
+            class="group w-full md:w-[380px] rounded-2xl border border-gold/20 bg-[#31070F] p-8 text-center hover:border-gold/40 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+
+            <div
+                class="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-gold/10 text-gold">
+                <i data-lucide="gift" class="h-8 w-8"></i>
+            </div>
+
+            <h3 class="font-serif text-2xl text-gold font-medium">
+                PAKET ACARA
+            </h3>
+
+            <p class="mt-3 text-sm text-cream/70 leading-relaxed">
+                Paket Ekonomis, Paket Eksklusif, Paket Hemat, Paket Baralek Gadang,
+                Paket Wedding Minang, Akustik dan berbagai kebutuhan acara lainnya.
+            </p>
+
+            <a href="{{ url('/katalog?category=Paket%20Pernikahan') }}"
+                class="mt-5 inline-block text-sm font-semibold text-gold hover:text-gold-soft transition">
+                Lihat →
+            </a>
+        </div>
+
+        <!-- Kartu 2: Sewa Barang -->
+        <div
+            class="group w-full md:w-[380px] rounded-2xl border border-gold/20 bg-[#31070F] p-8 text-center hover:border-gold/40 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+
+            <div
+                class="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-gold/10 text-gold">
+                <i data-lucide="package" class="h-8 w-8"></i>
+            </div>
+
+            <h3 class="font-serif text-2xl text-gold font-medium">
+                SEWA BARANG
+            </h3>
+
+            <p class="mt-3 text-sm text-cream/70 leading-relaxed">
+                Menyediakan penyewaan baju tari perempuan dan laki-laki,
+                serta alat musik tradisional Minangkabau untuk berbagai acara.
+            </p>
+
+            <a href="{{ url('/katalog?category=Properti') }}"
+                class="mt-5 inline-block text-sm font-semibold text-gold hover:text-gold-soft transition">
+                Lihat →
+            </a>
+        </div>
+
+    </div>
+</section>
+
+<!-- SECTION 3: CARA PESAN (HOW IT WORKS) — 6 Langkah sesuai dokumen AVERRA -->
+<section id="cara-pesan" class="relative py-24 bg-[#31070F] text-cream overflow-hidden border-t border-gold/10">
+    <div class="mx-auto max-w-6xl px-6 text-center">
+        <p class="text-xs tracking-[0.4em] text-gold uppercase font-semibold">— CARA PESAN —</p>
+        <h2 class="mt-2 text-4xl font-light text-cream sm:text-5xl font-serif">Bagaimana Cara Memesan?</h2>
+        <div class="h-[1px] bg-gradient-to-r from-transparent via-gold to-transparent mx-auto mt-3 w-32"></div>
+    </div>
+
+    <div class="mt-14 mx-auto max-w-5xl px-6 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        @php
+            $steps = [
+                ['num' => '①', 'title' => 'Pilih Layanan', 'desc' => 'Jelajahi katalog dan pilih yang sesuai kebutuhan'],
+                ['num' => '②', 'title' => 'Isi Form Pemesanan', 'desc' => 'Lengkapi data & pilih tanggal pelaksanaan'],
+                ['num' => '③', 'title' => 'Tunggu Konfirmasi', 'desc' => 'Admin kami akan menghubungi dalam 1x24 jam'],
+                ['num' => '④', 'title' => 'Lakukan Pembayaran', 'desc' => 'Upload bukti DP atau bayar lunas'],
+                ['num' => '⑤', 'title' => 'Acara Berjalan', 'desc' => 'Kami siapkan semua kebutuhan Anda'],
+                ['num' => '⑥', 'title' => 'Selesai & Nilai', 'desc' => 'Berikan penilaian untuk layanan kami'],
+            ];
+        @endphp
+        @foreach($steps as $s)
+            <div class="flex flex-col items-center text-center p-6 rounded-xl border border-gold/10 bg-maroon-deep/50 hover:border-gold/30 transition">
+                <span class="text-4xl mb-3">{{ $s['num'] }}</span>
+                <h3 class="font-serif text-xl text-gold font-medium">{{ $s['title'] }}</h3>
+                <p class="mt-2 text-sm text-cream/70 leading-relaxed">{{ $s['desc'] }}</p>
+            </div>
+        @endforeach
+    </div>
+</section>
+
+<!-- SECTION 4: PAKET UNGGULAN sesuai dokumen AVERRA -->
+<section id="paket" class="relative py-24 bg-maroon-deep text-cream overflow-hidden border-t border-gold/10">
+    <div class="mx-auto max-w-6xl px-6 text-center">
+        <p class="text-xs tracking-[0.4em] text-gold uppercase font-semibold">— PAKET TERPOPULER —</p>
+        <h2 class="mt-2 text-4xl font-light text-cream sm:text-5xl font-serif">Paket Unggulan</h2>
+        <div class="h-[1px] bg-gradient-to-r from-transparent via-gold to-transparent mx-auto mt-3 w-32"></div>
+    </div>
+
+    <div class="mt-14 mx-auto max-w-6xl px-6 grid gap-8 md:grid-cols-3">
+        @php
+            $featured = [
+                ['name' => 'Paket Baralek Gadang', 'desc' => 'MC,Alat musik tradisional/musik tradisional live,Penari perempuan,Silat,Pembawa carano 1 orang,3 Tari tradisional', 'price' => 'Rp 4.500.000', 'img' => asset('image/Akad & resepsi.jpeg')],
+                ['name' => 'Paket Wedding Minang', 'desc' => 'MC,Alat musik tradisional/musik tradisional live,Penari perempuan,Silat,Pembawa carano 1 orang,2 Tari tradisional', 'price' => 'Rp 4.000.000', 'img' => asset('image/Resepsi.jpeg')],
+                ['name' => 'Paket Hemat', 'desc' => 'MC,Pemain bansi', 'price' => 'Rp 1.000.000', 'img' => asset('image/Busana tari.jpeg')],
+            ];
+        @endphp
+        @foreach($featured as $f)
+            <div class="group rounded-2xl border border-gold/20 bg-[#31070F] overflow-hidden hover:border-gold/40 transition-all duration-300 hover:-translate-y-1">
+                <div class="aspect-[4/3] overflow-hidden bg-neutral-900">
+                    <img src="{{ $f['img'] }}" alt="{{ $f['name'] }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                </div>
+                <div class="p-6">
+                    <h3 class="font-serif text-xl text-gold font-medium">{{ $f['name'] }}</h3>
+                    <p class="mt-2 text-sm text-cream/70 leading-relaxed">{{ $f['desc'] }}</p>
+                    <p class="mt-3 text-lg font-serif text-gold-soft font-semibold">Mulai {{ $f['price'] }}</p>
+                    <a href="{{ url('/katalog') }}" class="mt-4 inline-block rounded-full bg-gradient-to-r from-[#D6B35C] to-[#B8983A] px-6 py-2 text-sm font-serif text-maroon-deep font-semibold shadow-md hover:scale-105 transition">Lihat Detail</a>
+                </div>
+            </div>
+        @endforeach
+    </div>
+</section>
+
    <!-- 2. SECTION TENTANG KAMI & FILOSOFI  -->
 <!-- SECTION TENTANG -->
 <section id="tentang" class="relative py-20 bg-maroon-deep text-cream overflow-hidden">
@@ -118,7 +249,7 @@ $gallery = [
 
                 <div class="relative aspect-[4/3] sm:aspect-video md:aspect-[3/4] overflow-hidden rounded-lg border border-gold/20 bg-neutral-900 shadow-2xl">
 
-                    <img src="{{ asset('foto/Busana tari.jpeg') }}"
+                    <img src="{{ asset('image/Busana tari.jpeg') }}"
                         alt="Busana Tari Rantiang Tagok"
                         class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                 </div>
@@ -142,7 +273,7 @@ $gallery = [
                 <p class="text-sm sm:text-base text-cream/80 leading-relaxed font-light">
                     Berdiri di jantung kota Padang,
                     <strong class="font-medium text-gold">
-                        Sanggar Seni Rantang Teago
+                        Sanggar Seni Rantiang Tagok
                     </strong>
                     lahir dari dedikasi mendalam untuk melestarikan
                     seni, musik, dan adat tradisi khusunya Minangkabau.
@@ -238,7 +369,7 @@ $gallery = [
 
     <!-- BACKGROUND -->
     <div class="absolute inset-0 opacity-[0.04] bg-cover bg-center"
-        style="background-image: url('{{ asset('foto/background.png') }}');
+        style="background-image: url('{{ asset('image/background.png') }}');
         filter: grayscale(100%);">
     </div>
 
@@ -355,7 +486,29 @@ $gallery = [
         </div>
     </div>
 </section>
-@include('public.layouts.footer')
+    
+<!-- CTA SECTION 7 — Siap Mulai Merencanakan Acaramu? sesuai dokumen AVERRA -->
+<section id="cta" class="relative py-24 bg-maroon-deep text-cream overflow-hidden border-t border-gold/10">
+    <div class="absolute inset-0 opacity-[0.05] bg-cover bg-center" style="background-image: url('{{ asset('image/background.png') }}'); filter: grayscale(100%);"></div>
+    <div class="relative z-10 mx-auto max-w-3xl px-6 text-center">
+        <h2 class="font-serif text-4xl sm:text-5xl font-light text-cream leading-tight">
+            Siap Mulai Merencanakan Acaramu?
+        </h2>
+        <p class="mt-4 text-lg text-cream/80 font-light">
+            Hubungi kami sekarang atau langsung buat pemesanan.
+        </p>
+        <div class="mt-8 flex flex-wrap justify-center gap-4">
+            <a href="{{ route('user.pemesanan.create') }}" class="rounded-full bg-gradient-to-r from-[#D6B35C] to-[#B8983A] px-8 py-3.5 font-serif text-base text-maroon-deep shadow-lg transition duration-300 hover:scale-105 transform inline-block font-semibold">
+                Buat Pemesanan
+            </a>
+            <a href="https://wa.me/62" target="_blank" rel="noopener noreferrer" class="rounded-full border border-gold/60 px-8 py-3.5 font-serif text-base text-cream transition duration-300 hover:bg-cream/10 inline-block">
+                WhatsApp Kami
+            </a>
+        </div>
+    </div>
+</section>
+
+@include('User.layouts.footer')
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <script>
