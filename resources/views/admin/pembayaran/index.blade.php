@@ -4,25 +4,22 @@
 
 @section('content')
 @php
-    $payments = [
-        [
-            'kode' => 'PAY-20260611-001',
-            'status' => 'Menunggu Verifikasi',
-            'pesanan' => 'AVR-20260610-001',
-            'customer' => 'Tazkiyah Qolbu',
-            'tahap' => 'DP 50%',
-            'jumlah' => 'Rp 2.750.000',
-            'dikirim' => '11 Juni 2026, 14.22',
-        ],
-        [
-            'kode' => 'PAY-20260612-002',
-            'status' => 'Menunggu Verifikasi',
-            'pesanan' => 'AVR-20260611-002',
-            'customer' => 'Siti Rahmah',
-            'tahap' => 'Lunas',
-            'jumlah' => 'Rp 300.000',
-            'dikirim' => '12 Juni 2026, 10.05',
-        ],
+    $statusAktif = request('status', 'semua');
+    $statusMap = [
+        'semua'        => 'Semua',
+        'menunggu'     => 'Menunggu Verifikasi',
+        'terverifikasi'=> 'Terverifikasi',
+        'ditolak'      => 'Ditolak',
+    ];
+    $badgeMap = [
+        'menunggu'      => 'badge-warning',
+        'terverifikasi' => 'badge-active',
+        'ditolak'       => 'badge-inactive',
+    ];
+    $tahapLabel = [
+        'dp'        => 'DP 50%',
+        'pelunasan' => 'Pelunasan',
+        'langsung'  => 'Lunas',
     ];
 @endphp
 
@@ -30,43 +27,94 @@
     <div>
         <h1 class="admin-title text-3xl">Pembayaran</h1>
         <p class="admin-subtitle mt-1 text-sm">
-            Verifikasi pembayaran DP, pelunasan, dan bukti transfer pelanggan.
+            Verifikasi bukti transfer pelanggan — DP, pelunasan, dan denda.
         </p>
     </div>
 
+    {{-- Flash --}}
+    @if(session('success'))
+        <div class="rounded-2xl bg-green-50 border border-green-200 px-5 py-3 text-sm font-semibold text-green-800">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    {{-- Filter tabs --}}
     <div class="admin-card p-4">
         <div class="flex flex-wrap gap-2 text-sm">
-            @foreach (['Semua', 'Menunggu Verifikasi (2)', 'Terverifikasi', 'Ditolak'] as $tab)
-                <button class="rounded-full border border-[#decba5] px-4 py-2 font-semibold text-[#5A0B1A] hover:bg-[#f7efe2]">
-                    {{ $tab }}
-                </button>
+            @foreach($statusMap as $key => $label)
+                <a href="{{ route('admin.pembayaran.index', ['status' => $key]) }}"
+                   class="rounded-full border px-4 py-2 font-semibold transition
+                          {{ $statusAktif === $key
+                              ? 'border-[#800000] bg-[#800000] text-white'
+                              : 'border-[#decba5] text-[#5A0B1A] hover:bg-[#f7efe2]' }}">
+                    {{ $label }}
+                    @if($key === 'menunggu' && $countMenunggu > 0)
+                        <span class="ml-1 bg-red-500 text-white rounded-full px-1.5 py-0.5 text-xs">{{ $countMenunggu }}</span>
+                    @endif
+                </a>
             @endforeach
         </div>
     </div>
 
-    <div class="space-y-4">
-        @foreach ($payments as $payment)
-            <div class="admin-card p-5">
-                <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                    <div class="space-y-2">
-                        <div class="flex flex-wrap items-center gap-2">
-                            <h2 class="font-heading text-xl font-bold text-gray-900">#{{ $payment['kode'] }}</h2>
-                            <span class="badge-warning">{{ $payment['status'] }}</span>
+    {{-- List pembayaran --}}
+    @if($pembayarans->isEmpty())
+        <div class="admin-card p-10 text-center">
+            <p class="text-4xl mb-3">💳</p>
+            <p class="font-semibold text-gray-700">Belum ada bukti pembayaran</p>
+            <p class="admin-muted text-sm mt-1">Bukti akan muncul setelah customer mengupload.</p>
+        </div>
+    @else
+        <div class="space-y-4">
+            @foreach($pembayarans as $pembayaran)
+                @php
+                    $badge = $badgeMap[$pembayaran->status] ?? 'badge-neutral';
+                    $statusLabel = match($pembayaran->status) {
+                        'menunggu'      => 'Menunggu Verifikasi',
+                        'terverifikasi' => 'Terverifikasi',
+                        'ditolak'       => 'Ditolak',
+                        default         => ucfirst($pembayaran->status),
+                    };
+                @endphp
+                <div class="admin-card p-5">
+                    <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                        <div class="space-y-2">
+                            <div class="flex flex-wrap items-center gap-2">
+                                <h2 class="font-heading text-lg font-bold text-gray-900">#{{ $pembayaran->kode_transaksi }}</h2>
+                                <span class="{{ $badge }}">{{ $statusLabel }}</span>
+                            </div>
+                            <p class="text-sm text-gray-700">
+                                Pesanan: <strong>#{{ $pembayaran->pemesanan?->kode_pemesanan ?? '-' }}</strong>
+                                &nbsp;|&nbsp; 👤 <strong>{{ $pembayaran->pemesanan?->nama_pemesan ?? $pembayaran->pemesanan?->user?->nama ?? '-' }}</strong>
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                Tahap: <strong>{{ $tahapLabel[$pembayaran->tahap] ?? $pembayaran->tahap }}</strong>
+                                &nbsp;|&nbsp; Jumlah: <strong>Rp {{ number_format($pembayaran->jumlah_bayar, 0, ',', '.') }}</strong>
+                            </p>
+                            <p class="text-xs text-[#7a5d58]">
+                                Dikirim: {{ $pembayaran->dibayar_pada?->format('d M Y, H.i') ?? '-' }}
+                            </p>
+                            @if($pembayaran->status === 'ditolak' && $pembayaran->catatan_penolakan)
+                                <p class="text-xs text-red-600 bg-red-50 rounded-lg px-3 py-1.5 border border-red-100">
+                                    Alasan ditolak: {{ $pembayaran->catatan_penolakan }}
+                                </p>
+                            @endif
                         </div>
 
-                        <p class="text-sm text-gray-700">Pesanan: #{{ $payment['pesanan'] }} | 👤 {{ $payment['customer'] }}</p>
-                        <p class="text-sm text-gray-700">Tahap: {{ $payment['tahap'] }} | Jumlah: {{ $payment['jumlah'] }}</p>
-                        <p class="text-xs text-[#7a5d58]">Dikirim: {{ $payment['dikirim'] }}</p>
-                    </div>
+                        <div class="flex flex-wrap gap-2 lg:flex-col lg:items-end">
+                            <a href="{{ route('admin.pembayaran.show', $pembayaran->id) }}"
+                               class="admin-btn-secondary text-sm">Lihat Bukti</a>
 
-                    <div class="flex flex-wrap gap-2">
-                        <a href="{{ route('admin.pembayaran.show') }}" class="admin-btn-secondary">Lihat Bukti Bayar</a>
-                        <button class="admin-btn-primary">Verifikasi</button>
-                        <button class="admin-btn-danger">Tolak</button>
+                            @if($pembayaran->status === 'menunggu')
+                                <form method="POST" action="{{ route('admin.pembayaran.verifikasi', $pembayaran->id) }}">
+                                    @csrf @method('PATCH')
+                                    <button type="submit" class="admin-btn-primary text-sm w-full">✅ Verifikasi</button>
+                                </form>
+                            @endif
+                        </div>
                     </div>
                 </div>
-            </div>
-        @endforeach
-    </div>
+            @endforeach
+        </div>
+    @endif
 </div>
 @endsection
