@@ -2,11 +2,11 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto my-10 space-y-6 px-4 sm:px-0 animate-fade-in">
-    
+
     {{-- Tombol Aksi --}}
     <div class="flex justify-between items-center print:hidden">
-        <a href="{{ route('user.pemesanan.index') }}" class="inline-flex items-center text-xs font-semibold text-gray-600 hover:text-red-800 transition">
-            ← Kembali ke Riwayat
+        <a href="{{ route('user.pemesanan.show', $pesanan->id) }}" class="inline-flex items-center text-xs font-semibold text-gray-600 hover:text-red-800 transition">
+            ← Kembali ke Detail Pesanan
         </a>
         <button onclick="window.print()" class="inline-flex items-center gap-1.5 rounded-full bg-red-800 text-white px-5 py-2.5 text-xs font-semibold hover:bg-red-900 transition shadow-sm">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -21,8 +21,8 @@
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-gray-100 pb-6 mb-6 gap-4">
             <div>
                 <span class="text-xs font-bold uppercase tracking-[0.2em] text-amber-600">OFFICIAL INVOICE</span>
-                <h2 class="text-3xl font-black text-red-800 tracking-tight mt-0.5">#{{ $pemesanan->kode_pemesanan ?? 'ORD-'.str_pad($pemesanan->id, 4, '0', STR_PAD_LEFT) }}</h2>
-                <p class="text-xs text-gray-400 mt-1">Tanggal Transaksi: <span class="font-medium text-gray-700">{{ is_string($pemesanan->created_at) ? $pemesanan->created_at : $pemesanan->created_at->format('d M Y') }}</span></p>
+                <h2 class="text-3xl font-black text-red-800 tracking-tight mt-0.5">#{{ $pesanan->kode_pemesanan }}</h2>
+                <p class="text-xs text-gray-400 mt-1">Tanggal Transaksi: <span class="font-medium text-gray-700">{{ $pesanan->created_at->format('d M Y') }}</span></p>
             </div>
             <div class="text-left sm:text-right">
                 <span class="font-bold text-2xl tracking-[0.15em] text-red-800 block">SILART</span>
@@ -33,15 +33,15 @@
         <div class="grid sm:grid-cols-2 gap-6 text-sm mb-8">
             <div>
                 <p class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-1.5">Ditagihkan Kepada:</p>
-                <p class="font-bold text-gray-900 text-base">{{ auth()->user()->name ?? auth()->user()->nama }}</p>
-                <p class="text-gray-500 font-mono text-xs mt-0.5">{{ $pemesanan->no_hp }}</p>
-                <p class="text-gray-600 mt-1 text-xs leading-relaxed">{{ $pemesanan->lokasi ?? 'Diambil langsung ke store' }}</p>
+                <p class="font-bold text-gray-900 text-base">{{ $pesanan->nama_pemesan }}</p>
+                <p class="text-gray-500 font-mono text-xs mt-0.5">{{ $pesanan->no_hp }}</p>
+                <p class="text-gray-600 mt-1 text-xs leading-relaxed">{{ $pesanan->lokasi ?? 'Diambil langsung ke store' }}</p>
             </div>
             <div class="sm:text-right">
                 <p class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-1.5">Metode Pelaksanaan:</p>
-                <p class="font-semibold text-gray-900 capitalize">{{ $pemesanan->kategori_order === 'acara' ? 'Event Booking Service' : 'Properti Rental Pro' }}</p>
-                <p class="text-xs text-gray-500 mt-1">Tanggal Penggunaan Kerja:</p>
-                <p class="font-bold text-red-800 text-xs font-mono mt-0.5">{{ is_string($pemesanan->tanggal_pakai) ? \Carbon\Carbon::parse($pemesanan->tanggal_pakai)->format('d F Y') : $pemesanan->tanggal_pakai->format('d F Y') }}</p>
+                <p class="font-semibold text-gray-900 capitalize">{{ $pesanan->kategori_order === 'acara' ? 'Event Booking Service' : 'Properti Rental Pro' }}</p>
+                <p class="text-xs text-gray-500 mt-1">Tanggal Penggunaan:</p>
+                <p class="font-bold text-red-800 text-xs font-mono mt-0.5">{{ $pesanan->tanggal_pakai->format('d F Y') }}</p>
             </div>
         </div>
 
@@ -57,18 +57,21 @@
                 </thead>
                 <tbody class="divide-y divide-gray-100 text-gray-700 bg-white">
                     @php $total_item_cost = 0; @endphp
-                    @foreach($pemesanan->items as $item)
-                        @php 
-                            $qty = $item->pivot->qty ?? $item->qty ?? 1;
-                            $price = $item->price ?? 0;
-                            $subtotal = $item->pivot->subtotal ?? ($price * $qty);
-                            $total_item_cost += $subtotal;
+                    @foreach($pesanan->detailPemesanans as $item)
+                        @php
+                            $namaItem = match($item->jenis_item) {
+                                'barang' => optional($item->barang)->nama_barang ?? '-',
+                                'jasa'   => optional($item->jasa)->nama_jasa ?? '-',
+                                'paket'  => optional($item->paket)->nama_paket ?? '-',
+                                default  => '-',
+                            };
+                            $total_item_cost += $item->subtotal;
                         @endphp
                         <tr>
-                            <td class="px-5 py-4 font-semibold text-gray-900">{{ $item->name }}</td>
-                            <td class="px-5 py-4 text-center font-mono">{{ $qty }}</td>
-                            <td class="px-5 py-4 text-right font-mono">Rp {{ number_format($price, 0, ',', '.') }}</td>
-                            <td class="px-5 py-4 text-right font-bold text-gray-900 font-mono">Rp {{ number_format($subtotal, 0, ',', '.') }}</td>
+                            <td class="px-5 py-4 font-semibold text-gray-900">{{ $namaItem }}</td>
+                            <td class="px-5 py-4 text-center font-mono">{{ $item->jumlah }}</td>
+                            <td class="px-5 py-4 text-right font-mono">Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
+                            <td class="px-5 py-4 text-right font-bold text-gray-900 font-mono">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -82,11 +85,11 @@
             </div>
             <div class="flex justify-between w-full text-gray-500">
                 <span>Ongkos Distribusi / Lokasi:</span>
-                <span class="font-mono font-medium text-gray-900">Rp {{ number_format($pemesanan->ongkos_lokasi, 0, ',', '.') }}</span>
+                <span class="font-mono font-medium text-gray-900">Rp {{ number_format($pesanan->ongkos_lokasi, 0, ',', '.') }}</span>
             </div>
             <div class="flex justify-between w-full font-black text-base text-gray-900 border-t border-dashed pt-3 mt-1">
                 <span class="text-red-800">TOTAL LUNAS (NET):</span>
-                <span class="text-xl text-red-800 font-mono">Rp {{ number_format($pemesanan->total_harga, 0, ',', '.') }}</span>
+                <span class="text-xl text-red-800 font-mono">Rp {{ number_format($pesanan->total_harga, 0, ',', '.') }}</span>
             </div>
         </div>
 
@@ -95,12 +98,11 @@
             <p class="mt-1 font-mono">Struk ini sah dikeluarkan secara sistematis dan tidak memerlukan tanda tangan basah.</p>
         </div>
     </div>
-    
-    {{-- Tombol menuju form ulasan jika status selesai --}}
-    @if($pemesanan->status === 'selesai')
+
+    @if($pesanan->status === 'selesai')
         <div class="text-right print:hidden">
-            <a href="{{ route('user.testimoni.create', ['pemesanan_id' => $pemesanan->id]) }}" class="inline-flex items-center gap-1.5 rounded-xl bg-amber-500 text-white px-6 py-3 text-xs font-bold hover:bg-amber-600 transition shadow-sm">
-                ✨ Berikan Ulasan & Testimoni Layanan →
+            <a href="{{ route('testimoni.store', ['pemesanan_id' => $pesanan->id]) }}" class="inline-flex items-center gap-1.5 rounded-xl bg-amber-500 text-white px-6 py-3 text-xs font-bold hover:bg-amber-600 transition shadow-sm">
+                Berikan Ulasan & Testimoni Layanan →
             </a>
         </div>
     @endif

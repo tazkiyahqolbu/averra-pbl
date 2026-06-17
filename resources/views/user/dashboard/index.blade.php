@@ -39,8 +39,5 @@
         <p class="text-sm text-gray-600">{{ $statusCounts['pengembalian'] }} barang sedang dalam proses pengembalian</p>
     </div>
 
-        </nav>
-    </div>
-
 </div>
 @endsection
