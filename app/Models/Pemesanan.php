@@ -13,7 +13,7 @@ class Pemesanan extends Model
     protected $fillable = [
         'kode_pemesanan', 'user_id', 'zona_id',
         'tanggal_pemesanan', 'tanggal_pakai', 'jenis',
-        'lokasi', 'ongkos_lokasi', 'no_hp',
+        'lokasi', 'ongkos_lokasi', 'no_hp', 'nama_pemesan',
         'catatan', 'total_harga', 'status',
     ];
 
@@ -24,6 +24,31 @@ class Pemesanan extends Model
         'total_harga'       => 'decimal:2',
     ];
 
+    // ── Status methods ─────────────────────────────────────────────────────────
+    public function isMenungguKonfirmasi(): bool { return $this->status === 'menunggu'; }
+    public function isMenungguPembayaran(): bool { return $this->status === 'dikonfirmasi'; }
+    public function isBerlangsung(): bool        { return $this->status === 'berlangsung'; }
+    public function isSelesai(): bool            { return $this->status === 'selesai'; }
+
+    // ── Accessors ──────────────────────────────────────────────────────────────
+    public function getKategoriOrderAttribute(): string
+    {
+        return $this->jenis === 'sewa_barang' ? 'sewa' : 'acara';
+    }
+
+    public function getMetodeBayarAttribute(): string
+    {
+        return $this->pembayarans()->orderBy('id')->value('tahap') ?? 'dp';
+    }
+
+    public function getPengembalianAttribute()
+    {
+        return PengembalianBarang::whereHas('detailPemesanan', fn($q) => $q->where('pemesanan_id', $this->id))
+            ->with('detailPemesanan')
+            ->first();
+    }
+
+    // ── Relations ──────────────────────────────────────────────────────────────
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -49,8 +74,8 @@ class Pemesanan extends Model
         return $this->hasMany(Pembayaran::class, 'pemesanan_id');
     }
 
-    public function testimonies()
+    public function testimoni()
     {
-        return $this->hasMany(Testimoni::class, 'pemesanan_id');
+        return $this->hasOne(Testimoni::class, 'pemesanan_id');
     }
 }

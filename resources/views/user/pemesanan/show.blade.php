@@ -3,7 +3,15 @@
 @section('content')
 <div class="max-w-4xl mx-auto my-10 bg-white p-8 rounded-3xl border border-gray-200">
     <!-- Header Status -->
-    <h2 class="text-2xl font-bold mb-6 text-[#800000]">Status: {{ ucfirst(str_replace('_', ' ', $pesanan->status)) }}</h2>
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+        <h2 class="text-2xl font-bold text-[#800000]">Status: {{ ucfirst(str_replace('_', ' ', $pesanan->status)) }}</h2>
+        @if(!$pesanan->isMenungguKonfirmasi())
+            <a href="{{ route('user.pemesanan.invoice', $pesanan->id) }}" target="_blank"
+               class="inline-flex items-center gap-2 bg-[#800000] hover:bg-[#600000] text-white px-4 py-2 rounded-xl text-xs font-semibold shadow-sm transition">
+                📄 Lihat Invoice
+            </a>
+        @endif
+    </div>
 
     <!-- A. Status: Menunggu Konfirmasi -->
     @if($pesanan->isMenungguKonfirmasi())

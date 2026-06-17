@@ -46,7 +46,7 @@
             <h3 class="text-xl font-bold text-[#800000] mb-6 border-b pb-2">STEP 1: Detail Pesanan</h3>
             <div class="mb-6">
                 <h4 class="text-sm font-bold text-gray-700 mb-3 uppercase tracking-wider">Pilih Paket Acara <span class="text-red-500">*</span></h4>
-                <select name="katalog_id" x-model="selectedKatalogId" @change="updateKatalog" required class="w-full mb-3 rounded-lg border-gray-300 focus:border-[#800000] transition">
+                <select name="katalog_id" x-model="selectedKatalogId" @change="updateKatalog" required class="w-full mb-3 rounded-lg border border-gray-300 px-3 py-2 focus:border-[#800000] transition">
                     <option value="" disabled>Pilih Paket dari Katalog</option>
                     <template x-for="k in katalogList.filter(i => i.category !== 'Sewa Barang' && i.category !== 'Properti')" :key="k.id">
                         <option :value="k.id" x-text="k.name + ' - Rp' + formatRupiah(k.price)"></option>
@@ -57,11 +57,11 @@
             <div class="mb-6 pt-6 border-t border-gray-100">
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Pelaksanaan <span class="text-red-500">*</span></label>
-                    <input type="date" name="tanggal_pelaksanaan" class="w-full rounded-lg border-gray-300 focus:border-[#800000] transition" required>
+                    <input type="date" name="tanggal_pelaksanaan" class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#800000] transition" required>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Keterangan Acara <span class="text-gray-400 font-normal text-xs">(opsional)</span></label>
-                    <textarea rows="3" name="keterangan_acara" class="w-full rounded-lg border-gray-300 focus:border-[#800000] transition" placeholder="Jenis acara, tema, dll."></textarea>
+                    <textarea rows="3" name="keterangan_acara" class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#800000] transition" placeholder="Jenis acara, tema, dll."></textarea>
                 </div>
             </div>
 
@@ -76,11 +76,11 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Nama Pemesan <span class="text-red-500">*</span></label>
-                    <input type="text" name="nama_pemesan" value="{{ auth()->user()->name ?? '' }}" class="w-full rounded-lg border-gray-300 transition" required>
+                    <input type="text" name="nama_pemesan" value="{{ auth()->user()->nama ?? '' }}" class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#800000] transition" required>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">No. HP <span class="text-red-500">*</span></label>
-                    <input type="tel" name="no_hp" value="{{ auth()->user()->phone ?? '' }}" class="w-full rounded-lg border-gray-300 transition" required>
+                    <input type="tel" name="no_hp" value="{{ auth()->user()->no_hp ?? '' }}" class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#800000] transition" required>
                 </div>
             </div>
 
@@ -98,13 +98,13 @@
                 </div>
 
                 <div x-show="eventLocation === 'di_luar'" class="space-y-4 bg-gray-50 p-4 rounded-xl border border-gray-200">
-                    <select name="zona_lokasi_id" x-model="selectedZonaId" class="w-full rounded-lg border-gray-300">
+                    <select name="zona_lokasi_id" x-model="selectedZonaId" class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#800000] transition">
                         <option value="">Pilih Zona Lokasi...</option>
                         <template x-for="z in zonaLokasis" :key="z.id">
                             <option :value="z.id" x-text="z.nama_zona + ' (Rp' + formatRupiah(z.tarif) + ')'"></option>
                         </template>
                     </select>
-                    <textarea name="alamat_lengkap" rows="3" class="w-full rounded-lg border-gray-300" placeholder="Alamat lengkap acara..."></textarea>
+                    <textarea name="alamat_lengkap" rows="3" class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#800000] transition" placeholder="Alamat lengkap acara..."></textarea>
                 </div>
             </div>
 

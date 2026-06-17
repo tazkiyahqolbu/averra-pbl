@@ -23,8 +23,14 @@ class DashboardController extends Controller
 
             'totalBookingsCount'     => Pemesanan::count(),
 
-            'bookings'               => Pemesanan::with('user')
+            'bookings'               => Pemesanan::with([
+                    'user',
+                    'detailPemesanans.barang',
+                    'detailPemesanans.jasa',
+                    'detailPemesanans.paket',
+                ])
                 ->orderByDesc('created_at')
+                ->limit(10)
                 ->get(),
         ]);
     }

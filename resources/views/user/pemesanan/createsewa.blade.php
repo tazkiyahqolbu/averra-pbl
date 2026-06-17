@@ -17,18 +17,18 @@
                  :style="'width: ' + ((step - 1) / 2 * 100) + '%'"></div>
 
             <div class="relative z-10 flex flex-col items-center">
-                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm"
-                     :class="step >= 1 ? 'bg-[#800000] text-white' : 'bg-white text-gray-400 border-2'">1</div>
+                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-colors duration-300"
+                     :class="step >= 1 ? 'bg-[#800000] text-white border-2 border-[#800000]' : 'bg-white text-gray-400 border-2 border-gray-200'">1</div>
                 <span class="mt-2 text-xs font-semibold" :class="step >= 1 ? 'text-[#800000]' : 'text-gray-400'">Detail Sewa</span>
             </div>
             <div class="relative z-10 flex flex-col items-center">
-                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm"
-                     :class="step >= 2 ? 'bg-[#800000] text-white' : 'bg-white text-gray-400 border-2'">2</div>
+                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-colors duration-300"
+                     :class="step >= 2 ? 'bg-[#800000] text-white border-2 border-[#800000]' : 'bg-white text-gray-400 border-2 border-gray-200'">2</div>
                 <span class="mt-2 text-xs font-semibold" :class="step >= 2 ? 'text-[#800000]' : 'text-gray-400'">Pengiriman</span>
             </div>
             <div class="relative z-10 flex flex-col items-center">
-                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm"
-                     :class="step >= 3 ? 'bg-[#800000] text-white' : 'bg-white text-gray-400 border-2'">3</div>
+                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-colors duration-300"
+                     :class="step >= 3 ? 'bg-[#800000] text-white border-2 border-[#800000]' : 'bg-white text-gray-400 border-2 border-gray-200'">3</div>
                 <span class="mt-2 text-xs font-semibold" :class="step >= 3 ? 'text-[#800000]' : 'text-gray-400'">Pembayaran</span>
             </div>
         </div>
@@ -44,7 +44,7 @@
             <h3 class="text-xl font-bold text-[#800000] mb-6 border-b pb-2">STEP 1: Item & Durasi</h3>
             <div class="mb-6">
                 <h4 class="text-sm font-bold text-gray-700 mb-3 uppercase tracking-wider">Pilih Barang <span class="text-red-500">*</span></h4>
-                <select name="katalog_id" x-model="selectedKatalogId" @change="updateKatalog" required class="w-full mb-3 rounded-lg border-gray-300">
+                <select name="katalog_id" x-model="selectedKatalogId" @change="updateKatalog" required class="w-full mb-3 rounded-lg border border-gray-300 px-3 py-2 focus:border-[#800000] transition">
                     <option value="" disabled>Pilih Barang dari Katalog</option>
                     <template x-for="k in katalogList.filter(i => i.category === 'Sewa Barang' || i.category === 'Properti')" :key="k.id">
                         <option :value="k.id" x-text="k.name + ' - Rp' + formatRupiah(k.price) + '/hari'"></option>
@@ -55,15 +55,15 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Ambil/Kirim <span class="text-red-500">*</span></label>
-                    <input type="date" name="tanggal_ambil" x-model="startDate" class="w-full rounded-lg border-gray-300" required>
+                    <input type="date" name="tanggal_ambil" x-model="startDate" class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#800000] transition" required>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Pengembalian <span class="text-red-500">*</span></label>
-                    <input type="date" name="tanggal_kembali" x-model="endDate" class="w-full rounded-lg border-gray-300" required>
+                    <input type="date" name="tanggal_kembali" x-model="endDate" class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#800000] transition" required>
                 </div>
                 <div class="md:col-span-2">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Jumlah Unit <span class="text-red-500">*</span></label>
-                    <input type="number" name="jumlah_unit" min="1" x-model="jumlahUnit" class="w-full md:w-1/3 rounded-lg border-gray-300" required>
+                    <input type="number" name="jumlah_unit" min="1" x-model="jumlahUnit" class="w-full md:w-1/3 rounded-lg border border-gray-300 px-3 py-2 focus:border-[#800000] transition" required>
                 </div>
             </div>
 
@@ -73,7 +73,7 @@
             </div>
 
             <div class="flex justify-end mt-4">
-                <button type="button" @click="nextStep()" :disabled="!selectedKatalogId" class="bg-[#800000] text-white px-6 py-2.5 rounded-full font-semibold">Lanjut</button>
+                <button type="button" @click="nextStep()" :disabled="!selectedKatalogId" class="bg-[#800000] text-white px-6 py-2.5 rounded-full font-semibold shadow-md disabled:opacity-50">Lanjut</button>
             </div>
         </div>
 
@@ -81,8 +81,14 @@
         <div x-show="step === 2" x-transition.opacity style="display: none;">
             <h3 class="text-xl font-bold text-[#800000] mb-6 border-b pb-2">STEP 2: Pengiriman</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <div><label class="block text-sm font-medium">Nama</label><input type="text" name="nama_pemesan" class="w-full rounded-lg border-gray-300"></div>
-                <div><label class="block text-sm font-medium">No. HP</label><input type="tel" name="no_hp" class="w-full rounded-lg border-gray-300"></div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nama Pemesan <span class="text-red-500">*</span></label>
+                    <input type="text" name="nama_pemesan" value="{{ auth()->user()->nama ?? '' }}" class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#800000] transition" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">No. HP <span class="text-red-500">*</span></label>
+                    <input type="tel" name="no_hp" value="{{ auth()->user()->no_hp ?? '' }}" class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#800000] transition" required>
+                </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -95,11 +101,11 @@
             </div>
 
             <div x-show="deliveryMethod === 'dikirim'" class="space-y-4 bg-gray-50 p-4 rounded-xl border">
-                <select name="zona_lokasi_id" x-model="selectedZonaId" class="w-full rounded-lg border-gray-300">
+                <select name="zona_lokasi_id" x-model="selectedZonaId" class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#800000] transition">
                     <option value="">Pilih Zona Pengiriman...</option>
                     <template x-for="z in zonaLokasis" :key="z.id"><option :value="z.id" x-text="z.nama_zona + ' (Rp' + formatRupiah(z.tarif) + ')'"></option></template>
                 </select>
-                <textarea name="alamat_lengkap" rows="3" class="w-full rounded-lg border-gray-300" placeholder="Alamat pengiriman lengkap..."></textarea>
+                <textarea name="alamat_lengkap" rows="3" class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#800000] transition" placeholder="Alamat pengiriman lengkap..."></textarea>
                 <div class="pt-2 border-t">
                     <span class="text-sm font-medium">Metode Pengembalian:</span>
                     <div class="flex gap-4 mt-2">
@@ -110,8 +116,8 @@
             </div>
 
             <div class="flex justify-between mt-6">
-                <button type="button" @click="prevStep()" class="text-gray-600">Kembali</button>
-                <button type="button" @click="nextStep()" class="bg-[#800000] text-white px-6 py-2.5 rounded-full">Lanjut</button>
+                <button type="button" @click="prevStep()" class="text-gray-600 px-6 py-2.5">Kembali</button>
+                <button type="button" @click="nextStep()" class="bg-[#800000] text-white px-6 py-2.5 rounded-full font-semibold">Lanjut</button>
             </div>
         </div>
 
@@ -134,7 +140,7 @@
             </div>
 
             <div class="flex justify-between">
-                <button type="button" @click="prevStep()" class="text-gray-600">Kembali</button>
+                <button type="button" @click="prevStep()" class="text-gray-600 px-6 py-2.5">Kembali</button>
                 <button type="submit" class="bg-[#D4AF37] text-[#800000] px-8 py-3 rounded-full font-bold">Kirim Pesanan</button>
             </div>
         </div>
