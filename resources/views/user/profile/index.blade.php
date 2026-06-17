@@ -12,8 +12,7 @@
     }
 </style>
 
-<div class="max-w-6xl mx-auto my-8 px-4 font-dashboard"
-     x-data="{ isEditing: false, showPassword: false }">
+<div class="max-w-6xl mx-auto font-dashboard" x-data="{ isEditing: false, showPassword: false, showSecurity: false }">
 
     {{-- Header --}}
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-gray-200 pb-4 mb-6">
@@ -51,14 +50,16 @@
     {{-- Avatar --}}
     <div class="h-24 w-24 rounded-full overflow-hidden bg-[#5D001E] shadow-sm">
 
-        @if(auth()->user()->profile_photo)
+        @php($u = auth()->user())
+
+        @if($u && $u->profile_photo)
             <img
-                src="{{ asset('storage/' . auth()->user()->profile_photo) }}"
+                src="{{ asset('storage/' . $u->profile_photo) }}"
                 alt="Foto Profil"
                 class="h-full w-full object-cover">
         @else
             <div class="h-full w-full flex items-center justify-center text-white text-3xl font-bold">
-                {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
+                {{ strtoupper(substr(($u?->name ?? 'U'), 0, 1)) }}
             </div>
         @endif
 
@@ -66,12 +67,12 @@
 
     {{-- Nama --}}
     <h2 class="mt-4 text-xl font-bold text-[#2D2D2D]">
-        {{ auth()->user()->name }}
+        {{ $u?->name ?? '' }}
     </h2>
 
     {{-- Email --}}
     <p class="text-sm text-gray-500 mt-1 break-all text-center">
-        {{ auth()->user()->email }}
+        {{ $u?->email ?? '' }}
     </p>
 
     {{-- Upload Foto --}}
@@ -150,31 +151,29 @@
 
                             <input type="text"
                                    name="nama"
-                                   value="{{ auth()->user()->name }}"
+                                   value="{{ $u?->name ?? '' }}"
                                    :disabled="!isEditing"
                                    class="w-full border-b border-[#DDD5CA] pb-2 bg-transparent outline-none transition focus:border-[#5D001E] disabled:text-gray-400 text-sm font-semibold text-gray-800">
+
                         </div>
 
-                        {{-- Email --}}
+                        {{-- Email — READ-ONLY sesuai dokumen AVERRA (tidak bisa diubah) --}}
                         <div>
                             <div class="flex items-center justify-between mb-2">
                                 <label class="text-sm font-medium text-gray-500">
                                     Email
                                 </label>
 
-                                <button type="button"
-                                        @click="isEditing = true"
-                                        class="text-[#5D001E]">
-
-                                    <i data-lucide="pencil" class="w-4 h-4"></i>
-                                </button>
+                                <span class="text-[10px] font-medium text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                                    🔒 tidak bisa diubah
+                                </span>
                             </div>
 
                             <input type="email"
                                    name="email"
-                                   value="{{ auth()->user()->email }}"
-                                   :disabled="!isEditing"
-                                   class="w-full border-b border-[#DDD5CA] pb-2 bg-transparent outline-none transition focus:border-[#5D001E] disabled:text-gray-400 text-sm font-semibold text-gray-800">
+                                   value="{{ $u?->email ?? '' }}"
+                                   readonly
+                                   class="w-full border-b border-[#DDD5CA] pb-2 bg-transparent outline-none text-sm font-semibold text-gray-400 cursor-not-allowed">
                         </div>
 
                         {{-- Nomor HP --}}
@@ -194,58 +193,74 @@
 
                             <input type="text"
                                    name="no_hp"
-                                   value="{{ auth()->user()->no_hp ?? '' }}"
+                                   value="{{ $u?->no_hp ?? '' }}"
                                    :disabled="!isEditing"
                                    class="w-full border-b border-[#DDD5CA] pb-2 bg-transparent outline-none transition focus:border-[#5D001E] disabled:text-gray-400 text-sm font-semibold text-gray-800">
                         </div>
 
-                        {{-- Password --}}
-                        <div>
-                            <div class="flex items-center justify-between mb-2">
-                                <label class="text-sm font-medium text-gray-500">
-                                    Password Baru
-                                </label>
-
-                                <span class="text-xs text-gray-400">
-                                    opsional
-                                </span>
-                            </div>
-
-                            <div class="relative">
-                                <input
-                                    x-ref="passwordInput"
-                                    :type="showPassword ? 'text' : 'password'"
-                                    name="password"
-                                    placeholder="Kosongkan jika tidak ingin mengubah"
-                                    :disabled="!isEditing"
-                                    class="w-full border-b border-[#DDD5CA] pb-2 bg-transparent outline-none transition focus:border-[#5D001E] disabled:text-gray-400 text-sm font-semibold text-gray-800 pr-16">
-
-                                <button
-                                    type="button"
-                                    @click="showPassword = !showPassword"
-                                    class="absolute right-0 top-0 text-xs font-semibold text-[#5D001E] hover:underline">
-
-                                    <span x-text="showPassword ? 'Sembunyikan' : 'Lihat'"></span>
-                                </button>
-                            </div>
-                        </div>
                     </div>
 
-                    {{-- Save Button --}}
-                    <div
-                        x-cloak
-                        x-show="isEditing"
-                        x-transition
-                        class="mt-8">
-
+                    <div class="mt-8">
                         <button type="submit"
                             class="inline-flex items-center rounded-full bg-[#5D001E] text-white px-5 py-2.5 text-xs font-semibold uppercase tracking-wider hover:bg-[#4A0F1A] transition shadow-md border border-[#D4AF37]">
-
                             Simpan Perubahan
                         </button>
                     </div>
 
                 </form>
+
+                {{-- KEAMANAN (digabung dengan bagian atas seperti permintaan kamu) --}}
+                <div class="mt-10 border-t border-gray-200 pt-6">
+                    <p class="text-xs font-bold uppercase tracking-[0.2em] text-[#D4AF37] mb-4">
+                        KEAMANAN
+                    </p>
+
+                    {{-- Tombol ganti password tetap satu konteks, tapi tidak memisah struktur visual terlalu jauh --}}
+                    <div class="flex items-center justify-between mb-5">
+                        <div></div>
+                        <button type="button"
+                            class="text-[#5D001E] text-sm font-semibold underline"
+                            x-show="isEditing"
+                            x-cloak
+                            @click="showSecurity = !showSecurity">
+                            Ganti Password →
+                        </button>
+                    </div>
+
+                    <div class="space-y-4" x-show="isEditing && showSecurity" x-cloak>
+                        <form action="{{ route('user.profile.update') }}" method="POST" class="space-y-4">
+                            @csrf
+                            @method('PUT')
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-500 mb-2">
+                                    Password Saat Ini
+                                </label>
+                                <input type="password" name="current_password" class="w-full border-b border-[#DDD5CA] pb-2 bg-transparent outline-none transition focus:border-[#5D001E] text-sm font-semibold text-gray-800" />
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-500 mb-2">
+                                    Password Baru
+                                </label>
+                                <input type="password" name="password" class="w-full border-b border-[#DDD5CA] pb-2 bg-transparent outline-none transition focus:border-[#5D001E] text-sm font-semibold text-gray-800" />
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-500 mb-2">
+                                    Konfirmasi Password Baru
+                                </label>
+                                <input type="password" name="password_confirmation" class="w-full border-b border-[#DDD5CA] pb-2 bg-transparent outline-none transition focus:border-[#5D001E] text-sm font-semibold text-gray-800" />
+                            </div>
+
+                            <button type="submit" class="inline-flex items-center rounded-full bg-[#5D001E] text-white px-5 py-2.5 text-xs font-semibold uppercase tracking-wider hover:bg-[#4A0F1A] transition shadow-md border border-[#D4AF37]">
+                                Simpan Password
+                            </button>
+                        </form>
+
+
+                    </div>
+                </div>
             </div>
 
         </div>
