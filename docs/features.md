@@ -12,13 +12,13 @@ route/controller terkait. Status menunjukkan progres pengembangan tiap fitur.
 | 3  | [Logout](#3-logout)                                       | User & Admin | ✅ Selesai      |
 | 4  | [Dashboard User](#4-dashboard-user)                       | User         | ✅ Selesai      |
 | 5  | [Dashboard Admin](#5-dashboard-admin)                     | Admin        | ✅ Selesai      |
-| 6  | [Riwayat Pemesanan User](#6-riwayat-pemesanan-user)       | User         | 🔄 Dalam Proses |
-| 7  | [Upload Bukti Pembayaran](#7-upload-bukti-pembayaran)     | User         | 🔄 Dalam Proses |
+| 6  | [Riwayat Pemesanan User](#6-riwayat-pemesanan-user)       | User         | ✅ Selesai      |
+| 7  | [Upload Bukti Pembayaran](#7-upload-bukti-pembayaran)     | User         | ✅ Selesai      |
 | 8  | [Profil User](#8-profil-user)                             | User         | 🔄 Dalam Proses |
-| 9  | [Kelola Pemesanan (Admin)](#9-kelola-pemesanan-admin)     | Admin        | 🔄 Dalam Proses |
-| 10 | [Verifikasi Pembayaran (Admin)](#10-verifikasi-pembayaran-admin) | Admin | 🔄 Dalam Proses |
-| 11 | [Kelola Jasa (Admin)](#11-kelola-jasa-admin)             | Admin        | 🔄 Dalam Proses |
-| 12 | [Kelola Paket (Admin)](#12-kelola-paket-admin)           | Admin        | 🔄 Dalam Proses |
+| 9  | [Kelola Pemesanan (Admin)](#9-kelola-pemesanan-admin)     | Admin        | ✅ Selesai      |
+| 10 | [Verifikasi Pembayaran (Admin)](#10-verifikasi-pembayaran-admin) | Admin | ✅ Selesai      |
+| 11 | [Kelola Jasa (Admin)](#11-kelola-jasa-admin)             | Admin        | ✅ Selesai      |
+| 12 | [Kelola Paket (Admin)](#12-kelola-paket-admin)           | Admin        | ✅ Selesai      |
 | 13 | [Kelola Barang (Admin)](#13-kelola-barang-admin)         | Admin        | 🔄 Dalam Proses |
 | 14 | [Kelola Testimoni (Admin)](#14-kelola-testimoni-admin)   | Admin        | 🔄 Dalam Proses |
 | 15 | [Laporan (Admin)](#15-laporan-admin)                     | Admin        | 🔄 Dalam Proses |
@@ -163,25 +163,54 @@ Login sebagai admin → redirect ke /admin/dashboard
 
 ## 6. Riwayat Pemesanan User
 
-**Status:** 🔄 Dalam Proses
+**Status:** ✅ Selesai
 **Aktor:** User (Pelanggan)
-**Tujuan:** Pelanggan dapat melihat seluruh riwayat pemesanan yang pernah dilakukan.
+**Tujuan:** Pelanggan dapat melihat seluruh riwayat pemesanan beserta status terkini dan detail setiap pesanan.
 
-**Alur:** _(dalam proses pengembangan)_
+**Alur:**
 
-**Route / Controller:** _belum tersedia_
+```
+User login → buka /pemesanan
+ → tampil daftar semua pemesanan milik user
+ → user klik pesanan → buka halaman detail (/pemesanan/{id})
+ → tampil info lengkap: status, pembayaran, detail barang/jasa, invoice
+```
+
+**Route / Controller:**
+
+| Method | Route              | Controller                        |
+|--------|--------------------|-----------------------------------|
+| GET    | /pemesanan         | `User\PemesananController@index`  |
+| GET    | /pemesanan/{id}    | `User\PemesananController@show`   |
+| GET    | /pemesanan/{id}/invoice | `User\PemesananController@invoice` |
 
 ---
 
 ## 7. Upload Bukti Pembayaran
 
-**Status:** 🔄 Dalam Proses
+**Status:** ✅ Selesai
 **Aktor:** User (Pelanggan)
-**Tujuan:** Pelanggan dapat mengupload bukti transfer sebagai konfirmasi pembayaran pemesanan.
+**Tujuan:** Pelanggan dapat mengupload bukti transfer sebagai konfirmasi pembayaran setelah pemesanan dikonfirmasi admin.
 
-**Alur:** _(dalam proses pengembangan)_
+**Alur:**
 
-**Route / Controller:** _belum tersedia_
+```
+Pesanan berstatus dikonfirmasi → user buka detail pesanan (/pemesanan/{id})
+ → tampil info rekening tujuan dan form upload bukti
+ → user pilih file (JPG/PNG/PDF, maks 5 MB) → klik "Kirim Bukti"
+ → sistem simpan file ke storage, update status pembayaran jadi "menunggu verifikasi"
+ → tampil notifikasi berhasil, status bukti berubah menjadi "Sedang Diverifikasi"
+
+Jika bukti sebelumnya ditolak admin:
+ → tampil pesan penolakan dan alasan
+ → user dapat upload ulang bukti baru
+```
+
+**Route / Controller:**
+
+| Method | Route                  | Controller                          |
+|--------|------------------------|-------------------------------------|
+| POST   | /pembayaran/upload     | `User\PembayaranController@upload`  |
 
 ---
 
@@ -199,49 +228,127 @@ Login sebagai admin → redirect ke /admin/dashboard
 
 ## 9. Kelola Pemesanan (Admin)
 
-**Status:** 🔄 Dalam Proses
+**Status:** ✅ Selesai
 **Aktor:** Admin
-**Tujuan:** Admin dapat melihat, mengkonfirmasi, dan mengelola seluruh data pemesanan pelanggan.
+**Tujuan:** Admin dapat melihat, mengkonfirmasi, atau menolak seluruh data pemesanan yang masuk dari pelanggan.
 
-**Alur:** _(dalam proses pengembangan)_
+**Alur:**
 
-**Route / Controller:** _belum tersedia_
+```
+Admin buka /admin/pemesanan → tampil daftar semua pemesanan dengan filter status
+ → admin klik pesanan → tampil detail lengkap termasuk data pelanggan dan barang/jasa
+
+Konfirmasi pesanan:
+ → admin klik "Konfirmasi" → status pesanan berubah jadi "dikonfirmasi"
+ → pelanggan mendapat notifikasi untuk melanjutkan pembayaran
+
+Tolak pesanan:
+ → admin isi alasan penolakan → klik "Tolak"
+ → status pesanan berubah jadi "dibatalkan"
+```
+
+**Route / Controller:**
+
+| Method | Route                             | Controller                              |
+|--------|-----------------------------------|-----------------------------------------|
+| GET    | /admin/pemesanan                  | `Admin\PemesananController@index`       |
+| GET    | /admin/pemesanan/{id}             | `Admin\PemesananController@show`        |
+| PATCH  | /admin/pemesanan/{id}/konfirmasi  | `Admin\PemesananController@konfirmasi`  |
+| PATCH  | /admin/pemesanan/{id}/tolak       | `Admin\PemesananController@tolak`       |
 
 ---
 
 ## 10. Verifikasi Pembayaran (Admin)
 
-**Status:** 🔄 Dalam Proses
+**Status:** ✅ Selesai
 **Aktor:** Admin
-**Tujuan:** Admin dapat memverifikasi bukti pembayaran yang diupload oleh pelanggan.
+**Tujuan:** Admin dapat memverifikasi atau menolak bukti pembayaran yang diupload pelanggan.
 
-**Alur:** _(dalam proses pengembangan)_
+**Alur:**
 
-**Route / Controller:** _belum tersedia_
+```
+Admin buka /admin/pembayaran → tampil daftar pembayaran dengan filter status
+ → admin klik pembayaran → tampil detail termasuk preview bukti transfer
+
+Verifikasi:
+ → admin klik "Verifikasi Pembayaran"
+ → status pembayaran berubah jadi "terverifikasi"
+ → status pesanan otomatis diperbarui:
+    ├─ Jika tahap DP atau langsung → status pesanan jadi "berlangsung"
+    └─ Jika tahap pelunasan → status pesanan jadi "selesai"
+
+Tolak:
+ → admin isi alasan penolakan → klik "Tolak Pembayaran"
+ → status pembayaran berubah jadi "ditolak"
+ → pelanggan dapat upload ulang bukti baru
+```
+
+**Route / Controller:**
+
+| Method | Route                                  | Controller                               |
+|--------|----------------------------------------|------------------------------------------|
+| GET    | /admin/pembayaran                      | `Admin\PembayaranController@index`       |
+| GET    | /admin/pembayaran/{id}                 | `Admin\PembayaranController@show`        |
+| PATCH  | /admin/pembayaran/{id}/verifikasi      | `Admin\PembayaranController@verifikasi`  |
+| PATCH  | /admin/pembayaran/{id}/tolak           | `Admin\PembayaranController@tolak`       |
 
 ---
 
 ## 11. Kelola Jasa (Admin)
 
-**Status:** 🔄 Dalam Proses
+**Status:** ✅ Selesai
 **Aktor:** Admin
 **Tujuan:** Admin dapat menambah, mengedit, dan menghapus data jasa yang tersedia di sanggar.
 
-**Alur:** _(dalam proses pengembangan)_
+**Alur:**
 
-**Route / Controller:** _belum tersedia_
+```
+Admin buka /admin/jasa → tampil daftar jasa
+ → Tambah: klik "Tambah Jasa" → isi form → simpan
+ → Edit: klik edit pada jasa → ubah data → simpan
+ → Hapus: klik hapus → konfirmasi → data dihapus
+```
+
+**Route / Controller:**
+
+| Method | Route                  | Controller                      |
+|--------|------------------------|---------------------------------|
+| GET    | /admin/jasa            | `Admin\JasaController@index`    |
+| GET    | /admin/jasa/create     | `Admin\JasaController@create`   |
+| POST   | /admin/jasa            | `Admin\JasaController@store`    |
+| GET    | /admin/jasa/{id}/edit  | `Admin\JasaController@edit`     |
+| PUT    | /admin/jasa/{id}       | `Admin\JasaController@update`   |
+| DELETE | /admin/jasa/{id}       | `Admin\JasaController@destroy`  |
 
 ---
 
 ## 12. Kelola Paket (Admin)
 
-**Status:** 🔄 Dalam Proses
+**Status:** ✅ Selesai
 **Aktor:** Admin
-**Tujuan:** Admin dapat mengelola data paket layanan yang ditawarkan sanggar.
+**Tujuan:** Admin dapat mengelola data paket layanan beserta foto-foto paket yang ditawarkan sanggar.
 
-**Alur:** _(dalam proses pengembangan)_
+**Alur:**
 
-**Route / Controller:** _belum tersedia_
+```
+Admin buka /admin/paket → tampil daftar paket
+ → Tambah: klik "Tambah Paket" → isi form (nama, deskripsi, harga, foto) → simpan
+ → Edit: klik edit → ubah data atau tambah/hapus foto → simpan
+ → Hapus paket: klik hapus → konfirmasi → data dan foto dihapus
+ → Hapus foto: klik hapus pada foto individual → foto dihapus
+```
+
+**Route / Controller:**
+
+| Method | Route                          | Controller                           |
+|--------|--------------------------------|--------------------------------------|
+| GET    | /admin/paket                   | `Admin\PaketController@index`        |
+| GET    | /admin/paket/create            | `Admin\PaketController@create`       |
+| POST   | /admin/paket                   | `Admin\PaketController@store`        |
+| GET    | /admin/paket/{id}/edit         | `Admin\PaketController@edit`         |
+| PUT    | /admin/paket/{id}              | `Admin\PaketController@update`       |
+| DELETE | /admin/paket/{id}              | `Admin\PaketController@destroy`      |
+| GET    | /admin/paket/foto/{id}/hapus   | `Admin\PaketController@destroyFoto`  |
 
 ---
 
@@ -285,8 +392,16 @@ Login sebagai admin → redirect ke /admin/dashboard
 
 **Status:** 🔄 Dalam Proses
 **Aktor:** Sistem (otomatis)
-**Tujuan:** Sistem mengirimkan email otomatis kepada pelanggan ketika status pemesanan berubah.
+**Tujuan:** Sistem mengirimkan email pengingat otomatis kepada pelanggan H-1 sebelum tanggal pengembalian untuk pesanan yang sedang berlangsung.
 
-**Alur:** _(dalam proses pengembangan)_
+**Alur:**
 
-**Route / Controller:** _belum tersedia_
+```
+Scheduler berjalan setiap hari
+ → ambil semua pesanan dengan status "berlangsung"
+ → cek tanggal pengembalian di detail_pemesanan
+ → jika tanggal pengembalian = besok → kirim email reminder ke pelanggan
+ → email berisi: nama pelanggan, kode pesanan, tanggal pengembalian, detail barang/jasa
+```
+
+**Route / Controller:** _(dalam proses pengembangan)_
