@@ -498,7 +498,7 @@ $gallery = [
             Hubungi kami sekarang atau langsung buat pemesanan.
         </p>
         <div class="mt-8 flex flex-wrap justify-center gap-4">
-            <a href="{{ route('user.pemesanan.create') }}" class="rounded-full bg-gradient-to-r from-[#D6B35C] to-[#B8983A] px-8 py-3.5 font-serif text-base text-maroon-deep shadow-lg transition duration-300 hover:scale-105 transform inline-block font-semibold">
+            <a href="{{ route('public.katalog.index') }}" class="rounded-full bg-gradient-to-r from-[#D6B35C] to-[#B8983A] px-8 py-3.5 font-serif text-base text-maroon-deep shadow-lg transition duration-300 hover:scale-105 transform inline-block font-semibold">
                 Buat Pemesanan
             </a>
             <a href="https://wa.me/62" target="_blank" rel="noopener noreferrer" class="rounded-full border border-gold/60 px-8 py-3.5 font-serif text-base text-cream transition duration-300 hover:bg-cream/10 inline-block">

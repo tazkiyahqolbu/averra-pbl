@@ -170,7 +170,12 @@
 
                     <div class="pt-4 border-t border-gold/10">
                         @if($item->available)
-                            <a href="{{ route('user.pemesanan.create', ['item' => $item->id]) }}" class="w-full text-center rounded-full bg-gradient-to-r from-[#D6B35C] to-[#B8983A] py-3 px-6 font-serif text-base text-maroon-deep font-semibold shadow-lg transition duration-300 hover:scale-[1.02] transform inline-block">
+                            @php
+                                $pesanRoute = $item->type === 'paket'
+                                    ? route('user.pemesanan.create.acara')
+                                    : route('user.pemesanan.create.sewa');
+                            @endphp
+                            <a href="{{ $pesanRoute }}" class="w-full text-center rounded-full bg-gradient-to-r from-[#D6B35C] to-[#B8983A] py-3 px-6 font-serif text-base text-maroon-deep font-semibold shadow-lg transition duration-300 hover:scale-[1.02] transform inline-block">
                                 {{ $item->category === 'Sewa Barang' || $item->category === 'Properti' ? 'Sewa Sekarang' : 'Pesan Paket' }}
                             </a>
                         @else
