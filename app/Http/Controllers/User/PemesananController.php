@@ -55,7 +55,7 @@ class PemesananController extends Controller
         return view('user.pemesanan.show', compact('pesanan'));
     }
 
-    public function createAcara(): View
+    public function createAcara(Request $request): View
     {
         $katalogs = collect()
             ->merge(Jasa::all()->map(fn($j) => [
@@ -76,12 +76,13 @@ class PemesananController extends Controller
             'nama_zona' => $z->nama_zona,
             'tarif'     => (float) $z->biaya,
         ]);
-        $item = null;
+
+        $item = $this->resolveItemFromQuery($request->query('item'), ['jasa', 'paket']);
 
         return view('user.pemesanan.createacara', compact('katalogs', 'item', 'zonaLokasis'));
     }
 
-    public function createSewa(): View
+    public function createSewa(Request $request): View
     {
         $katalogs = Barang::where('stok', '>', 0)->where('aktif', true)->get()->map(fn($b) => [
             'id'       => 'barang-' . $b->id,
@@ -95,9 +96,40 @@ class PemesananController extends Controller
             'nama_zona' => $z->nama_zona,
             'tarif'     => (float) $z->biaya,
         ]);
-        $item = null;
+
+        $item = $this->resolveItemFromQuery($request->query('item'), ['barang']);
 
         return view('user.pemesanan.createsewa', compact('katalogs', 'item', 'zonaLokasis'));
+    }
+
+    private function resolveItemFromQuery(?string $slug, array $allowedTypes): ?array
+    {
+        if (!$slug) return null;
+
+        $parts  = explode('-', $slug, 2);
+        $type   = $parts[0] ?? null;
+        $typeId = $parts[1] ?? null;
+
+        if (!$typeId || !in_array($type, $allowedTypes)) return null;
+
+        try {
+            if ($type === 'jasa') {
+                $model = Jasa::findOrFail($typeId);
+                return ['id' => $slug, 'name' => $model->nama_jasa, 'price' => (float) $model->harga, 'category' => 'Jasa'];
+            }
+            if ($type === 'paket') {
+                $model = Paket::findOrFail($typeId);
+                return ['id' => $slug, 'name' => $model->nama_paket, 'price' => (float) $model->harga, 'category' => 'Paket'];
+            }
+            if ($type === 'barang') {
+                $model = Barang::findOrFail($typeId);
+                return ['id' => $slug, 'name' => $model->nama_barang, 'price' => (float) $model->harga, 'category' => 'Sewa Barang'];
+            }
+        } catch (\Exception $e) {
+            return null;
+        }
+
+        return null;
     }
 
     public function store(Request $request): RedirectResponse
