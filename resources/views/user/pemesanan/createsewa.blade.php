@@ -44,12 +44,29 @@
             <h3 class="text-xl font-bold text-[#800000] mb-6 border-b pb-2">STEP 1: Item & Durasi</h3>
             <div class="mb-6">
                 <h4 class="text-sm font-bold text-gray-700 mb-3 uppercase tracking-wider">Pilih Barang <span class="text-red-500">*</span></h4>
-                <select name="katalog_id" x-model="selectedKatalogId" @change="updateKatalog" required class="w-full mb-3 rounded-lg border border-gray-300 px-3 py-2 focus:border-[#800000] transition">
-                    <option value="" disabled>Pilih Barang dari Katalog</option>
-                    <template x-for="k in katalogList.filter(i => i.category === 'Sewa Barang' || i.category === 'Properti')" :key="k.id">
-                        <option :value="k.id" x-text="k.name + ' - Rp' + formatRupiah(k.price) + '/hari'"></option>
-                    </template>
-                </select>
+
+                @if($item)
+                    {{-- Datang dari katalog: item sudah terpilih, tidak bisa diubah --}}
+                    <input type="hidden" name="katalog_id" value="{{ $item['id'] }}">
+                    <div class="w-full mb-3 rounded-xl border border-[#800000]/30 bg-[#FAF3E0] px-4 py-3 flex items-center justify-between">
+                        <div>
+                            <p class="font-semibold text-[#800000]">{{ $item['name'] }}</p>
+                            <p class="text-xs text-gray-500 mt-0.5">Sewa Barang</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-[#800000]">Rp {{ number_format($item['price'], 0, ',', '.') }}</p>
+                            <p class="text-xs text-gray-500">/hari</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-400">Item dipilih dari katalog. <a href="{{ route('public.katalog.index') }}" class="text-[#800000] underline">Ganti item</a></p>
+                @else
+                    <select name="katalog_id" x-model="selectedKatalogId" @change="updateKatalog" required class="w-full mb-3 rounded-lg border border-gray-300 px-3 py-2 focus:border-[#800000] transition">
+                        <option value="" disabled>Pilih Barang dari Katalog</option>
+                        <template x-for="k in katalogList.filter(i => i.category === 'Sewa Barang' || i.category === 'Properti')" :key="k.id">
+                            <option :value="k.id" x-text="k.name + ' - Rp' + formatRupiah(k.price) + '/hari'"></option>
+                        </template>
+                    </select>
+                @endif
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
