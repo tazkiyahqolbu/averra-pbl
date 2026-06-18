@@ -171,7 +171,7 @@
                     <div class="pt-4 border-t border-gold/10">
                         @if($item->available)
                             @php
-                                $pesanRoute = $item->type === 'paket'
+                                $pesanRoute = in_array($item->type, ['paket', 'jasa'])
                                     ? route('user.pemesanan.create.acara')
                                     : route('user.pemesanan.create.sewa');
                             @endphp

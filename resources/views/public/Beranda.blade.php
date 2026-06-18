@@ -93,7 +93,7 @@ $gallery = [
             </p>
             
             <div class="mt-8 flex flex-wrap justify-center gap-3">
-                <a href="#booking" class="rounded-full bg-gradient-to-r from-[#D6B35C] to-[#B8983A] px-8 py-3.5 font-serif text-base text-maroon-deep shadow-lg transition duration-300 hover:scale-105 transform inline-block font-semibold">
+                <a href="{{ route('public.katalog.index') }}" class="rounded-full bg-gradient-to-r from-[#D6B35C] to-[#B8983A] px-8 py-3.5 font-serif text-base text-maroon-deep shadow-lg transition duration-300 hover:scale-105 transform inline-block font-semibold">
                     Booking Acara Anda
                 </a>
                 <a href="#tentang" class="rounded-full border border-gold/60 px-8 py-3.5 font-serif text-base text-cream transition duration-300 hover:bg-cream/10 inline-block">
@@ -143,7 +143,7 @@ $gallery = [
                 Paket Wedding Minang, Akustik dan berbagai kebutuhan acara lainnya.
             </p>
 
-            <a href="{{ url('/katalog?category=Paket%20Pernikahan') }}"
+            <a href="{{ url('/katalog?category=Paket%20Acara') }}"
                 class="mt-5 inline-block text-sm font-semibold text-gold hover:text-gold-soft transition">
                 Lihat →
             </a>
@@ -167,7 +167,7 @@ $gallery = [
                 serta alat musik tradisional Minangkabau untuk berbagai acara.
             </p>
 
-            <a href="{{ url('/katalog?category=Properti') }}"
+            <a href="{{ url('/katalog?category=Sewa%20Barang') }}"
                 class="mt-5 inline-block text-sm font-semibold text-gold hover:text-gold-soft transition">
                 Lihat →
             </a>
