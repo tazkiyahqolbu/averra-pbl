@@ -26,6 +26,9 @@ class KatalogController extends Controller
             'available' => true,
             'rating'   => 4.8,
             'ulasan'   => 0,
+            'color'    => null,
+            'material' => null,
+            'stok'     => null,
         ]);
 
         $paketItems = Paket::where('aktif', true)->get()->map(fn($p) => (object)[
@@ -39,6 +42,9 @@ class KatalogController extends Controller
             'available' => true,
             'rating'   => 4.8,
             'ulasan'   => 0,
+            'color'    => null,
+            'material' => null,
+            'stok'     => null,
         ]);
 
         $katalogs = $jasaItems->concat($paketItems);
@@ -75,6 +81,9 @@ class KatalogController extends Controller
                 'available' => true,
                 'rating'   => 4.8,
                 'ulasan'   => 0,
+                'color'    => null,
+                'material' => null,
+                'stok'     => null,
             ];
         } elseif ($type === 'paket' && $typeId) {
             $model = Paket::findOrFail($typeId);
@@ -89,6 +98,9 @@ class KatalogController extends Controller
                 'available' => true,
                 'rating'   => 4.8,
                 'ulasan'   => 0,
+                'color'    => null,
+                'material' => null,
+                'stok'     => null,
             ];
         } else {
             abort(404);
