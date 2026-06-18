@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Barang;
 use App\Models\Jasa;
 use App\Models\Paket;
 use Illuminate\Http\Request;
@@ -12,8 +13,8 @@ class KatalogController extends Controller
 {
     public function index(Request $request)
     {
-        $search   = $request->get('search', '');
-        $category = $request->get('category', 'Semua');
+        $search   = $request->query('search', '');
+        $category = $request->query('category', 'Semua');
 
         $jasaItems = Jasa::where('aktif', true)->get()->map(fn($j) => (object)[
             'id'       => 'jasa-' . $j->id,
@@ -47,7 +48,23 @@ class KatalogController extends Controller
             'stok'     => null,
         ]);
 
-        $katalogs = $jasaItems->concat($paketItems);
+        $barangItems = Barang::where('aktif', true)->get()->map(fn($b) => (object)[
+            'id'       => 'barang-' . $b->id,
+            'type'     => 'barang',
+            'name'     => $b->nama_barang,
+            'category' => 'Sewa Barang',
+            'img'      => $b->thumbnail_path ? Storage::url($b->thumbnail_path) : 'image/background.png',
+            'price'    => (float) $b->harga,
+            'desc'     => $b->deskripsi,
+            'available' => $b->stok > 0,
+            'rating'   => 4.8,
+            'ulasan'   => 0,
+            'color'    => null,
+            'material' => null,
+            'stok'     => $b->stok,
+        ]);
+
+        $katalogs = $jasaItems->concat($paketItems)->concat($barangItems);
 
         if ($search) {
             $katalogs = $katalogs->filter(
@@ -101,6 +118,23 @@ class KatalogController extends Controller
                 'color'    => null,
                 'material' => null,
                 'stok'     => null,
+            ];
+        } elseif ($type === 'barang' && $typeId) {
+            $model = Barang::findOrFail($typeId);
+            $item  = (object)[
+                'id'       => $slug,
+                'type'     => 'barang',
+                'name'     => $model->nama_barang,
+                'category' => 'Sewa Barang',
+                'img'      => $model->thumbnail_path ? Storage::url($model->thumbnail_path) : 'image/background.png',
+                'price'    => (float) $model->harga,
+                'desc'     => $model->deskripsi,
+                'available' => $model->stok > 0,
+                'rating'   => 4.8,
+                'ulasan'   => 0,
+                'color'    => null,
+                'material' => null,
+                'stok'     => $model->stok,
             ];
         } else {
             abort(404);
