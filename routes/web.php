@@ -7,15 +7,17 @@ use App\Http\Controllers\Admin\KategoriPaketController;
 use App\Http\Controllers\Admin\PemesananController as AdminPemesananController;
 use App\Http\Controllers\Admin\PembayaranController as AdminPembayaranController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Frontend\KatalogController;
 use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\User\PemesananController;
 use App\Http\Controllers\User\PembayaranController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn() => redirect()->route('login'));
+Route::get('/', fn() => view('public.Beranda'))->name('public.beranda');
 
 // Halaman publik
-Route::get('/katalog', fn() => redirect()->route('user.pemesanan.index'))->name('public.katalog.index');
+Route::get('/katalog',       [KatalogController::class, 'index'])->name('public.katalog.index');
+Route::get('/katalog/{slug}', [KatalogController::class, 'show'])->name('katalog.show');
 
 // Testimoni
 Route::middleware('auth')->post('/testimoni/{pemesanan_id}', function ($pemesanan_id) {
