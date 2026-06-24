@@ -45,8 +45,8 @@
                 <a href="{{ route('admin.pemesanan.index', ['status' => $slug]) }}"
                    class="rounded-full border px-4 py-2 font-semibold transition
                    {{ $activeTab === $slug
-                        ? 'border-[#5A0B1A] bg-[#5A0B1A] text-white'
-                        : 'border-[#decba5] text-[#5A0B1A] hover:bg-[#f7efe2]' }}">
+                        ? 'border-transparent bg-gradient-to-br from-[#6B1625] to-[#3A0A12] text-white shadow-[0_3px_10px_rgba(74,15,26,0.3)]'
+                        : 'border-[#E2D4C0] text-[#4A0F1A] hover:bg-[#FAF3E0]' }}">
                     {{ $label }}
                 </a>
             @endforeach
@@ -73,11 +73,11 @@
                             <h2 class="font-heading text-xl font-bold text-gray-900">#{{ $pemesanan->kode_pemesanan }}</h2>
                             <span class="{{ $badge['class'] }}">{{ $badge['label'] }}</span>
                         </div>
-                        <p class="text-sm text-gray-700">👤 {{ $pemesanan->user?->nama }} | 📞 {{ $pemesanan->user?->no_hp ?? '-' }}</p>
-                        <p class="text-sm text-gray-700">📋 {{ $itemName }} <span class="text-[#7a5d58]">[{{ $jenisLabel }}]</span></p>
-                        <p class="text-sm text-gray-700">📅 Pelaksanaan: {{ $pemesanan->tanggal_pakai?->format('d M Y') ?? '-' }} | 📍 {{ $pemesanan->zonaLokasi?->nama_zona ?? '-' }}</p>
-                        <p class="text-sm text-gray-700">💰 Total: <strong>Rp {{ number_format($pemesanan->total_harga, 0, ',', '.') }}</strong> <span class="text-[#7a5d58]">(Metode: {{ $metode }})</span></p>
-                        <p class="text-xs text-[#7a5d58]">🕐 Dipesan: {{ $pemesanan->created_at->format('d M Y, H.i') }}</p>
+                        <p class="text-sm text-gray-700 flex items-center gap-1.5"><i data-lucide="user" class="h-3.5 w-3.5 text-[#4A2E28]/50 shrink-0"></i> {{ $pemesanan->user?->nama }} <span class="text-[#E2D4C0] mx-1">|</span> <i data-lucide="phone" class="h-3.5 w-3.5 text-[#4A2E28]/50 shrink-0"></i> {{ $pemesanan->user?->no_hp ?? '-' }}</p>
+                        <p class="text-sm text-gray-700 flex items-center gap-1.5"><i data-lucide="clipboard-list" class="h-3.5 w-3.5 text-[#4A2E28]/50 shrink-0"></i> {{ $itemName }} <span class="text-[#4A2E28]">[{{ $jenisLabel }}]</span></p>
+                        <p class="text-sm text-gray-700 flex items-center gap-1.5"><i data-lucide="calendar" class="h-3.5 w-3.5 text-[#4A2E28]/50 shrink-0"></i> Pelaksanaan: {{ $pemesanan->tanggal_pakai?->format('d M Y') ?? '-' }} <span class="text-[#E2D4C0] mx-1">|</span> <i data-lucide="map-pin" class="h-3.5 w-3.5 text-[#4A2E28]/50 shrink-0"></i> {{ $pemesanan->zonaLokasi?->nama_zona ?? '-' }}</p>
+                        <p class="text-sm text-gray-700 flex items-center gap-1.5"><i data-lucide="wallet" class="h-3.5 w-3.5 text-[#4A2E28]/50 shrink-0"></i> Total: <strong>Rp {{ number_format($pemesanan->total_harga, 0, ',', '.') }}</strong> <span class="text-[#4A2E28]">(Metode: {{ $metode }})</span></p>
+                        <p class="text-xs text-[#4A2E28] flex items-center gap-1.5"><i data-lucide="clock" class="h-3 w-3 text-[#4A2E28]/40 shrink-0"></i> Dipesan: {{ $pemesanan->created_at->format('d M Y, H.i') }}</p>
                     </div>
 
                     <div class="flex flex-wrap items-start gap-2">

@@ -27,7 +27,7 @@
     <div class="admin-card p-4">
         <div class="flex flex-wrap gap-2 text-sm">
             @foreach (['Semua', 'Belum Diperiksa (1)', 'Sedang Diperiksa', 'Selesai'] as $tab)
-                <button class="rounded-full border border-[#decba5] px-4 py-2 font-semibold text-[#5A0B1A] hover:bg-[#f7efe2]">
+                <button class="rounded-full border border-[#E2D4C0] px-4 py-2 font-semibold text-[#4A0F1A] hover:bg-[#FAF3E0]">
                     {{ $tab }}
                 </button>
             @endforeach
@@ -44,7 +44,7 @@
                             <span class="badge-warning">{{ $return['status'] }}</span>
                         </div>
 
-                        <p class="text-sm text-gray-700">Pesanan: #{{ $return['pesanan'] }} | 👤 {{ $return['customer'] }}</p>
+                        <p class="text-sm text-gray-700 flex items-center gap-1.5">Pesanan: #{{ $return['pesanan'] }} <span class="text-[#E2D4C0] mx-1">|</span> <i data-lucide="user" class="h-3.5 w-3.5 text-[#4A2E28]/50 shrink-0"></i> {{ $return['customer'] }}</p>
                         <p class="text-sm text-gray-700">Item: {{ $return['item'] }}</p>
                         <p class="text-sm text-gray-700">Jadwal Kembali: {{ $return['jadwal'] }}</p>
                     </div>

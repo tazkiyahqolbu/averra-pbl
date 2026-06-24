@@ -29,7 +29,7 @@
             <textarea class="admin-textarea">Area luar Kota Padang dengan tambahan transportasi.</textarea>
         </div>
 
-        <div class="flex flex-col-reverse gap-3 border-t border-[#decba5] pt-5 sm:flex-row sm:justify-end">
+        <div class="flex flex-col-reverse gap-3 border-t border-[#E2D4C0] pt-5 sm:flex-row sm:justify-end">
             <a href="{{ route('admin.zona-lokasi.index') }}" class="admin-btn-secondary">Kembali</a>
             <button type="button" class="admin-btn-primary">Update Zona</button>
         </div>

@@ -41,9 +41,11 @@
 
             @if($pembayaran->buktiUrl)
                 @if(str_ends_with(strtolower($pembayaran->bukti_pembayaran_path ?? ''), '.pdf'))
-                    <div class="flex items-center justify-center rounded-3xl border border-dashed border-[#decba5] bg-[#fff8ed] p-10">
+                    <div class="flex items-center justify-center rounded-3xl border border-dashed border-[#E2D4C0] bg-[#FAF3E0] p-10">
                         <div class="text-center">
-                            <p class="text-6xl mb-4">📄</p>
+                            <div class="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-white border border-[#E2D4C0] shadow-sm mb-4">
+                                <i data-lucide="file-text" class="h-8 w-8 text-[#C8960C]"></i>
+                            </div>
                             <p class="font-semibold text-gray-700 mb-3">Bukti pembayaran berformat PDF</p>
                             <a href="{{ $pembayaran->buktiUrl }}" target="_blank"
                                class="admin-btn-primary inline-block">Buka PDF</a>
@@ -52,7 +54,7 @@
                 @else
                     {{-- Lightbox sederhana pakai Alpine --}}
                     <div x-data="{ open: false }">
-                        <div class="rounded-3xl overflow-hidden border border-[#decba5] bg-[#fff8ed] cursor-zoom-in"
+                        <div class="rounded-3xl overflow-hidden border border-[#E2D4C0] bg-[#FAF3E0] cursor-zoom-in"
                              @click="open = true" title="Klik untuk perbesar">
                             <img src="{{ $pembayaran->buktiUrl }}" alt="Bukti Transfer"
                                  class="w-full object-contain max-h-[420px]">
@@ -74,10 +76,12 @@
                     </div>
                 @endif
             @else
-                <div class="flex min-h-[280px] items-center justify-center rounded-3xl border border-dashed border-[#decba5] bg-[#fff8ed]">
+                <div class="flex min-h-[280px] items-center justify-center rounded-3xl border border-dashed border-[#E2D4C0] bg-[#FAF3E0]">
                     <div class="text-center">
-                        <p class="text-5xl">🖼️</p>
-                        <p class="mt-3 font-semibold text-gray-700">Belum ada bukti yang diupload</p>
+                        <div class="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white border border-[#E2D4C0] mb-3">
+                            <i data-lucide="image-off" class="h-7 w-7 text-[#E2D4C0]"></i>
+                        </div>
+                        <p class="mt-2 font-semibold text-gray-700">Belum ada bukti yang diupload</p>
                     </div>
                 </div>
             @endif
@@ -109,7 +113,7 @@
                     </p>
                     <p>
                         <span class="admin-muted">Jumlah</span><br>
-                        <strong class="text-[#800000] text-base">Rp {{ number_format($pembayaran->jumlah_bayar, 0, ',', '.') }}</strong>
+                        <strong class="text-[#4A0F1A] text-base">Rp {{ number_format($pembayaran->jumlah_bayar, 0, ',', '.') }}</strong>
                     </p>
                     <p>
                         <span class="admin-muted">Dikirim pada</span><br>
@@ -144,7 +148,7 @@
                     {{-- Verifikasi --}}
                     <form method="POST" action="{{ route('admin.pembayaran.verifikasi', $pembayaran->id) }}">
                         @csrf @method('PATCH')
-                        <button type="submit" class="admin-btn-primary w-full">✅ Verifikasi Pembayaran</button>
+                        <button type="submit" class="admin-btn-primary w-full">Verifikasi Pembayaran</button>
                     </form>
 
                     {{-- Tolak --}}
@@ -157,18 +161,18 @@
                         @error('catatan_penolakan')
                             <p class="text-red-500 text-xs">{{ $message }}</p>
                         @enderror
-                        <button type="submit" class="admin-btn-danger w-full mt-2">❌ Tolak Pembayaran</button>
+                        <button type="submit" class="admin-btn-danger w-full mt-2">Tolak Pembayaran</button>
                     </form>
 
                 @elseif($pembayaran->status === 'terverifikasi')
                     <div class="flex items-center gap-2 bg-green-50 border border-green-200 rounded-2xl px-4 py-3">
-                        <span class="text-xl">✅</span>
+                        <i data-lucide="check-circle" class="h-5 w-5 text-green-600 shrink-0"></i>
                         <p class="text-sm font-semibold text-green-800">Pembayaran sudah diverifikasi</p>
                     </div>
 
                 @elseif($pembayaran->status === 'ditolak')
                     <div class="flex items-center gap-2 bg-red-50 border border-red-200 rounded-2xl px-4 py-3">
-                        <span class="text-xl">❌</span>
+                        <i data-lucide="x-circle" class="h-5 w-5 text-red-600 shrink-0"></i>
                         <p class="text-sm font-semibold text-red-800">Pembayaran ditolak</p>
                     </div>
                 @endif

@@ -37,8 +37,8 @@
         <div>
             <label class="admin-label">Status</label>
             <div class="flex flex-wrap gap-3">
-                <label class="rounded-2xl border border-[#decba5] bg-[#fffdf7] px-4 py-3 text-sm"><input type="radio" name="status" checked> Aktif</label>
-                <label class="rounded-2xl border border-[#decba5] bg-[#fffdf7] px-4 py-3 text-sm"><input type="radio" name="status"> Nonaktif</label>
+                <label class="rounded-2xl border border-[#E2D4C0] bg-[#ffffff] px-4 py-3 text-sm"><input type="radio" name="status" checked> Aktif</label>
+                <label class="rounded-2xl border border-[#E2D4C0] bg-[#ffffff] px-4 py-3 text-sm"><input type="radio" name="status"> Nonaktif</label>
             </div>
         </div>
 

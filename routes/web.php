@@ -41,6 +41,7 @@ Route::middleware('auth')->name('user.')->group(function () {
     Route::get('/pemesanan/buat/acara', [PemesananController::class, 'createAcara'])->name('pemesanan.create.acara');
     Route::get('/pemesanan/buat/sewa',  [PemesananController::class, 'createSewa'])->name('pemesanan.create.sewa');
     Route::post('/pemesanan', [PemesananController::class, 'store'])->name('pemesanan.store');
+    Route::get('/pemesanan/{id}/submitted', [PemesananController::class, 'submitted'])->name('pemesanan.submitted');
     Route::get('/pemesanan/{id}', [PemesananController::class, 'show'])->name('pemesanan.show');
     Route::put('/pemesanan/{id}', [PemesananController::class, 'update'])->name('pemesanan.update');
     Route::get('/pemesanan/{id}/invoice', [PemesananController::class, 'invoice'])->name('pemesanan.invoice');

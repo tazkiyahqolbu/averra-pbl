@@ -33,7 +33,7 @@
 
         <div class="overflow-x-auto">
             <table class="w-full">
-                <thead class="border-b border-[#decba5] bg-[#f9f1e6]">
+                <thead class="border-b border-[#E2D4C0] bg-[#FAF3E0]">
                     <tr>
                         <th class="admin-table-th">Tanggal</th>
                         <th class="admin-table-th">Berlaku Untuk</th>
@@ -42,7 +42,7 @@
                     </tr>
                 </thead>
 
-                <tbody class="divide-y divide-[#decba5]">
+                <tbody class="divide-y divide-[#E2D4C0]">
                     @foreach ($blockedDates as $date)
                         <tr>
                             <td class="admin-table-td font-semibold">{{ $date['tanggal'] }}</td>
