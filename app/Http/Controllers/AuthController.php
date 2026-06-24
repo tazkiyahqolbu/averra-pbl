@@ -31,11 +31,18 @@ class AuthController extends Controller
         ]);
         $user->assignRole('user');
 
-        Auth::login($user);
-        $request->session()->regenerate();
+        return redirect()->route('register.success')
+            ->with('registered_name', $data['nama']);
+    }
 
-        return redirect()->route('public.beranda')
-            ->with('success', 'Pendaftaran berhasil, selamat datang!');
+    // Tampilkan halaman sukses setelah daftar
+    public function showRegisterSuccess(): View|RedirectResponse
+    {
+        if (! session('registered_name')) {
+            return redirect()->route('register');
+        }
+
+        return view('auth.register-success');
     }
 
     // Tampilkan form login
