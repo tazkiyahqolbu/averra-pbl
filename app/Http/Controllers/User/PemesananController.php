@@ -229,8 +229,16 @@ class PemesananController extends Controller
             'dibayar_pada'      => null,
         ]);
 
-        return redirect()->route('user.pemesanan.show', $pemesanan->id)
-            ->with('success', 'Pesanan berhasil dibuat! Menunggu konfirmasi admin.');
+        return redirect()->route('user.pemesanan.submitted', $pemesanan->id);
+    }
+
+    public function submitted($id): View
+    {
+        $pesanan = Pemesanan::where('user_id', Auth::id())
+            ->with(['detailPemesanans.barang', 'detailPemesanans.jasa', 'detailPemesanans.paket', 'pembayarans'])
+            ->findOrFail($id);
+
+        return view('user.pemesanan.submitted', compact('pesanan'));
     }
 
     public function update($id): RedirectResponse

@@ -42,7 +42,7 @@
             </div>
 
             <div class="mb-6">
-                <h1 class="font-heading text-3xl font-bold text-gray-900">Buat Akun Baru</h1>
+                <h1 class="font-heading text-3xl font-bold text-[#4A0F1A]">Buat Akun Baru</h1>
                 <p class="mt-1.5 text-sm text-[#7a5d58]">Daftarkan diri untuk mengakses layanan peminjaman kostum.</p>
             </div>
 

@@ -27,8 +27,8 @@
 
     --color-maroon: #7B1C2E;
     --color-maroon-deep: #4A0F1A;
-    --color-gold: #C8A84B;
-    --color-gold-soft: #D9C07A;
+    --color-gold: #C8960C;
+    --color-gold-soft: #D4A820;
     --color-cream: #FAF3E0;
 }
 
@@ -90,3 +90,20 @@
 .sidebar-fade {
     mask-image: linear-gradient(to bottom, black 0%, black 92%, transparent 100%);
 }
+
+/* ── Scroll reveal ── */
+.scroll-fade {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.65s ease, transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.scroll-fade.in-view {
+    opacity: 1;
+    transform: translateY(0);
+}
+.scroll-delay-1 { transition-delay: 0.08s; }
+.scroll-delay-2 { transition-delay: 0.16s; }
+.scroll-delay-3 { transition-delay: 0.24s; }
+.scroll-delay-4 { transition-delay: 0.32s; }
+.scroll-delay-5 { transition-delay: 0.40s; }
+.scroll-delay-6 { transition-delay: 0.48s; }

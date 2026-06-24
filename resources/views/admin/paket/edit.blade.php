@@ -72,7 +72,7 @@
                     @if ($paket->thumbnail_path)
                     <img src="{{ asset('storage/' . $paket->thumbnail_path) }}" class="admin-preview-image">
                     @else
-                        <div class="admin-preview-image flex items-center justify-center text-sm font-semibold text-[#7a5d58]">
+                        <div class="admin-preview-image flex items-center justify-center text-sm font-semibold text-[#4A2E28]">
                             Belum ada
                         </div>
                     @endif
@@ -83,8 +83,8 @@
                     <input id="thumbnail_path" name="thumbnail_path" type="file" accept="image/*" class="admin-file">
                 </div>
 
-                <div class="flex items-center gap-3 rounded-2xl border border-[#decba5] bg-[#fffdf7] p-4 md:col-span-2">
-                    <input id="aktif" name="aktif" type="checkbox" value="1" @checked($paket->aktif) class="h-5 w-5 rounded border-[#decba5] text-[#7b1c2e]">
+                <div class="flex items-center gap-3 rounded-2xl border border-[#E2D4C0] bg-[#ffffff] p-4 md:col-span-2">
+                    <input id="aktif" name="aktif" type="checkbox" value="1" @checked($paket->aktif) class="h-5 w-5 rounded border-[#E2D4C0] text-[#4A0F1A]">
                     <div>
                         <label for="aktif" class="font-semibold text-[#4a0f1a]">Paket Aktif</label>
                         <p class="admin-muted text-xs">Jika aktif, paket dapat ditampilkan pada katalog.</p>
@@ -103,7 +103,7 @@
 
             <div class="space-y-5">
                 @foreach ($paket->paketDetails as $detail)
-                    <div class="rounded-2xl border border-[#decba5] bg-[#fffdf7] p-5">
+                    <div class="rounded-2xl border border-[#E2D4C0] bg-[#ffffff] p-5">
                         <div class="grid gap-5 md:grid-cols-2">
                             <div>
                                 <label class="admin-label">Nama Item</label>
@@ -152,7 +152,7 @@
                         @if ($foto->foto_path)
                             <img src="{{ asset('storage/' . $foto->foto_path) }}" alt="{{ $foto->keterangan }}" class="h-36 w-full object-cover">
                         @else
-                            <div class="flex h-36 w-full items-center justify-center bg-[#ead8b8] text-sm font-semibold text-[#7a5d58]">
+                            <div class="flex h-36 w-full items-center justify-center bg-[#E2D4C0] text-sm font-semibold text-[#4A2E28]">
                                 Foto Paket
                             </div>
                         @endif

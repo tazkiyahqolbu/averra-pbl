@@ -48,7 +48,7 @@
         <div>
             <label class="admin-label">Media Saat Ini</label>
             <div class="flex items-center gap-4">
-                <div class="admin-thumb-lg flex items-center justify-center text-xs font-semibold text-[#7a5d58]">FOTO</div>
+                <div class="admin-thumb-lg flex items-center justify-center text-xs font-semibold text-[#4A2E28]">FOTO</div>
                 <input type="file" class="admin-file" accept="image/*,video/*">
             </div>
         </div>
@@ -58,7 +58,7 @@
             <textarea class="admin-textarea">Dokumentasi acara pernikahan adat Minangkabau.</textarea>
         </div>
 
-        <div class="flex flex-col-reverse gap-3 border-t border-[#decba5] pt-5 sm:flex-row sm:justify-end">
+        <div class="flex flex-col-reverse gap-3 border-t border-[#E2D4C0] pt-5 sm:flex-row sm:justify-end">
             <a href="{{ route('admin.galeri.index') }}" class="admin-btn-secondary">Kembali</a>
             <button type="button" class="admin-btn-primary">Update Galeri</button>
         </div>

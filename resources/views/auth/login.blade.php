@@ -95,7 +95,7 @@
             </div>
 
             <div class="mb-7">
-                <h1 class="font-heading text-3xl font-bold text-gray-900">Selamat Datang</h1>
+                <h1 class="font-heading text-3xl font-bold text-[#4A0F1A]">Selamat Datang</h1>
                 <p class="mt-1.5 text-sm text-[#7a5d58]">Masuk ke akun Anda untuk melanjutkan.</p>
             </div>
 
