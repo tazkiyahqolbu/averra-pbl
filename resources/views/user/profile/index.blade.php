@@ -2,16 +2,6 @@
 
 @section('content')
 
-<style>
-    [x-cloak] {
-        display: none !important;
-    }
-
-    .font-dashboard {
-        font-family: Inter, ui-sans-serif, system-ui, sans-serif;
-    }
-</style>
-
 <div class="max-w-6xl mx-auto font-dashboard" x-data="{ isEditing: false, showPassword: false, showSecurity: false }">
 
     {{-- Header --}}
