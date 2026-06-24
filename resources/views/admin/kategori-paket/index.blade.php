@@ -12,7 +12,7 @@
     </div>
 
     <div class="admin-card p-6">
-        <h2 class="mb-4 text-lg font-semibold text-gray-900">Tambah Kategori Paket</h2>
+        <h2 class="mb-4 text-lg font-semibold text-[#4A0F1A]">Tambah Kategori Paket</h2>
 
             <form action="{{ route('admin.kategori-paket.store') }}" method="POST" enctype="multipart/form-data" class="grid gap-4 md:grid-cols-2">
              @csrf
@@ -40,7 +40,7 @@
 
     <div class="admin-table-wrapper">
         <div class="border-b border-[#E2D4C0] px-6 py-4">
-            <h2 class="text-lg font-semibold text-gray-900">Daftar Kategori Paket</h2>
+            <h2 class="text-lg font-semibold text-[#4A0F1A]">Daftar Kategori Paket</h2>
         </div>
 
         <div class="overflow-x-auto">
@@ -77,7 +77,7 @@
 
                     </td>
 
-                            <td class="admin-table-td font-semibold text-gray-900">
+                            <td class="admin-table-td font-semibold text-[#4A0F1A]">
                                 {{ $kategori->nama   }}
                             </td>
 
@@ -132,7 +132,7 @@
 >
     <div class="w-full max-w-lg rounded-2xl bg-white shadow-xl">
         <div class="border-b border-[#E2D4C0] px-6 py-4">
-            <h2 class="text-lg font-semibold text-gray-900">
+            <h2 class="text-lg font-semibold text-[#4A0F1A]">
                 Edit Kategori Paket
             </h2>
         </div>

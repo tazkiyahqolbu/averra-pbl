@@ -62,7 +62,7 @@
             <div class="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-[#FAF3E0] border border-[#E2D4C0] mb-3">
                 <i data-lucide="credit-card" class="h-6 w-6 text-[#C8960C]/60"></i>
             </div>
-            <p class="font-semibold text-gray-700">Belum ada bukti pembayaran</p>
+            <p class="font-semibold text-[#4A0F1A]">Belum ada bukti pembayaran</p>
             <p class="admin-muted text-sm mt-1">Bukti akan muncul setelah customer mengupload.</p>
         </div>
     @else
@@ -81,14 +81,14 @@
                     <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                         <div class="space-y-2">
                             <div class="flex flex-wrap items-center gap-2">
-                                <h2 class="font-heading text-lg font-bold text-gray-900">#{{ $pembayaran->kode_transaksi }}</h2>
+                                <h2 class="font-heading text-lg font-bold text-[#4A0F1A]">#{{ $pembayaran->kode_transaksi }}</h2>
                                 <span class="{{ $badge }}">{{ $statusLabel }}</span>
                             </div>
-                            <p class="text-sm text-gray-700">
+                            <p class="text-sm text-[#4A2E28]">
                                 Pesanan: <strong>#{{ $pembayaran->pemesanan?->kode_pemesanan ?? '-' }}</strong>
                                 &nbsp;|&nbsp; <i data-lucide="user" class="inline h-3.5 w-3.5 align-text-bottom text-[#4A2E28]/50"></i> <strong>{{ $pembayaran->pemesanan?->nama_pemesan ?? $pembayaran->pemesanan?->user?->nama ?? '-' }}</strong>
                             </p>
-                            <p class="text-sm text-gray-700">
+                            <p class="text-sm text-[#4A2E28]">
                                 Tahap: <strong>{{ $tahapLabel[$pembayaran->tahap] ?? $pembayaran->tahap }}</strong>
                                 &nbsp;|&nbsp; Jumlah: <strong>Rp {{ number_format($pembayaran->jumlah_bayar, 0, ',', '.') }}</strong>
                             </p>

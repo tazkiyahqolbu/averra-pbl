@@ -53,14 +53,14 @@
                             </td>
 
                             <td class="admin-table-td">
-                                <p class="font-semibold text-gray-900">{{ $item->nama_paket }}</p>
+                                <p class="font-semibold text-[#4A0F1A]">{{ $item->nama_paket }}</p>
                             </td>
 
                             <td class="admin-table-td">
                                 {{ $item->kategori->nama ?? '-' }}
                             </td>
 
-                            <td class="admin-table-td font-semibold text-gray-900">
+                            <td class="admin-table-td font-semibold text-[#4A0F1A]">
                                 Rp {{ number_format($item->harga, 0, ',', '.') }}
                             </td>
 

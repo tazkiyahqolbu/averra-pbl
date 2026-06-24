@@ -154,7 +154,7 @@
                     <span class="text-sm text-[#4A2E28]">
                         ({{ $ulasan > 0 ? $ulasan . ' ulasan' : 'Belum ada ulasan' }})
                     </span>
-                    @if($item->type === 'jasa' && $ulasan > 0)
+                    @if($ulasan > 0)
                         <a href="#ulasan" class="ml-1 text-xs text-[#C8A84B] underline underline-offset-2 hover:text-[#B8983A] transition">
                             Lihat semua
                         </a>
@@ -282,9 +282,8 @@
 
     </div>{{-- end max-w wrapper --}}
 
-    {{-- ══ SECTION ULASAN (khusus Jasa) ══ --}}
-    @if($item->type === 'jasa')
-        <section id="ulasan" class="py-16 bg-[#FAF3E0]">
+    {{-- ══ SECTION ULASAN ══ --}}
+    <section id="ulasan" class="py-16 bg-[#FAF3E0]">
             <div class="mx-auto max-w-6xl px-6">
 
                 {{-- Heading --}}
@@ -407,7 +406,6 @@
 
             </div>
         </section>
-    @endif
 
     <div class="pb-12"></div>
 

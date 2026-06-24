@@ -26,6 +26,6 @@
                 Kirim Bukti
             </button>
         </div>
-        <p class="text-[10px] text-[#4A2E28]/40">Format: JPG, PNG, atau PDF. Maks 5 MB.</p>
+        <p class="text-[10px] text-[#4A2E28]/60">Format: JPG, PNG, atau PDF. Maks 5 MB.</p>
     </div>
 </form>

@@ -53,7 +53,7 @@
 
             <div class="rounded-2xl bg-[#FAF3E0] p-4">
                 <p class="admin-muted text-sm">Rata-rata Rating</p>
-                <p class="font-heading text-2xl font-bold text-gray-900"><span class="text-amber-400">★</span> 4.7 dari 23 ulasan</p>
+                <p class="font-heading text-2xl font-bold text-[#4A0F1A]"><span class="text-amber-400">★</span> 4.7 dari 23 ulasan</p>
             </div>
         </div>
     </div>
@@ -65,11 +65,11 @@
                     <span class="text-base tracking-wide">
                         <span class="text-amber-400">{{ str_repeat('★', $item['rating']) }}</span><span class="text-[#E2D4C0]">{{ str_repeat('★', 5 - $item['rating']) }}</span>
                     </span>
-                    <strong class="text-gray-900">{{ $item['nama'] }}</strong>
+                    <strong class="text-[#4A0F1A]">{{ $item['nama'] }}</strong>
                 </div>
 
                 <p class="admin-muted text-sm">{{ $item['item'] }} | {{ $item['tanggal'] }}</p>
-                <p class="mt-3 text-sm leading-6 text-gray-700">
+                <p class="mt-3 text-sm leading-6 text-[#4A2E28]">
                     “{{ $item['ulasan'] }}”
                 </p>
             </div>

@@ -32,7 +32,7 @@
 
                 <div>
                     <label class="admin-label">Email</label>
-                    <input type="email" class="admin-input bg-gray-100" value="{{ Auth::user()->email ?? 'admin@rantiang.com' }}" readonly>
+                    <input type="email" class="admin-input bg-[#FAF3E0] opacity-70" value="{{ Auth::user()->email ?? 'admin@rantiang.com' }}" readonly>
                 </div>
 
                 <div>

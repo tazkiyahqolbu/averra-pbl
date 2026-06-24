@@ -101,7 +101,7 @@
             </div>
 
             {{-- Pesan --}}
-            <h1 class="font-heading text-3xl font-bold text-gray-900">Pendaftaran Berhasil!</h1>
+            <h1 class="font-heading text-3xl font-bold text-[#4A0F1A]">Pendaftaran Berhasil!</h1>
             <p class="mt-2 text-sm text-[#7a5d58]">
                 Halo, <span class="font-semibold text-[#4a0f1a]">{{ session('registered_name') }}</span>!<br>
                 Akun Anda telah berhasil dibuat.
