@@ -49,18 +49,18 @@
     <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         @foreach ($summary as $item)
             <div class="admin-card p-5">
-                <p class="font-heading text-2xl font-bold text-gray-900">{{ $item['value'] }}</p>
-                <p class="mt-2 text-xs font-semibold uppercase tracking-wide text-[#7a5d58]">{{ $item['label'] }}</p>
+                <p class="font-heading text-2xl font-bold text-[#4A0F1A]">{{ $item['value'] }}</p>
+                <p class="mt-2 text-xs font-semibold uppercase tracking-wide text-[#4A2E28]">{{ $item['label'] }}</p>
             </div>
         @endforeach
     </div>
 
     <div class="admin-card p-6">
         <h2 class="admin-title mb-4 text-xl">Grafik Pendapatan</h2>
-        <div class="flex h-64 items-end gap-3 rounded-2xl border border-dashed border-[#decba5] bg-[#fff8ed] p-6">
+        <div class="flex h-64 items-end gap-3 rounded-2xl border border-dashed border-[#E2D4C0] bg-[#FAF3E0] p-6">
             @foreach ([35, 55, 42, 75, 60, 90, 80] as $height)
                 <div class="flex flex-1 items-end">
-                    <div class="w-full rounded-t-xl bg-[#7b1c2e]/80" style="height: {{ $height }}%;"></div>
+                    <div class="w-full rounded-t-xl bg-[#4A0F1A]/80" style="height: {{ $height }}%;"></div>
                 </div>
             @endforeach
         </div>
@@ -70,12 +70,12 @@
         <h2 class="admin-title mb-4 text-xl">Item Terpopuler</h2>
         <div class="space-y-3">
             @foreach ($popularItems as $index => $item)
-                <div class="flex items-center justify-between rounded-2xl bg-[#fff8ed] p-4">
+                <div class="flex items-center justify-between rounded-2xl bg-[#FAF3E0] p-4">
                     <div class="flex items-center gap-3">
-                        <span class="flex h-8 w-8 items-center justify-center rounded-full bg-[#7b1c2e] text-sm font-bold text-white">
+                        <span class="flex h-8 w-8 items-center justify-center rounded-full bg-[#4A0F1A] text-sm font-bold text-white">
                             {{ $index + 1 }}
                         </span>
-                        <span class="font-semibold text-gray-800">{{ $item['name'] }}</span>
+                        <span class="font-semibold text-[#4A2E28]">{{ $item['name'] }}</span>
                     </div>
                     <span class="admin-muted text-sm">{{ $item['count'] }}</span>
                 </div>
@@ -88,7 +88,7 @@
 
         <div class="overflow-x-auto">
             <table class="w-full">
-                <thead class="border-b border-[#decba5] bg-[#f9f1e6]">
+                <thead class="border-b border-[#E2D4C0] bg-[#FAF3E0]">
                     <tr>
                         <th class="admin-table-th">No. Pesanan</th>
                         <th class="admin-table-th">Customer</th>
@@ -98,7 +98,7 @@
                         <th class="admin-table-th">Tanggal</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-[#decba5]">
+                <tbody class="divide-y divide-[#E2D4C0]">
                     @foreach ($transactions as $trx)
                         <tr>
                             <td class="admin-table-td font-semibold">{{ $trx['kode'] }}</td>

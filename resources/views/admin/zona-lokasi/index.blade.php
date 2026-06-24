@@ -26,7 +26,7 @@
     <div class="admin-card p-6">
         <div class="overflow-x-auto">
             <table class="w-full">
-                <thead class="border-b border-[#decba5] bg-[#f9f1e6]">
+                <thead class="border-b border-[#E2D4C0] bg-[#FAF3E0]">
                     <tr>
                         <th class="admin-table-th">Nama Zona</th>
                         <th class="admin-table-th">Keterangan</th>
@@ -35,7 +35,7 @@
                     </tr>
                 </thead>
 
-                <tbody class="divide-y divide-[#decba5]">
+                <tbody class="divide-y divide-[#E2D4C0]">
                     @foreach ($zones as $zone)
                         <tr>
                             <td class="admin-table-td font-semibold">{{ $zone['nama'] }}</td>

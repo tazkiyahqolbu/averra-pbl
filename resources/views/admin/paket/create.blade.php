@@ -61,8 +61,8 @@
                     <input id="thumbnail_path" name="thumbnail_path" type="file" accept="image/*" class="admin-file">
                 </div>
 
-                <div class="flex items-center gap-3 rounded-2xl border border-[#decba5] bg-[#fffdf7] p-4">
-                    <input id="aktif" name="aktif" type="checkbox" value="1" checked class="h-5 w-5 rounded border-[#decba5] text-[#7b1c2e]">
+                <div class="flex items-center gap-3 rounded-2xl border border-[#E2D4C0] bg-[#ffffff] p-4">
+                    <input id="aktif" name="aktif" type="checkbox" value="1" checked class="h-5 w-5 rounded border-[#E2D4C0] text-[#4A0F1A]">
                     <div>
                         <label for="aktif" class="font-semibold text-[#4a0f1a]">Paket Aktif</label>
                         <p class="admin-muted text-xs">Jika aktif, paket dapat ditampilkan pada katalog.</p>
@@ -80,8 +80,8 @@
             </div>
             <button type="button" class="admin-btn-secondary">+ Tambah Item</button>
             <div class="space-y-2 text-sm">
-                <div class="flex justify-between rounded-2xl bg-[#fff8ed] p-3"><span>Fotografer 2 Orang x2</span><button class="font-semibold text-red-600">Hapus</button></div>
-                <div class="flex justify-between rounded-2xl bg-[#fff8ed] p-3"><span>MC Profesional x1</span><button class="font-semibold text-red-600">Hapus</button></div>
+                <div class="flex justify-between rounded-2xl bg-[#FAF3E0] p-3"><span>Fotografer 2 Orang x2</span><button class="font-semibold text-red-600">Hapus</button></div>
+                <div class="flex justify-between rounded-2xl bg-[#FAF3E0] p-3"><span>MC Profesional x1</span><button class="font-semibold text-red-600">Hapus</button></div>
             </div>
         </div>
 
@@ -93,7 +93,7 @@
                 <button type="button" class="admin-btn-secondary">+ Tambah</button>
             </div>
             <div class="space-y-2 text-sm">
-                <div class="flex justify-between rounded-2xl bg-[#fff8ed] p-3"><span>Fotografer Extra +Rp 300.000</span><button class="font-semibold text-red-600">Hapus</button></div>
+                <div class="flex justify-between rounded-2xl bg-[#FAF3E0] p-3"><span>Fotografer Extra +Rp 300.000</span><button class="font-semibold text-red-600">Hapus</button></div>
             </div>
         </div>
 

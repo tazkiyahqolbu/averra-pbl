@@ -12,7 +12,7 @@
     </div>
 
     <div class="admin-card p-6">
-        <h2 class="mb-4 text-lg font-semibold text-gray-900">Tambah Kategori Paket</h2>
+        <h2 class="mb-4 text-lg font-semibold text-[#4A0F1A]">Tambah Kategori Paket</h2>
 
             <form action="{{ route('admin.kategori-paket.store') }}" method="POST" enctype="multipart/form-data" class="grid gap-4 md:grid-cols-2">
              @csrf
@@ -39,14 +39,14 @@
     </div>
 
     <div class="admin-table-wrapper">
-        <div class="border-b border-[#decba5] px-6 py-4">
-            <h2 class="text-lg font-semibold text-gray-900">Daftar Kategori Paket</h2>
+        <div class="border-b border-[#E2D4C0] px-6 py-4">
+            <h2 class="text-lg font-semibold text-[#4A0F1A]">Daftar Kategori Paket</h2>
         </div>
 
         <div class="overflow-x-auto">
             <table class="min-w-full">
                 <thead>
-                    <tr class="border-b border-[#decba5] bg-[#f8f3ea]">
+                    <tr class="border-b border-[#E2D4C0] bg-[#FAF3E0]">
                         <th class="admin-table-th">No</th>
                         <th class="admin-table-th">Ikon</th>
                         <th class="admin-table-th">Nama Kategori</th>
@@ -57,7 +57,7 @@
 
                 <tbody>
                     @foreach ($kategoriPakets as $kategori)
-                        <tr class="border-b border-[#decba5] last:border-b-0 hover:bg-[#fff8ed]">
+                        <tr class="border-b border-[#E2D4C0] last:border-b-0 hover:bg-[#FAF3E0]">
                             <td class="admin-table-td">{{ $loop->iteration }}</td>
 
                             <td class="admin-table-td">
@@ -69,7 +69,7 @@
 
                         @else
 
-                            <div class="admin-thumb flex items-center justify-center text-xs font-semibold text-[#7a5d58]">
+                            <div class="admin-thumb flex items-center justify-center text-xs font-semibold text-[#4A2E28]">
                                 IMG
                             </div>
 
@@ -77,7 +77,7 @@
 
                     </td>
 
-                            <td class="admin-table-td font-semibold text-gray-900">
+                            <td class="admin-table-td font-semibold text-[#4A0F1A]">
                                 {{ $kategori->nama   }}
                             </td>
 
@@ -131,8 +131,8 @@
     class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4"
 >
     <div class="w-full max-w-lg rounded-2xl bg-white shadow-xl">
-        <div class="border-b border-[#decba5] px-6 py-4">
-            <h2 class="text-lg font-semibold text-gray-900">
+        <div class="border-b border-[#E2D4C0] px-6 py-4">
+            <h2 class="text-lg font-semibold text-[#4A0F1A]">
                 Edit Kategori Paket
             </h2>
         </div>
@@ -166,7 +166,7 @@
 
                 <div
                     id="editIkonPreview"
-                    class="admin-thumb-lg flex items-center justify-center text-xs font-semibold text-[#7a5d58]">
+                    class="admin-thumb-lg flex items-center justify-center text-xs font-semibold text-[#4A2E28]">
                     IMG
                 </div>
             </div>
@@ -180,7 +180,7 @@
                     class="admin-file"
                     accept="image/*"
                 >
-                <p class="mt-2 text-xs text-[#7a5d58]">
+                <p class="mt-2 text-xs text-[#4A2E28]">
                     Kosongkan jika tidak ingin mengganti ikon/foto.
                 </p>
             </div>

@@ -14,7 +14,7 @@
     <div class="admin-card p-6">
         <form class="space-y-5">
             <div class="flex items-center gap-4">
-                <div class="flex h-20 w-20 items-center justify-center rounded-full bg-[#5A0B1A] text-2xl font-bold text-white">
+                <div class="flex h-20 w-20 items-center justify-center rounded-full bg-[#4A0F1A] text-2xl font-bold text-white">
                     {{ strtoupper(substr(Auth::user()->name ?? 'A', 0, 1)) }}
                 </div>
 
@@ -32,7 +32,7 @@
 
                 <div>
                     <label class="admin-label">Email</label>
-                    <input type="email" class="admin-input bg-gray-100" value="{{ Auth::user()->email ?? 'admin@rantiang.com' }}" readonly>
+                    <input type="email" class="admin-input bg-[#FAF3E0] opacity-70" value="{{ Auth::user()->email ?? 'admin@rantiang.com' }}" readonly>
                 </div>
 
                 <div>

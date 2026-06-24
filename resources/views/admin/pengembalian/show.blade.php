@@ -22,7 +22,7 @@
                     <p><span class="admin-muted text-sm">Customer</span><br><strong>Siti Rahmah</strong></p>
                     <p><span class="admin-muted text-sm">Item</span><br><strong>Kamera Canon EOS + Tripod</strong></p>
                     <p><span class="admin-muted text-sm">Jadwal Kembali</span><br><strong>13 Juni 2026</strong></p>
-                    <p><span class="admin-muted text-sm">Tanggal Kembali</span><br><strong>13 Juni 2026 ✅ Tepat Waktu</strong></p>
+                    <p><span class="admin-muted text-sm">Tanggal Kembali</span><br><strong>13 Juni 2026 <span class="inline-flex items-center gap-1 text-green-600 font-normal text-sm"><i data-lucide="check-circle" class="h-3.5 w-3.5"></i> Tepat Waktu</span></strong></p>
                 </div>
             </div>
 
@@ -34,7 +34,7 @@
                         <label class="admin-label">Kondisi Barang *</label>
                         <div class="grid gap-3 md:grid-cols-2">
                             @foreach (['Baik — tidak ada kerusakan', 'Rusak Ringan — kerusakan minor', 'Rusak Berat — perlu perbaikan signifikan', 'Hilang — barang tidak dikembalikan'] as $condition)
-                                <label class="flex items-center gap-3 rounded-2xl border border-[#decba5] bg-[#fffdf7] p-4 text-sm">
+                                <label class="flex items-center gap-3 rounded-2xl border border-[#E2D4C0] bg-[#ffffff] p-4 text-sm">
                                     <input type="radio" name="kondisi" class="h-4 w-4">
                                     <span>{{ $condition }}</span>
                                 </label>

@@ -33,15 +33,17 @@
             <div class="admin-card p-5">
                 <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                     <div class="flex gap-4">
-                        <div class="admin-thumb flex items-center justify-center text-xl">📦</div>
+                        <div class="admin-thumb flex items-center justify-center bg-[#FAF3E0]">
+                            <i data-lucide="package" class="h-5 w-5 text-[#C8960C]/70"></i>
+                        </div>
                         <div>
                             <div class="flex flex-wrap items-center gap-2">
-                                <h2 class="font-heading text-xl font-bold text-gray-900">{{ $item['nama'] }}</h2>
+                                <h2 class="font-heading text-xl font-bold text-[#4A0F1A]">{{ $item['nama'] }}</h2>
                                 <span class="{{ $item['status'] === 'Aktif' ? 'badge-active' : 'badge-inactive' }}">{{ $item['status'] }}</span>
                             </div>
                             <p class="admin-muted mt-1 text-sm">Kategori: {{ $item['kategori'] }}</p>
-                            <p class="mt-1 text-sm text-gray-700">Harga: <strong>{{ $item['harga'] }}</strong> | Stok: {{ $item['stok'] }} unit</p>
-                            <p class="mt-1 text-sm text-gray-700">Nilai Barang: <strong>{{ $item['nilai'] }}</strong></p>
+                            <p class="mt-1 text-sm text-[#4A2E28]">Harga: <strong class="text-[#4A0F1A]">{{ $item['harga'] }}</strong> | Stok: <strong class="text-[#4A0F1A]">{{ $item['stok'] }} unit</strong></p>
+                            <p class="mt-1 text-sm text-[#4A2E28]">Nilai Barang: <strong class="text-[#4A0F1A]">{{ $item['nilai'] }}</strong></p>
                         </div>
                     </div>
                     <div class="flex gap-2">
