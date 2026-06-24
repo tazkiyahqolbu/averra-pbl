@@ -33,65 +33,35 @@ $gallery = [
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SILART — Sanggar Rantiang Tagok | Layanan Adat Minangkabau</title>
     <meta name="description" content="Sistem Informasi & Layanan Sanggar Rantiang Tagok. Paket pernikahan, hiburan, MC, band, tari, dan makeup bernuansa Minangkabau elegan.">
-    
+
     <meta property="og:title" content="SILART — Sanggar Rantiang Tagok">
     <meta property="og:description" content="Kehangatan budaya Minang berbalut kemewahan modern.">
-
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        background: '#FAF3E0',
-                        foreground: '#7B1C2E',
-                        maroon: {
-                            DEFAULT: '#7B1C2E',
-                            deep: '#4A0F1A',
-                        },
-                        gold: {
-                            DEFAULT: '#C8A84B',
-                            soft: '#D9C07A',
-                        },
-                        cream: '#FAF3E0',
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        serif: ['Cormorant Garamond', 'Georgia', 'serif'],
-                    }
-                }
-            }
-        }
-    </script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-
-<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <body class="min-h-screen bg-[#FAF3E0] text-maroon antialiased selection:bg-gold/30">
 
     @include('public.layouts.navbar')
 
     <section id="home" class="relative isolate flex h-screen items-center justify-center overflow-hidden">
         <div class="absolute inset-0 -z-20 bg-cover bg-center h-full w-full" style="background-image: linear-gradient(to bottom, rgba(29,21,21,0.85), rgba(32,22,22,0.75), rgba(29,21,21,0.95)), url('{{ asset('image/background.png') }}'); background-repeat: no-repeat; background-size: cover; background-position: center;"></div>
-        
+
         <div class="relative z-10 mx-auto max-w-4xl px-6 text-center">
             <div class="mx-auto mb-6 flex items-center justify-center gap-4">
                 <span class="text-xs tracking-[0.4em] text-gold uppercase font-semibold">— SANGGAR RANTIANG TAGOK —</span>
             </div>
-            
+
             <h1 class="font-serif text-5xl font-light leading-[1.05] text-cream sm:text-7xl md:text-8xl">
                 Menjaga <em class="text-gold not-italic">Warisan</em><br>Ranah Minang
             </h1>
-            
+
             <p class="mx-auto mt-6 max-w-xl font-serif text-lg leading-relaxed text-white/90 sm:text-xl">
                 Menghadirkan kehangatan adat dan kemewahan modern dalam setiap perayaan istimewa Anda.
             </p>
-            
+
             <div class="mt-8 flex flex-wrap justify-center gap-3">
                 <a href="{{ route('public.katalog.index') }}" class="rounded-full bg-gradient-to-r from-[#D6B35C] to-[#B8983A] px-8 py-3.5 font-serif text-base text-maroon-deep shadow-lg transition duration-300 hover:scale-105 transform inline-block font-semibold">
                     Booking Acara Anda
@@ -108,7 +78,7 @@ $gallery = [
 
 <!-- SECTION 2: LAYANAN KAMI -->
 <section id="layanan" class="relative py-24 bg-maroon-deep text-cream overflow-hidden">
-    
+
     <!-- Heading -->
     <div class="mx-auto max-w-6xl px-6 text-center">
         <p class="text-xs tracking-[0.4em] text-gold uppercase font-semibold">
@@ -486,7 +456,7 @@ $gallery = [
         </div>
     </div>
 </section>
-    
+
 <!-- CTA SECTION 7 — Siap Mulai Merencanakan Acaramu? sesuai dokumen AVERRA -->
 <section id="cta" class="relative py-24 bg-maroon-deep text-cream overflow-hidden border-t border-gold/10">
     <div class="absolute inset-0 opacity-[0.05] bg-cover bg-center" style="background-image: url('{{ asset('image/background.png') }}'); filter: grayscale(100%);"></div>
