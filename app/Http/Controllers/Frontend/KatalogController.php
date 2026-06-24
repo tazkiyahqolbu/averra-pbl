@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Barang;
 use App\Models\Jasa;
 use App\Models\Paket;
+use App\Models\Testimoni;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -85,61 +86,79 @@ class KatalogController extends Controller
         $type   = $parts[0] ?? null;
         $typeId = $parts[1] ?? null;
 
+        $fotos      = collect();
+        $testimonis = collect();
+
         if ($type === 'jasa' && $typeId) {
-            $model = Jasa::findOrFail($typeId);
-            $item  = (object)[
-                'id'       => $slug,
-                'type'     => 'jasa',
-                'name'     => $model->nama_jasa,
-                'category' => 'Jasa',
-                'img'      => $model->thumbnail_path ? Storage::url($model->thumbnail_path) : 'image/background.png',
-                'price'    => (float) $model->harga,
-                'desc'     => $model->deskripsi,
+            $model = Jasa::with(['fotos' => fn($q) => $q->orderBy('urutan')])->findOrFail($typeId);
+
+            $fotos = $model->fotos;
+
+            $testimonis = Testimoni::where('dipublikasikan', true)
+                ->whereHas('pemesanan', fn($q) => $q->whereHas('detailPemesanans',
+                    fn($q2) => $q2->where('jenis_item', 'jasa')->where('jasa_id', (int) $typeId)
+                ))
+                ->with('user')
+                ->latest()
+                ->get();
+
+            $avgRating = $testimonis->isNotEmpty()
+                ? round($testimonis->avg('rating'), 1)
+                : 4.8;
+
+            $item = (object)[
+                'id'        => $slug,
+                'type'      => 'jasa',
+                'name'      => $model->nama_jasa,
+                'category'  => 'Jasa',
+                'img'       => $model->thumbnail_path ? Storage::url($model->thumbnail_path) : 'image/background.png',
+                'price'     => (float) $model->harga,
+                'desc'      => $model->deskripsi,
                 'available' => true,
-                'rating'   => 4.8,
-                'ulasan'   => 0,
-                'color'    => null,
-                'material' => null,
-                'stok'     => null,
+                'rating'    => $avgRating,
+                'ulasan'    => $testimonis->count(),
+                'color'     => null,
+                'material'  => null,
+                'stok'      => null,
             ];
         } elseif ($type === 'paket' && $typeId) {
             $model = Paket::findOrFail($typeId);
             $item  = (object)[
-                'id'       => $slug,
-                'type'     => 'paket',
-                'name'     => $model->nama_paket,
-                'category' => 'Paket Acara',
-                'img'      => $model->thumbnail_path ? Storage::url($model->thumbnail_path) : 'image/background.png',
-                'price'    => (float) $model->harga,
-                'desc'     => $model->deskripsi,
+                'id'        => $slug,
+                'type'      => 'paket',
+                'name'      => $model->nama_paket,
+                'category'  => 'Paket Acara',
+                'img'       => $model->thumbnail_path ? Storage::url($model->thumbnail_path) : 'image/background.png',
+                'price'     => (float) $model->harga,
+                'desc'      => $model->deskripsi,
                 'available' => true,
-                'rating'   => 4.8,
-                'ulasan'   => 0,
-                'color'    => null,
-                'material' => null,
-                'stok'     => null,
+                'rating'    => 4.8,
+                'ulasan'    => 0,
+                'color'     => null,
+                'material'  => null,
+                'stok'      => null,
             ];
         } elseif ($type === 'barang' && $typeId) {
             $model = Barang::findOrFail($typeId);
             $item  = (object)[
-                'id'       => $slug,
-                'type'     => 'barang',
-                'name'     => $model->nama_barang,
-                'category' => 'Sewa Barang',
-                'img'      => $model->thumbnail_path ? Storage::url($model->thumbnail_path) : 'image/background.png',
-                'price'    => (float) $model->harga,
-                'desc'     => $model->deskripsi,
+                'id'        => $slug,
+                'type'      => 'barang',
+                'name'      => $model->nama_barang,
+                'category'  => 'Sewa Barang',
+                'img'       => $model->thumbnail_path ? Storage::url($model->thumbnail_path) : 'image/background.png',
+                'price'     => (float) $model->harga,
+                'desc'      => $model->deskripsi,
                 'available' => $model->stok > 0,
-                'rating'   => 4.8,
-                'ulasan'   => 0,
-                'color'    => null,
-                'material' => null,
-                'stok'     => $model->stok,
+                'rating'    => 4.8,
+                'ulasan'    => 0,
+                'color'     => null,
+                'material'  => null,
+                'stok'      => $model->stok,
             ];
         } else {
             abort(404);
         }
 
-        return view('public.katalog.show', compact('item'));
+        return view('public.katalog.show', compact('item', 'fotos', 'testimonis'));
     }
 }
