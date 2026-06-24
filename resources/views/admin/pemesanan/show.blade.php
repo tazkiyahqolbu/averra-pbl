@@ -72,7 +72,7 @@
 
                 <table class="w-full text-sm border-collapse">
                     <thead>
-                        <tr class="bg-[#f7efe2] text-left">
+                        <tr class="bg-[#FAF3E0] text-left">
                             <th class="p-2 rounded-tl-lg">Item</th>
                             <th class="p-2 text-center">Jml</th>
                             <th class="p-2 text-right rounded-tr-lg">Subtotal</th>
@@ -98,7 +98,7 @@
                 @if($pemesanan->catatan)
                     <div class="mt-4">
                         <p class="admin-muted text-sm">Catatan</p>
-                        <p class="rounded-2xl bg-[#fff8ed] p-4 text-sm text-gray-700">{{ $pemesanan->catatan }}</p>
+                        <p class="rounded-2xl bg-[#FAF3E0] p-4 text-sm text-gray-700">{{ $pemesanan->catatan }}</p>
                     </div>
                 @endif
             </div>
@@ -131,13 +131,13 @@
             <div class="admin-card p-5">
                 <h2 class="admin-title mb-4 text-xl">Info Pemesanan</h2>
                 <div class="space-y-3 text-sm">
-                    <div class="rounded-2xl bg-[#fff8ed] p-3">
+                    <div class="rounded-2xl bg-[#FAF3E0] p-3">
                         <strong>{{ $pemesanan->created_at->format('d M Y H.i') }}</strong>
                         <p class="admin-muted">Pesanan masuk</p>
                     </div>
                     <div class="rounded-2xl bg-[#f3f4f6] p-3">
                         <strong>Status saat ini</strong>
-                        <p class="font-semibold text-[#5A0B1A]">{{ $badge['label'] }}</p>
+                        <p class="font-semibold text-[#4A0F1A]">{{ $badge['label'] }}</p>
                     </div>
                 </div>
             </div>

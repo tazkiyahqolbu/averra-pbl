@@ -24,7 +24,7 @@
     <div class="admin-table-wrapper">
         <div class="overflow-x-auto">
             <table class="w-full border-collapse">
-                <thead class="border-b border-[#decba5] bg-[#f9f1e6]">
+                <thead class="border-b border-[#E2D4C0] bg-[#FAF3E0]">
                     <tr>
                         <th class="admin-table-th w-16">#</th>
                         <th class="admin-table-th">Thumbnail</th>
@@ -37,16 +37,16 @@
                     </tr>
                 </thead>
 
-                <tbody class="divide-y divide-[#decba5]">
+                <tbody class="divide-y divide-[#E2D4C0]">
                     @forelse ($paketItems as $index => $item)
-                        <tr class="hover:bg-[#f9f1e6]/50">
-                            <td class="admin-table-td font-semibold text-[#7a5d58]">{{ $index + 1 }}</td>
+                        <tr class="hover:bg-[#FAF3E0]/50">
+                            <td class="admin-table-td font-semibold text-[#4A2E28]">{{ $index + 1 }}</td>
 
                             <td class="admin-table-td">
                                 @if (!empty($item['thumbnail_path']))
                                     <img src="{{ asset('storage/' . $item['thumbnail_path']) }}" alt="{{ $item['nama_paket'] }}" class="admin-thumb">
                                 @else
-                                    <div class="admin-thumb flex items-center justify-center text-xs font-semibold text-[#7a5d58]">
+                                    <div class="admin-thumb flex items-center justify-center text-xs font-semibold text-[#4A2E28]">
                                         IMG
                                     </div>
                                 @endif

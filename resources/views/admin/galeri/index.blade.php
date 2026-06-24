@@ -28,8 +28,8 @@
     <div class="admin-gallery-grid">
         @foreach ($galeri as $item)
             <div class="admin-gallery-card">
-                <div class="flex h-44 items-center justify-center bg-[#ead8b8] text-5xl">
-                    🖼️
+                <div class="flex h-44 items-center justify-center bg-[#FAF3E0]">
+                    <i data-lucide="image" class="h-12 w-12 text-[#E2D4C0]"></i>
                 </div>
 
                 <div class="space-y-3 p-4">

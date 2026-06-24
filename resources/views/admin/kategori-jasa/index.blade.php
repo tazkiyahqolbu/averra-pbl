@@ -24,14 +24,14 @@
         <div class="admin-card p-6 xl:col-span-2">
             <div class="overflow-x-auto">
                 <table class="w-full">
-                    <thead class="border-b border-[#decba5] bg-[#f9f1e6]">
+                    <thead class="border-b border-[#E2D4C0] bg-[#FAF3E0]">
                         <tr>
                             <th class="admin-table-th">Nama Kategori</th>
                             <th class="admin-table-th">Jumlah Item</th>
                             <th class="admin-table-th">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-[#decba5]">
+                    <tbody class="divide-y divide-[#E2D4C0]">
                         @foreach ($kategori as $item)
                             <tr>
                                 <td class="admin-table-td font-semibold">{{ $item['nama'] }}</td>

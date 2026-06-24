@@ -51,9 +51,9 @@
                 </select>
             </div>
 
-            <div class="rounded-2xl bg-[#fff8ed] p-4">
+            <div class="rounded-2xl bg-[#FAF3E0] p-4">
                 <p class="admin-muted text-sm">Rata-rata Rating</p>
-                <p class="font-heading text-2xl font-bold text-gray-900">⭐ 4.7 dari 23 ulasan</p>
+                <p class="font-heading text-2xl font-bold text-gray-900"><span class="text-amber-400">★</span> 4.7 dari 23 ulasan</p>
             </div>
         </div>
     </div>
@@ -62,8 +62,8 @@
         @foreach ($testimoni as $item)
             <div class="admin-card p-5">
                 <div class="mb-2 flex flex-wrap items-center gap-2">
-                    <span class="text-lg">
-                        {{ str_repeat('⭐', $item['rating']) }}{{ str_repeat('☆', 5 - $item['rating']) }}
+                    <span class="text-base tracking-wide">
+                        <span class="text-amber-400">{{ str_repeat('★', $item['rating']) }}</span><span class="text-[#E2D4C0]">{{ str_repeat('★', 5 - $item['rating']) }}</span>
                     </span>
                     <strong class="text-gray-900">{{ $item['nama'] }}</strong>
                 </div>
