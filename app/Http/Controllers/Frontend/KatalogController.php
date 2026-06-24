@@ -123,6 +123,17 @@ class KatalogController extends Controller
             ];
         } elseif ($type === 'paket' && $typeId) {
             $model = Paket::findOrFail($typeId);
+
+            $testimonis = Testimoni::where('dipublikasikan', true)
+                ->whereHas('pemesanan', fn($q) => $q->whereHas('detailPemesanans',
+                    fn($q2) => $q2->where('jenis_item', 'paket')->where('paket_id', (int) $typeId)
+                ))
+                ->with('user')
+                ->latest()
+                ->get();
+
+            $avgRating = $testimonis->isNotEmpty() ? round($testimonis->avg('rating'), 1) : 4.8;
+
             $item  = (object)[
                 'id'        => $slug,
                 'type'      => 'paket',
@@ -132,14 +143,25 @@ class KatalogController extends Controller
                 'price'     => (float) $model->harga,
                 'desc'      => $model->deskripsi,
                 'available' => true,
-                'rating'    => 4.8,
-                'ulasan'    => 0,
+                'rating'    => $avgRating,
+                'ulasan'    => $testimonis->count(),
                 'color'     => null,
                 'material'  => null,
                 'stok'      => null,
             ];
         } elseif ($type === 'barang' && $typeId) {
             $model = Barang::findOrFail($typeId);
+
+            $testimonis = Testimoni::where('dipublikasikan', true)
+                ->whereHas('pemesanan', fn($q) => $q->whereHas('detailPemesanans',
+                    fn($q2) => $q2->where('jenis_item', 'barang')->where('barang_id', (int) $typeId)
+                ))
+                ->with('user')
+                ->latest()
+                ->get();
+
+            $avgRating = $testimonis->isNotEmpty() ? round($testimonis->avg('rating'), 1) : 4.8;
+
             $item  = (object)[
                 'id'        => $slug,
                 'type'      => 'barang',
@@ -149,8 +171,8 @@ class KatalogController extends Controller
                 'price'     => (float) $model->harga,
                 'desc'      => $model->deskripsi,
                 'available' => $model->stok > 0,
-                'rating'    => 4.8,
-                'ulasan'    => 0,
+                'rating'    => $avgRating,
+                'ulasan'    => $testimonis->count(),
                 'color'     => null,
                 'material'  => null,
                 'stok'      => $model->stok,

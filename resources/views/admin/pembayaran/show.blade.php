@@ -46,7 +46,7 @@
                             <div class="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-white border border-[#E2D4C0] shadow-sm mb-4">
                                 <i data-lucide="file-text" class="h-8 w-8 text-[#C8960C]"></i>
                             </div>
-                            <p class="font-semibold text-gray-700 mb-3">Bukti pembayaran berformat PDF</p>
+                            <p class="font-semibold text-[#4A2E28] mb-3">Bukti pembayaran berformat PDF</p>
                             <a href="{{ $pembayaran->buktiUrl }}" target="_blank"
                                class="admin-btn-primary inline-block">Buka PDF</a>
                         </div>
@@ -59,7 +59,7 @@
                             <img src="{{ $pembayaran->buktiUrl }}" alt="Bukti Transfer"
                                  class="w-full object-contain max-h-[420px]">
                         </div>
-                        <p class="text-xs text-gray-400 mt-2 text-center">Klik gambar untuk memperbesar</p>
+                        <p class="text-xs text-[#4A2E28]/60 mt-2 text-center">Klik gambar untuk memperbesar</p>
 
                         {{-- Modal lightbox --}}
                         <div x-show="open" x-cloak
@@ -81,7 +81,7 @@
                         <div class="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white border border-[#E2D4C0] mb-3">
                             <i data-lucide="image-off" class="h-7 w-7 text-[#E2D4C0]"></i>
                         </div>
-                        <p class="mt-2 font-semibold text-gray-700">Belum ada bukti yang diupload</p>
+                        <p class="mt-2 font-semibold text-[#4A2E28]">Belum ada bukti yang diupload</p>
                     </div>
                 </div>
             @endif

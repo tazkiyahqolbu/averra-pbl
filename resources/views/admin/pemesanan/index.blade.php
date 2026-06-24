@@ -70,13 +70,13 @@
                 <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     <div class="space-y-1.5">
                         <div class="flex flex-wrap items-center gap-2">
-                            <h2 class="font-heading text-xl font-bold text-gray-900">#{{ $pemesanan->kode_pemesanan }}</h2>
+                            <h2 class="font-heading text-xl font-bold text-[#4A0F1A]">#{{ $pemesanan->kode_pemesanan }}</h2>
                             <span class="{{ $badge['class'] }}">{{ $badge['label'] }}</span>
                         </div>
-                        <p class="text-sm text-gray-700 flex items-center gap-1.5"><i data-lucide="user" class="h-3.5 w-3.5 text-[#4A2E28]/50 shrink-0"></i> {{ $pemesanan->user?->nama }} <span class="text-[#E2D4C0] mx-1">|</span> <i data-lucide="phone" class="h-3.5 w-3.5 text-[#4A2E28]/50 shrink-0"></i> {{ $pemesanan->user?->no_hp ?? '-' }}</p>
-                        <p class="text-sm text-gray-700 flex items-center gap-1.5"><i data-lucide="clipboard-list" class="h-3.5 w-3.5 text-[#4A2E28]/50 shrink-0"></i> {{ $itemName }} <span class="text-[#4A2E28]">[{{ $jenisLabel }}]</span></p>
-                        <p class="text-sm text-gray-700 flex items-center gap-1.5"><i data-lucide="calendar" class="h-3.5 w-3.5 text-[#4A2E28]/50 shrink-0"></i> Pelaksanaan: {{ $pemesanan->tanggal_pakai?->format('d M Y') ?? '-' }} <span class="text-[#E2D4C0] mx-1">|</span> <i data-lucide="map-pin" class="h-3.5 w-3.5 text-[#4A2E28]/50 shrink-0"></i> {{ $pemesanan->zonaLokasi?->nama_zona ?? '-' }}</p>
-                        <p class="text-sm text-gray-700 flex items-center gap-1.5"><i data-lucide="wallet" class="h-3.5 w-3.5 text-[#4A2E28]/50 shrink-0"></i> Total: <strong>Rp {{ number_format($pemesanan->total_harga, 0, ',', '.') }}</strong> <span class="text-[#4A2E28]">(Metode: {{ $metode }})</span></p>
+                        <p class="text-sm text-[#4A2E28] flex items-center gap-1.5"><i data-lucide="user" class="h-3.5 w-3.5 text-[#4A2E28]/50 shrink-0"></i> {{ $pemesanan->user?->nama }} <span class="text-[#E2D4C0] mx-1">|</span> <i data-lucide="phone" class="h-3.5 w-3.5 text-[#4A2E28]/50 shrink-0"></i> {{ $pemesanan->user?->no_hp ?? '-' }}</p>
+                        <p class="text-sm text-[#4A2E28] flex items-center gap-1.5"><i data-lucide="clipboard-list" class="h-3.5 w-3.5 text-[#4A2E28]/50 shrink-0"></i> {{ $itemName }} <span class="text-[#4A2E28]">[{{ $jenisLabel }}]</span></p>
+                        <p class="text-sm text-[#4A2E28] flex items-center gap-1.5"><i data-lucide="calendar" class="h-3.5 w-3.5 text-[#4A2E28]/50 shrink-0"></i> Pelaksanaan: {{ $pemesanan->tanggal_pakai?->format('d M Y') ?? '-' }} <span class="text-[#E2D4C0] mx-1">|</span> <i data-lucide="map-pin" class="h-3.5 w-3.5 text-[#4A2E28]/50 shrink-0"></i> {{ $pemesanan->zonaLokasi?->nama_zona ?? '-' }}</p>
+                        <p class="text-sm text-[#4A2E28] flex items-center gap-1.5"><i data-lucide="wallet" class="h-3.5 w-3.5 text-[#4A2E28]/50 shrink-0"></i> Total: <strong>Rp {{ number_format($pemesanan->total_harga, 0, ',', '.') }}</strong> <span class="text-[#4A2E28]">(Metode: {{ $metode }})</span></p>
                         <p class="text-xs text-[#4A2E28] flex items-center gap-1.5"><i data-lucide="clock" class="h-3 w-3 text-[#4A2E28]/40 shrink-0"></i> Dipesan: {{ $pemesanan->created_at->format('d M Y, H.i') }}</p>
                     </div>
 
@@ -97,8 +97,8 @@
                 </div>
             </div>
         @empty
-            <div class="admin-card p-10 text-center text-gray-500">
-                Tidak ada pemesanan untuk filter ini.
+            <div class="admin-card p-10 text-center">
+                <p class="font-medium text-[#4A2E28]/60">Tidak ada pemesanan untuk filter ini.</p>
             </div>
         @endforelse
     </div>

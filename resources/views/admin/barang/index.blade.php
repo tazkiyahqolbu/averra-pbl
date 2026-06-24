@@ -38,12 +38,12 @@
                         </div>
                         <div>
                             <div class="flex flex-wrap items-center gap-2">
-                                <h2 class="font-heading text-xl font-bold text-gray-900">{{ $item['nama'] }}</h2>
+                                <h2 class="font-heading text-xl font-bold text-[#4A0F1A]">{{ $item['nama'] }}</h2>
                                 <span class="{{ $item['status'] === 'Aktif' ? 'badge-active' : 'badge-inactive' }}">{{ $item['status'] }}</span>
                             </div>
                             <p class="admin-muted mt-1 text-sm">Kategori: {{ $item['kategori'] }}</p>
-                            <p class="mt-1 text-sm text-gray-700">Harga: <strong>{{ $item['harga'] }}</strong> | Stok: {{ $item['stok'] }} unit</p>
-                            <p class="mt-1 text-sm text-gray-700">Nilai Barang: <strong>{{ $item['nilai'] }}</strong></p>
+                            <p class="mt-1 text-sm text-[#4A2E28]">Harga: <strong class="text-[#4A0F1A]">{{ $item['harga'] }}</strong> | Stok: <strong class="text-[#4A0F1A]">{{ $item['stok'] }} unit</strong></p>
+                            <p class="mt-1 text-sm text-[#4A2E28]">Nilai Barang: <strong class="text-[#4A0F1A]">{{ $item['nilai'] }}</strong></p>
                         </div>
                     </div>
                     <div class="flex gap-2">

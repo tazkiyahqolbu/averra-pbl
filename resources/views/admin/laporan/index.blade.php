@@ -49,7 +49,7 @@
     <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         @foreach ($summary as $item)
             <div class="admin-card p-5">
-                <p class="font-heading text-2xl font-bold text-gray-900">{{ $item['value'] }}</p>
+                <p class="font-heading text-2xl font-bold text-[#4A0F1A]">{{ $item['value'] }}</p>
                 <p class="mt-2 text-xs font-semibold uppercase tracking-wide text-[#4A2E28]">{{ $item['label'] }}</p>
             </div>
         @endforeach
@@ -75,7 +75,7 @@
                         <span class="flex h-8 w-8 items-center justify-center rounded-full bg-[#4A0F1A] text-sm font-bold text-white">
                             {{ $index + 1 }}
                         </span>
-                        <span class="font-semibold text-gray-800">{{ $item['name'] }}</span>
+                        <span class="font-semibold text-[#4A2E28]">{{ $item['name'] }}</span>
                     </div>
                     <span class="admin-muted text-sm">{{ $item['count'] }}</span>
                 </div>

@@ -34,7 +34,7 @@
 
                 <div class="space-y-3 p-4">
                     <div>
-                        <p class="font-semibold text-gray-900">{{ $item['judul'] }}</p>
+                        <p class="font-semibold text-[#4A0F1A]">{{ $item['judul'] }}</p>
                         <p class="admin-muted text-sm">{{ $item['kategori'] }}</p>
                     </div>
 

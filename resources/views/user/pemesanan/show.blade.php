@@ -226,7 +226,7 @@
                                 {{ $terlambat ? 'bg-red-500' : ($hariSisa <= 2 ? 'bg-orange-400' : 'bg-[#4A0F1A]') }}"
                                  style="width: {{ min(100, $progressPct) }}%"></div>
                         </div>
-                        <p class="text-[10px] text-[#4A2E28]/40 mt-1 text-right">{{ $progressPct }}% masa sewa berjalan</p>
+                        <p class="text-[10px] text-[#4A2E28]/60 mt-1 text-right">{{ $progressPct }}% masa sewa berjalan</p>
                     </div>
 
                     <div class="grid grid-cols-2 gap-3 mt-4 text-sm">
@@ -359,7 +359,7 @@
                     @endfor
                 </div>
                 <p class="text-sm text-[#4A2E28] italic">"{{ $pesanan->testimoni->isi_testimoni }}"</p>
-                <p class="text-xs text-[#4A2E28]/40 mt-2">{{ $pesanan->testimoni->created_at->format('d F Y') }}</p>
+                <p class="text-xs text-[#4A2E28]/60 mt-2">{{ $pesanan->testimoni->created_at->format('d F Y') }}</p>
             @endif
         </div>
     @endif

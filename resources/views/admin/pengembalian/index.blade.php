@@ -40,13 +40,13 @@
                 <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     <div class="space-y-2">
                         <div class="flex flex-wrap items-center gap-2">
-                            <h2 class="font-heading text-xl font-bold text-gray-900">#{{ $return['kode'] }}</h2>
+                            <h2 class="font-heading text-xl font-bold text-[#4A0F1A]">#{{ $return['kode'] }}</h2>
                             <span class="badge-warning">{{ $return['status'] }}</span>
                         </div>
 
-                        <p class="text-sm text-gray-700 flex items-center gap-1.5">Pesanan: #{{ $return['pesanan'] }} <span class="text-[#E2D4C0] mx-1">|</span> <i data-lucide="user" class="h-3.5 w-3.5 text-[#4A2E28]/50 shrink-0"></i> {{ $return['customer'] }}</p>
-                        <p class="text-sm text-gray-700">Item: {{ $return['item'] }}</p>
-                        <p class="text-sm text-gray-700">Jadwal Kembali: {{ $return['jadwal'] }}</p>
+                        <p class="text-sm text-[#4A2E28] flex items-center gap-1.5">Pesanan: #{{ $return['pesanan'] }} <span class="text-[#E2D4C0] mx-1">|</span> <i data-lucide="user" class="h-3.5 w-3.5 text-[#4A2E28]/50 shrink-0"></i> {{ $return['customer'] }}</p>
+                        <p class="text-sm text-[#4A2E28]">Item: {{ $return['item'] }}</p>
+                        <p class="text-sm text-[#4A2E28]">Jadwal Kembali: {{ $return['jadwal'] }}</p>
                     </div>
 
                     <a href="{{ route('admin.pengembalian.show') }}" class="admin-btn-primary">
