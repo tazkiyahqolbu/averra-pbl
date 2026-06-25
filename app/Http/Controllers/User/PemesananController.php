@@ -211,6 +211,12 @@ class PemesananController extends Controller
                 'tanggal_kembali' => $request->tanggal_kembali,
             ]);
 
+            // Kurangi stok barang — dilakukan di dalam transaksi agar stok tidak
+            // berkurang kalau ada bagian lain yang gagal disimpan
+            if ($jenis === 'sewa_barang') {
+                $model->decrement('stok', $jumlah);
+            }
+
             // Catat pilihan metode bayar di tabel pembayaran
             $tahap = ($request->metode_bayar ?? 'dp') === 'lunas' ? 'langsung' : 'dp';
             $pemesanan->pembayarans()->create([
