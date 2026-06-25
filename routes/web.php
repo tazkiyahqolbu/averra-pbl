@@ -52,7 +52,9 @@ Route::middleware('auth')->name('user.')->group(function () {
     Route::post('/pembayaran/upload', [PembayaranController::class, 'upload'])->name('pembayaran.upload');
 
     // Profile
-    Route::get('/profil', [ProfileController::class, 'index'])->name('profil.index');
+    Route::get('/profil', [ProfileController::class, 'index'])->name('profile.index');
+    Route::put('/profil', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profil/foto', [ProfileController::class, 'updatePhoto'])->name('profile.photo.update');
 });
 
 // ── Rute Admin ────────────────────────────────────────────────────────────────

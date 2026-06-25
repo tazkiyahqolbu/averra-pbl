@@ -26,6 +26,8 @@ class DashboardController extends Controller
                 ->count(),
         ];
 
-        return view('user.dashboard.index', compact('statusCounts'));
+        $user = Auth::user();
+
+        return view('user.dashboard.index', compact('statusCounts', 'user'));
     }
 }
