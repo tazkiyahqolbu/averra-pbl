@@ -427,27 +427,24 @@ $gallery = [
     </section>
 
     {{-- ══ CTA ══ --}}
-    <section id="cta" class="relative py-24 overflow-hidden"
-             style="background: linear-gradient(135deg, #1e050d 0%, #4A0F1A 50%, #7B1C2E 100%);">
-        <div class="absolute inset-0 opacity-[0.05]" aria-hidden="true">
+    <section id="cta" class="relative py-24 bg-[#FAF3E0]">
+        <div class="absolute inset-0 opacity-[0.04]" aria-hidden="true">
             <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                     <pattern id="cta-geo" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
-                        <path d="M30 2 L58 30 L30 58 L2 30 Z" fill="none" stroke="white" stroke-width="1"/>
+                        <path d="M30 2 L58 30 L30 58 L2 30 Z" fill="none" stroke="#7B1C2E" stroke-width="1"/>
                     </pattern>
                 </defs>
                 <rect width="100%" height="100%" fill="url(#cta-geo)"/>
             </svg>
         </div>
-        <div class="pointer-events-none absolute right-0 top-0 h-80 w-80 rounded-full opacity-20"
-             style="background: radial-gradient(circle, #e8b96a 0%, transparent 70%);" aria-hidden="true"></div>
 
         <div class="relative z-10 mx-auto max-w-3xl px-6 text-center scroll-fade">
             <p class="mb-4 text-xs tracking-[0.4em] text-[#C8A84B] uppercase font-semibold">— MULAI SEKARANG —</p>
-            <h2 class="font-serif text-4xl font-light leading-tight text-[#FAF3E0] sm:text-5xl">
+            <h2 class="font-serif text-4xl font-light leading-tight text-[#4A0F1A] sm:text-5xl">
                 Siap Mulai Merencanakan<br>Acaramu?
             </h2>
-            <p class="mt-4 text-lg font-light text-[#FAF3E0]/70">
+            <p class="mt-4 text-lg font-light text-[#4A2E28]/60">
                 Hubungi kami sekarang atau langsung buat pemesanan.
             </p>
             <div class="mt-8 flex flex-wrap justify-center gap-4">
@@ -455,8 +452,8 @@ $gallery = [
                    class="inline-block rounded-full bg-gradient-to-r from-[#D6B35C] to-[#B8983A] px-8 py-3.5 font-serif text-base font-semibold text-[#4A0F1A] shadow-lg transition duration-300 hover:scale-105">
                     Buat Pemesanan
                 </a>
-                <a href="https://wa.me/62" target="_blank" rel="noopener noreferrer"
-                   class="inline-block rounded-full border border-[#FAF3E0]/30 px-8 py-3.5 font-serif text-base text-[#FAF3E0] transition duration-300 hover:bg-[#FAF3E0]/10">
+                <a href="https://wa.me/6282261177926" target="_blank" rel="noopener noreferrer"
+                   class="inline-block rounded-full border border-[#4A0F1A]/30 px-8 py-3.5 font-serif text-base text-[#4A0F1A] transition duration-300 hover:bg-[#4A0F1A]/8">
                     WhatsApp Kami
                 </a>
             </div>

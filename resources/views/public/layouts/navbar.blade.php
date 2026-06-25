@@ -72,38 +72,40 @@
                                 Keluar
                             </button>
 
-                            <div x-show="confirmLogout" x-cloak
-                                 x-transition:enter="transition ease-out duration-150"
-                                 x-transition:enter-start="opacity-0"
-                                 x-transition:enter-end="opacity-100"
-                                 x-transition:leave="transition ease-in duration-100"
-                                 x-transition:leave-start="opacity-100"
-                                 x-transition:leave-end="opacity-0"
-                                 class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
-                                 x-on:click.self="confirmLogout = false">
-                                <div class="w-full max-w-xs rounded-2xl bg-white border border-[#E2D4C0] shadow-2xl p-6">
-                                    <div class="flex flex-col items-center text-center">
-                                        <div class="flex h-12 w-12 items-center justify-center rounded-full bg-red-50 border border-red-200 mb-4">
-                                            <i data-lucide="log-out" class="h-5 w-5 text-red-500"></i>
+                            <template x-teleport="body">
+                                <div x-show="confirmLogout" x-cloak
+                                     x-transition:enter="transition ease-out duration-150"
+                                     x-transition:enter-start="opacity-0 scale-95"
+                                     x-transition:enter-end="opacity-100 scale-100"
+                                     x-transition:leave="transition ease-in duration-100"
+                                     x-transition:leave-start="opacity-100 scale-100"
+                                     x-transition:leave-end="opacity-0 scale-95"
+                                     class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 px-4"
+                                     x-on:click.self="confirmLogout = false">
+                                    <div class="w-full max-w-xs rounded-2xl bg-white border border-[#E2D4C0] shadow-2xl p-6">
+                                        <div class="flex flex-col items-center text-center">
+                                            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-red-50 border border-red-200 mb-4">
+                                                <i data-lucide="log-out" class="h-5 w-5 text-red-500"></i>
+                                            </div>
+                                            <h3 class="font-serif text-lg font-light text-[#4A0F1A]">Yakin ingin keluar?</h3>
+                                            <p class="mt-1 text-sm text-[#4A2E28]/60">Kamu perlu login kembali untuk mengakses akun.</p>
                                         </div>
-                                        <h3 class="font-serif text-lg font-light text-[#4A0F1A]">Yakin ingin keluar?</h3>
-                                        <p class="mt-1 text-sm text-[#4A2E28]/60">Kamu perlu login kembali untuk mengakses akun.</p>
-                                    </div>
-                                    <div class="mt-5 flex gap-2">
-                                        <button x-on:click="confirmLogout = false"
-                                                class="flex-1 rounded-full border border-[#E2D4C0] bg-white py-2.5 text-sm font-semibold text-[#4A0F1A] hover:bg-[#FAF3E0] transition">
-                                            Batal
-                                        </button>
-                                        <form method="POST" action="/logout" class="flex-1">
-                                            @csrf
-                                            <button type="submit"
-                                                    class="w-full rounded-full bg-gradient-to-br from-red-600 to-red-800 py-2.5 text-sm font-semibold text-white shadow-sm hover:from-red-700 hover:to-red-900 transition">
-                                                Ya, Keluar
+                                        <div class="mt-5 flex gap-2">
+                                            <button x-on:click="confirmLogout = false"
+                                                    class="flex-1 rounded-full border border-[#E2D4C0] bg-white py-2.5 text-sm font-semibold text-[#4A0F1A] hover:bg-[#FAF3E0] transition">
+                                                Batal
                                             </button>
-                                        </form>
+                                            <form method="POST" action="/logout" class="flex-1">
+                                                @csrf
+                                                <button type="submit"
+                                                        class="w-full rounded-full bg-gradient-to-br from-red-600 to-red-800 py-2.5 text-sm font-semibold text-white shadow-sm hover:from-red-700 hover:to-red-900 transition">
+                                                    Ya, Keluar
+                                                </button>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </template>
                         </div>
                     </div>
                 </div>

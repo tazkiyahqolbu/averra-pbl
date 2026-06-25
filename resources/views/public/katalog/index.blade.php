@@ -103,7 +103,7 @@ $search     = request('search', '');
     </section>
 
     {{-- ══ GRID PRODUK ══ --}}
-    <section class="pb-20 bg-[#FAF3E0]">
+    <section id="product-section" class="pb-20 bg-[#FAF3E0]">
         <div class="mx-auto max-w-6xl px-6">
 
             @php
@@ -221,6 +221,16 @@ $search     = request('search', '');
             });
         }, { threshold: 0.08 });
         document.querySelectorAll('.scroll-fade').forEach(el => observer.observe(el));
+
+        // Setelah load dengan filter aktif, scroll ke grid produk agar tidak kembali ke atas
+        if (window.location.search) {
+            const grid = document.getElementById('product-section');
+            if (grid) {
+                setTimeout(() => {
+                    grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 80);
+            }
+        }
     </script>
 </body>
 </html>

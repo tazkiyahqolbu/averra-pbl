@@ -45,10 +45,18 @@
 
             {{-- Icon animasi --}}
             <div class="mb-6 flex justify-center">
-                <div class="flex h-20 w-20 items-center justify-center rounded-full bg-amber-50 border-2 border-amber-200">
-                    <i data-lucide="clock" class="h-9 w-9 text-amber-500"></i>
+                <div class="relative flex h-20 w-20 items-center justify-center rounded-full bg-amber-50 border-2 border-amber-200">
+                    {{-- Lingkaran berputar di sekeliling --}}
+                    <svg class="absolute inset-0 h-full w-full" style="animation: spin 3s linear infinite;" viewBox="0 0 80 80" fill="none">
+                        <circle cx="40" cy="40" r="36" stroke="#F59E0B" stroke-width="2.5"
+                                stroke-dasharray="12 8" stroke-linecap="round"/>
+                    </svg>
+                    <i data-lucide="clock" class="relative h-9 w-9 text-amber-500"></i>
                 </div>
             </div>
+            <style>
+                @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+            </style>
 
             {{-- Judul --}}
             <div class="text-center mb-6">
@@ -121,10 +129,10 @@
                     <i data-lucide="clipboard-list" class="h-4 w-4"></i>
                     Semua Pesanan Saya
                 </a>
-                <a href="{{ route('user.dashboard.index') }}"
+                <a href="{{ route('public.beranda') }}"
                    class="flex items-center justify-center gap-2 w-full rounded-full px-6 py-3 text-sm font-medium text-[#4A2E28]/60 hover:text-[#4A0F1A] transition-colors duration-200">
-                    <i data-lucide="layout-dashboard" class="h-4 w-4"></i>
-                    Kembali ke Dashboard
+                    <i data-lucide="home" class="h-4 w-4"></i>
+                    Kembali ke Beranda
                 </a>
             </div>
         </div>

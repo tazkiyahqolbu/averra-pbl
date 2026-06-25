@@ -82,17 +82,6 @@
 
                     <div class="flex flex-wrap items-start gap-2">
                         <a href="{{ route('admin.pemesanan.show', $pemesanan->id) }}" class="admin-btn-secondary">Lihat Detail</a>
-
-                        @if($pemesanan->status === 'menunggu')
-                            <form method="POST" action="{{ route('admin.pemesanan.konfirmasi', $pemesanan->id) }}">
-                                @csrf @method('PATCH')
-                                <button type="submit" class="admin-btn-primary">Konfirmasi</button>
-                            </form>
-                            <form method="POST" action="{{ route('admin.pemesanan.tolak', $pemesanan->id) }}">
-                                @csrf @method('PATCH')
-                                <button type="submit" class="admin-btn-danger">Tolak</button>
-                            </form>
-                        @endif
                     </div>
                 </div>
             </div>
