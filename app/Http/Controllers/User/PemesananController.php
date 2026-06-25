@@ -10,6 +10,7 @@ use App\Models\Pemesanan;
 use App\Models\ZonaLokasi;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
+use App\Http\Requests\StoreBookingRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -132,12 +133,8 @@ class PemesananController extends Controller
         return null;
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(StoreBookingRequest $request): RedirectResponse
     {
-        $request->validate([
-            'katalog_id'  => 'required|string',
-            'total_harga' => 'required|numeric|min:0',
-        ]);
 
         // Parse "barang-3" → ['barang', '3']
         [$jenisItem, $itemId] = explode('-', $request->katalog_id, 2);
