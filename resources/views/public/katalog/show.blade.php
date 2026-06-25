@@ -260,12 +260,21 @@
                             $pesanRoute = in_array($item->type, ['paket', 'jasa'])
                                 ? route('user.pemesanan.create.acara', ['item' => $item->id])
                                 : route('user.pemesanan.create.sewa', ['item' => $item->id]);
+                            $labelPesan = in_array($item->category, ['Sewa Barang', 'Properti', 'Kostum']) ? 'Sewa Sekarang' : 'Pesan Paket Ini';
                         @endphp
-                        <a href="{{ $pesanRoute }}"
-                           class="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#D6B35C] to-[#B8983A] py-3.5 px-6 font-serif text-base font-semibold text-[#4A0F1A] shadow-md transition duration-300 hover:scale-[1.02] hover:shadow-lg">
-                            <i data-lucide="calendar-check" class="h-4 w-4"></i>
-                            {{ in_array($item->category, ['Sewa Barang', 'Properti', 'Kostum']) ? 'Sewa Sekarang' : 'Pesan Paket Ini' }}
-                        </a>
+                        @auth
+                            <a href="{{ $pesanRoute }}"
+                               class="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#D6B35C] to-[#B8983A] py-3.5 px-6 font-serif text-base font-semibold text-[#4A0F1A] shadow-md transition duration-300 hover:scale-[1.02] hover:shadow-lg">
+                                <i data-lucide="calendar-check" class="h-4 w-4"></i>
+                                {{ $labelPesan }}
+                            </a>
+                        @else
+                            <button type="button" onclick="document.getElementById('modal-login-required').classList.remove('hidden')"
+                                    class="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#D6B35C] to-[#B8983A] py-3.5 px-6 font-serif text-base font-semibold text-[#4A0F1A] shadow-md transition duration-300 hover:scale-[1.02] hover:shadow-lg">
+                                <i data-lucide="calendar-check" class="h-4 w-4"></i>
+                                {{ $labelPesan }}
+                            </button>
+                        @endauth
                         <p class="mt-2 text-center text-xs text-[#4A2E28]">
                             Konfirmasi dalam 1×24 jam setelah pemesanan
                         </p>
@@ -411,6 +420,36 @@
 
     @include('public.layouts.footer')
 
+    {{-- Modal: Harus Login Dulu --}}
+    @guest
+    <div id="modal-login-required" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
+        <div class="w-full max-w-sm rounded-3xl bg-white border border-[#E2D4C0] shadow-2xl p-8 text-center">
+            <div class="mb-4 flex justify-center">
+                <div class="flex h-14 w-14 items-center justify-center rounded-full bg-[#FAF3E0] border-2 border-[#C8A84B]/40">
+                    <i data-lucide="lock" class="h-6 w-6 text-[#C8960C]"></i>
+                </div>
+            </div>
+            <h3 class="font-serif text-xl font-medium text-[#4A0F1A] mb-2">Masuk Terlebih Dahulu</h3>
+            <p class="text-sm text-[#4A2E28]/70 mb-6">Kamu perlu login atau daftar akun untuk melakukan pemesanan.</p>
+            <div class="space-y-3">
+                <a href="{{ route('login') }}"
+                   class="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#D6B35C] to-[#B8983A] py-3 px-6 font-serif font-semibold text-[#4A0F1A] shadow-sm transition hover:scale-[1.02]">
+                    <i data-lucide="log-in" class="h-4 w-4"></i>
+                    Masuk Sekarang
+                </a>
+                <a href="{{ route('register') }}"
+                   class="flex w-full items-center justify-center gap-2 rounded-full border border-[#4A0F1A]/20 py-3 px-6 text-sm font-semibold text-[#4A0F1A] transition hover:border-[#4A0F1A] hover:bg-[#4A0F1A]/5">
+                    Daftar Akun Baru
+                </a>
+                <button onclick="document.getElementById('modal-login-required').classList.add('hidden')"
+                        class="w-full text-sm text-[#4A2E28]/50 hover:text-[#4A0F1A] transition py-1">
+                    Kembali
+                </button>
+            </div>
+        </div>
+    </div>
+    @endguest
+
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
         window.addEventListener('load', () => { lucide.createIcons(); });
@@ -421,6 +460,11 @@
             });
         }, { threshold: 0.1 });
         document.querySelectorAll('.scroll-fade').forEach(el => observer.observe(el));
+
+        // Tutup modal saat klik di luar card
+        document.getElementById('modal-login-required')?.addEventListener('click', function(e) {
+            if (e.target === this) this.classList.add('hidden');
+        });
     </script>
 </body>
 </html>

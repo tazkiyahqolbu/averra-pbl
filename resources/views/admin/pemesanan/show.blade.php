@@ -151,23 +151,105 @@
                         @csrf @method('PATCH')
                         <button type="submit" class="admin-btn-primary w-full">Konfirmasi Pesanan</button>
                     </form>
-                    <form method="POST" action="{{ route('admin.pemesanan.tolak', $pemesanan->id) }}" class="mt-2 space-y-2">
-                        @csrf @method('PATCH')
-                        <button type="submit" class="admin-btn-danger w-full">Tolak Pesanan</button>
-                    </form>
+                    <button type="button" onclick="document.getElementById('modal-tolak').classList.remove('hidden')"
+                            class="admin-btn-danger w-full mt-2">
+                        Tolak Pesanan
+                    </button>
+
                 @elseif($pemesanan->status === 'dikonfirmasi')
                     <p class="text-sm text-[#4A2E28] mb-3">Pesanan sudah dikonfirmasi. Menunggu pembayaran dari customer.</p>
-                    <form method="POST" action="{{ route('admin.pemesanan.tolak', $pemesanan->id) }}">
-                        @csrf @method('PATCH')
-                        <button type="submit" class="admin-btn-danger w-full">Batalkan Pesanan</button>
-                    </form>
+                    <button type="button" onclick="document.getElementById('modal-tolak').classList.remove('hidden')"
+                            class="admin-btn-danger w-full">
+                        Batalkan Pesanan
+                    </button>
+
+                @elseif($pemesanan->status === 'dibatalkan')
+                    <div class="rounded-xl border border-red-200 bg-red-50 p-4 text-sm">
+                        <p class="font-semibold text-red-700 mb-1">Pesanan telah ditolak/dibatalkan</p>
+                        @if($pemesanan->alasan_penolakan)
+                            <p class="text-red-600">Alasan: {{ $pemesanan->alasan_penolakan }}</p>
+                        @endif
+                    </div>
+
                 @else
                     <p class="text-sm text-[#4A2E28]/60">Tidak ada aksi tersedia untuk status ini.</p>
                 @endif
 
                 <a href="{{ route('admin.pemesanan.index') }}" class="admin-btn-secondary w-full mt-2 block text-center">Kembali</a>
             </div>
+
+            {{-- Validation error --}}
+            @error('alasan_penolakan')
+                <div class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                    {{ $message }}
+                </div>
+            @enderror
         </div>
     </div>
 </div>
+{{-- Modal: Alasan Penolakan/Pembatalan --}}
+@if(in_array($pemesanan->status, ['menunggu', 'dikonfirmasi']))
+<div id="modal-tolak" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+    <div class="w-full max-w-md rounded-2xl bg-white border border-gray-200 shadow-2xl p-6">
+        <div class="flex items-center gap-3 mb-4">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-red-50 border border-red-200 shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                </svg>
+            </div>
+            <div>
+                <h3 class="font-semibold text-gray-800">
+                    {{ $pemesanan->status === 'menunggu' ? 'Tolak Pesanan' : 'Batalkan Pesanan' }}
+                </h3>
+                <p class="text-xs text-gray-500">#{{ $pemesanan->kode_pemesanan }}</p>
+            </div>
+        </div>
+
+        <p class="text-sm text-gray-600 mb-4">
+            Berikan alasan yang jelas agar pelanggan mengerti mengapa pesanan ini
+            {{ $pemesanan->status === 'menunggu' ? 'ditolak' : 'dibatalkan' }}.
+            Alasan ini akan ditampilkan ke pelanggan.
+        </p>
+
+        <form method="POST" action="{{ route('admin.pemesanan.tolak', $pemesanan->id) }}">
+            @csrf @method('PATCH')
+            <div class="mb-4">
+                <label class="block text-xs font-semibold uppercase tracking-wide text-gray-600 mb-1.5">
+                    Alasan {{ $pemesanan->status === 'menunggu' ? 'Penolakan' : 'Pembatalan' }}
+                    <span class="text-red-500">*</span>
+                </label>
+                <textarea name="alasan_penolakan" rows="4" required minlength="10" maxlength="500"
+                          placeholder="Contoh: Tanggal yang dipilih tidak tersedia, slot sudah penuh untuk periode tersebut..."
+                          class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-800 placeholder-gray-400 focus:border-red-300 focus:outline-none focus:ring-2 focus:ring-red-100 resize-none transition">{{ old('alasan_penolakan') }}</textarea>
+                <p class="mt-1 text-xs text-gray-400">Minimal 10 karakter, maksimal 500 karakter.</p>
+            </div>
+            <div class="flex gap-2">
+                <button type="button" onclick="document.getElementById('modal-tolak').classList.add('hidden')"
+                        class="flex-1 rounded-xl border border-gray-200 bg-white py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition">
+                    Batal
+                </button>
+                <button type="submit"
+                        class="flex-1 rounded-xl bg-red-600 py-2.5 text-sm font-semibold text-white hover:bg-red-700 transition">
+                    Ya, {{ $pemesanan->status === 'menunggu' ? 'Tolak' : 'Batalkan' }} Pesanan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Buka ulang modal jika ada validation error
+    @error('alasan_penolakan')
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('modal-tolak').classList.remove('hidden');
+        });
+    @enderror
+
+    // Tutup modal klik backdrop
+    document.getElementById('modal-tolak')?.addEventListener('click', function(e) {
+        if (e.target === this) this.classList.add('hidden');
+    });
+</script>
+@endif
+
 @endsection

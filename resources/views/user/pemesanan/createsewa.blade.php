@@ -139,8 +139,19 @@
                                 <label class="mb-2 block text-[10px] font-semibold uppercase tracking-[0.25em] text-[#4A0F1A]">
                                     Tanggal Kembali <span class="text-red-400">*</span>
                                 </label>
-                                <input type="date" name="tanggal_kembali" x-model="endDate" required
+                                <input type="date" name="tanggal_kembali" x-model="endDate"
+                                       :min="startDate || ''"
+                                       @change="if(startDate && endDate && endDate < startDate){ endDate = ''; }"
+                                       required
                                        class="w-full rounded-xl border border-[#E2D4C0] bg-white px-4 py-3 text-sm text-[#4A0F1A] focus:border-[#C8960C] focus:outline-none transition">
+                                <p class="mt-1 text-xs text-red-500"
+                                   x-show="startDate && endDate && endDate < startDate">
+                                    Tanggal kembali tidak boleh sebelum tanggal ambil
+                                </p>
+                                <p class="mt-1 text-xs text-[#4A2E28]/50"
+                                   x-show="startDate && !endDate">
+                                    Minimal sama dengan tanggal ambil
+                                </p>
                             </div>
                         </div>
 
@@ -241,17 +252,17 @@
                                       class="w-full resize-none rounded-xl border border-[#E2D4C0] bg-white px-4 py-3 text-sm text-[#4A0F1A] placeholder-[#4A2E28]/30 focus:border-[#C8960C] focus:outline-none transition"
                                       placeholder="Alamat pengiriman lengkap…"></textarea>
                             <div class="border-t border-[#E2D4C0] pt-3">
-                                <p class="mb-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#4A0F1A]">Metode Pengembalian</p>
+                                <p class="mb-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#4A0F1A]">Metode Pengembalian Barang</p>
                                 <div class="flex gap-5 text-sm">
                                     <label class="flex items-center gap-2 cursor-pointer">
                                         <input type="radio" name="metode_pengembalian" value="antar_sendiri" checked
                                                class="accent-[#C8960C]">
-                                        <span class="text-[#4A2E28]">Antar Sendiri</span>
+                                        <span class="text-[#4A2E28]">Saya Antar ke Sanggar</span>
                                     </label>
                                     <label class="flex items-center gap-2 cursor-pointer">
                                         <input type="radio" name="metode_pengembalian" value="dijemput"
                                                class="accent-[#C8960C]">
-                                        <span class="text-[#4A2E28]">Dijemput (+Biaya)</span>
+                                        <span class="text-[#4A2E28]">Dijemput Tim Kami (+Biaya)</span>
                                     </label>
                                 </div>
                             </div>
@@ -410,6 +421,82 @@
                 prevStep() { this.step--; window.scrollTo({ top: 0, behavior: 'smooth' }); },
             }));
         });
+    </script>
+
+    {{-- ── Modal: Tinggalkan Halaman? ── --}}
+    <div id="leave-modal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 px-4">
+        <div class="w-full max-w-xs rounded-2xl bg-white border border-[#E2D4C0] shadow-2xl p-6 text-center">
+            <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-amber-50 border border-amber-200">
+                <i data-lucide="alert-triangle" class="h-5 w-5 text-amber-500"></i>
+            </div>
+            <h3 class="font-serif text-lg font-light text-[#4A0F1A]">Tinggalkan halaman?</h3>
+            <p class="mt-1 text-sm text-[#4A2E28]/60">Data yang sudah kamu isi akan hilang jika kamu meninggalkan halaman ini.</p>
+            <div class="mt-5 flex gap-2">
+                <button id="leave-cancel"
+                        class="flex-1 rounded-full border border-[#E2D4C0] bg-white py-2.5 text-sm font-semibold text-[#4A0F1A] hover:bg-[#FAF3E0] transition">
+                    Tetap di Sini
+                </button>
+                <button id="leave-confirm"
+                        class="flex-1 rounded-full bg-gradient-to-r from-[#D6B35C] to-[#B8983A] py-2.5 text-sm font-semibold text-[#4A0F1A] transition hover:scale-[1.02]">
+                    Ya, Tinggalkan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function () {
+        let formDirty = false;
+        let leaveTarget = null;
+        const modal = document.getElementById('leave-modal');
+
+        // Tandai form "kotor" ketika ada input dari user
+        document.querySelectorAll('input, select, textarea').forEach(el => {
+            el.addEventListener('input',  () => { formDirty = true; });
+            el.addEventListener('change', () => { formDirty = true; });
+        });
+
+        // Reset dirty saat form di-submit (biarkan submit jalan normal)
+        document.querySelector('form[method="POST"]')
+            ?.addEventListener('submit', () => { formDirty = false; });
+
+        // Dialog native browser: tombol back, refresh, tutup tab
+        window.addEventListener('beforeunload', function (e) {
+            if (!formDirty) return;
+            e.preventDefault();
+            e.returnValue = '';
+        });
+
+        // Intercept klik link navigasi
+        document.addEventListener('click', function (e) {
+            if (!formDirty) return;
+            const link = e.target.closest('a[href]');
+            if (!link) return;
+            const href = link.getAttribute('href');
+            if (!href || href.startsWith('#') || href.startsWith('javascript:')) return;
+
+            e.preventDefault();
+            leaveTarget = href;
+            modal.classList.remove('hidden');
+        });
+
+        document.getElementById('leave-cancel')?.addEventListener('click', () => {
+            modal.classList.add('hidden');
+            leaveTarget = null;
+        });
+
+        document.getElementById('leave-confirm')?.addEventListener('click', () => {
+            formDirty = false;
+            if (leaveTarget) window.location.href = leaveTarget;
+        });
+
+        modal?.addEventListener('click', function (e) {
+            if (e.target === this) {
+                modal.classList.add('hidden');
+                leaveTarget = null;
+            }
+        });
+    })();
     </script>
 </body>
 </html>
