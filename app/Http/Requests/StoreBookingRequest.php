@@ -19,7 +19,7 @@ class StoreBookingRequest extends FormRequest
             'nama_pemesan'        => ['required', 'string', 'max:255'],
             'no_hp'               => ['required', 'string', 'max:20'],
             'alamat_lengkap'      => ['nullable', 'string'],
-            'zona_lokasi_id'      => ['nullable', 'exists:zona_lokasis,id'],
+            'zona_lokasi_id'      => ['nullable', 'exists:zona_lokasi,id'],
             'keterangan_acara'    => ['nullable', 'string'],
             'metode_bayar'        => ['required', 'in:dp,lunas'],
             'tanggal_pelaksanaan' => ['nullable', 'date', 'after_or_equal:today'],
