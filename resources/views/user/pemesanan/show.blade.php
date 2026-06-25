@@ -347,45 +347,84 @@
         </div>
 
         {{-- Testimoni --}}
-        <div class="rounded-2xl border border-[#E2D4C0] bg-white shadow-[0_2px_8px_rgba(74,15,26,0.06)] p-6">
+        <div class="rounded-2xl border border-[#E2D4C0] bg-white shadow-[0_2px_8px_rgba(74,15,26,0.06)] p-6 mt-4">
             @if(!$pesanan->testimoni)
-                <h3 class="font-serif text-lg font-light text-[#4A0F1A] mb-4">Bagaimana pengalaman Anda?</h3>
-                <form action="{{ route('testimoni.store', $pesanan->id) }}" method="POST" class="space-y-4"
-                      x-data="{ rating: 0 }">
+                <div class="text-center mb-6">
+                    <h3 class="font-serif text-2xl font-light text-[#4A0F1A]">Bagaimana pengalaman Anda?</h3>
+                    <p class="text-sm text-[#4A2E28]/60 mt-1">Bantu kami menjadi lebih baik dengan ulasan Anda.</p>
+                </div>
+                <form action="{{ route('testimoni.store', $pesanan->id) }}" method="POST" enctype="multipart/form-data" class="space-y-5"
+                      x-data="{ rating: 0, hoverRating: 0, fileName: '' }">
                     @csrf
+                    
                     {{-- Star rating --}}
-                    <div>
-                        <p class="text-[10px] uppercase tracking-wider text-[#4A2E28]/50 mb-2">Penilaian</p>
-                        <div class="flex gap-1">
+                    <div class="text-center">
+                        <div class="flex justify-center gap-2" x-on:mouseleave="hoverRating = 0">
                             @for($i = 1; $i <= 5; $i++)
                                 <button type="button"
                                         x-on:click="rating = {{ $i }}"
-                                        class="text-2xl transition"
-                                        x-bind:class="rating >= {{ $i }} ? 'text-[#C8960C]' : 'text-[#E2D4C0]'">★</button>
+                                        x-on:mouseenter="hoverRating = {{ $i }}"
+                                        class="text-4xl transition-all duration-200 transform hover:scale-110"
+                                        x-bind:class="(hoverRating >= {{ $i }} || rating >= {{ $i }}) ? 'text-[#C8960C] drop-shadow-md' : 'text-[#E2D4C0]'">
+                                    ★
+                                </button>
                             @endfor
                         </div>
-                        <input type="hidden" name="rating" x-bind:value="rating">
+                        <p class="text-xs text-[#4A2E28]/60 mt-2" x-text="rating > 0 ? rating + ' Bintang' : 'Pilih penilaian'"></p>
+                        <input type="hidden" name="rating" x-bind:value="rating" required>
                     </div>
+
+                    {{-- Ulasan --}}
                     <div>
-                        <p class="text-[10px] uppercase tracking-wider text-[#4A2E28]/50 mb-2">Ulasan</p>
-                        <textarea name="isi_testimoni" rows="3"
-                                  class="w-full rounded-xl border border-[#E2D4C0] bg-[#FAF3E0] px-4 py-3 text-sm text-[#4A2E28] focus:border-[#C8960C] focus:outline-none transition"
-                                  placeholder="Ceritakan pengalaman Anda..."></textarea>
+                        <label class="block text-[10px] uppercase tracking-wider text-[#4A2E28]/50 mb-2 font-semibold">Ulasan Anda</label>
+                        <textarea name="isi_testimoni" rows="4" required
+                                  class="w-full rounded-xl border border-[#E2D4C0] bg-[#FAF3E0] px-4 py-3 text-sm text-[#4A2E28] focus:border-[#C8960C] focus:ring-1 focus:ring-[#C8960C] focus:outline-none transition-all resize-none"
+                                  placeholder="Ceritakan pengalaman Anda menggunakan layanan kami..."></textarea>
                     </div>
-                    <button type="submit"
-                            class="rounded-full bg-gradient-to-br from-[#6B1625] to-[#3A0A12] px-6 py-2.5 text-sm font-semibold text-[#FAF3E0] shadow-[0_4px_14px_rgba(74,15,26,0.3)] hover:shadow-[0_6px_18px_rgba(74,15,26,0.4)] hover:from-[#7B1C2E] transition-all duration-200">
-                        Kirim Ulasan
-                    </button>
+
+                    {{-- Media Upload --}}
+                    <div>
+                        <label class="block text-[10px] uppercase tracking-wider text-[#4A2E28]/50 mb-2 font-semibold">Upload Foto/Video (Opsional)</label>
+                        <div class="relative group">
+                            <label class="flex flex-col items-center justify-center w-full h-32 rounded-xl border-2 border-dashed border-[#E2D4C0] bg-[#FAF3E0]/50 hover:bg-[#FAF3E0] hover:border-[#C8960C] transition-all cursor-pointer">
+                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                    <i data-lucide="upload-cloud" class="w-8 h-8 text-[#C8960C] mb-2 group-hover:scale-110 transition-transform"></i>
+                                    <p class="text-sm text-[#4A2E28]/70" x-show="!fileName"><span class="font-semibold text-[#4A0F1A]">Klik untuk upload</span> atau drag and drop</p>
+                                    <p class="text-sm text-[#4A0F1A] font-semibold" x-show="fileName" x-text="fileName"></p>
+                                    <p class="text-xs text-[#4A2E28]/50 mt-1" x-show="!fileName">PNG, JPG, MP4 (Max. 10MB)</p>
+                                </div>
+                                <input type="file" name="media" accept="image/*,video/*" class="hidden" x-on:change="fileName = $event.target.files[0] ? $event.target.files[0].name : ''" />
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="pt-2">
+                        <button type="submit"
+                                class="w-full rounded-xl bg-gradient-to-br from-[#6B1625] to-[#3A0A12] px-6 py-3.5 text-sm font-semibold text-[#FAF3E0] shadow-[0_4px_14px_rgba(74,15,26,0.3)] hover:shadow-[0_6px_18px_rgba(74,15,26,0.4)] hover:from-[#7B1C2E] transition-all duration-200 flex items-center justify-center gap-2">
+                            <i data-lucide="send" class="w-4 h-4"></i>
+                            Kirim Ulasan
+                        </button>
+                    </div>
                 </form>
             @else
-                <p class="text-[10px] uppercase tracking-wider text-[#C8960C] mb-3">Ulasan Anda</p>
-                <div class="flex gap-0.5 mb-3 text-[#C8960C]">
-                    @for($i = 1; $i <= 5; $i++)
-                        <span class="{{ $i <= $pesanan->testimoni->rating ? '' : 'opacity-25' }}">★</span>
-                    @endfor
+                <div class="flex items-center justify-between mb-4">
+                    <p class="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#C8960C]">Ulasan Anda</p>
+                    <div class="flex gap-1 text-lg text-[#C8960C]">
+                        @for($i = 1; $i <= 5; $i++)
+                            <span class="{{ $i <= $pesanan->testimoni->rating ? 'drop-shadow-sm' : 'text-[#E2D4C0]' }}">★</span>
+                        @endfor
+                    </div>
                 </div>
-                <p class="text-sm text-[#4A2E28] italic">"{{ $pesanan->testimoni->isi_testimoni }}"</p>
-                <p class="text-xs text-[#4A2E28]/60 mt-2">{{ $pesanan->testimoni->created_at->format('d F Y') }}</p>
+                <div class="rounded-xl border border-[#E2D4C0] bg-[#FAF3E0] p-4 relative">
+                    <i data-lucide="quote" class="absolute top-4 right-4 w-6 h-6 text-[#C8960C] opacity-20"></i>
+                    <p class="text-sm text-[#4A2E28] italic relative z-10">"{{ $pesanan->testimoni->isi_testimoni }}"</p>
+                    @if(optional($pesanan->testimoni)->media_path)
+                        <div class="mt-3">
+                            <p class="text-xs text-[#4A2E28]/60 mb-1 flex items-center gap-1"><i data-lucide="paperclip" class="w-3 h-3"></i> Lampiran Media</p>
+                        </div>
+                    @endif
+                    <p class="text-[10px] text-[#4A2E28]/50 mt-3 font-semibold">{{ $pesanan->testimoni->created_at->format('d F Y, H:i') }}</p>
+                </div>
             @endif
         </div>
     @endif
