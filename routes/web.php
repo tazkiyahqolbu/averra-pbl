@@ -11,6 +11,8 @@ use App\Http\Controllers\Frontend\KatalogController;
 use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\User\PemesananController;
 use App\Http\Controllers\User\PembayaranController;
+use App\Http\Controllers\User\ProfileController;
+
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn() => view('public.Beranda'))->name('public.beranda');
@@ -50,7 +52,7 @@ Route::middleware('auth')->name('user.')->group(function () {
     Route::post('/pembayaran/upload', [PembayaranController::class, 'upload'])->name('pembayaran.upload');
 
     // Profile
-    Route::get('/profil', fn() => view('user.profile.index'))->name('profile.index');
+    Route::get('/profil', [ProfileController::class, 'index'])->name('profil.index');
 });
 
 // ── Rute Admin ────────────────────────────────────────────────────────────────
