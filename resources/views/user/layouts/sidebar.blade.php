@@ -7,7 +7,8 @@
     ];
 @endphp
 
-<aside class="w-56 flex-shrink-0 flex flex-col min-h-screen sticky top-0 h-screen overflow-y-auto"
+<div class="w-56 flex-shrink-0"></div>
+<aside class="w-56 flex flex-col h-screen fixed top-0 left-0 overflow-y-auto z-40"
        style="background: linear-gradient(to bottom, #5C1520 0%, #4A0F1A 50%, #3A0A12 100%);">
 
     {{-- Logo --}}
