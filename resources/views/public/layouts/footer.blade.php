@@ -1,4 +1,4 @@
-<footer id="kontak" class="bg-maroon-deep pt-14 pb-6 text-cream border-t border-maroon/30">
+<footer id="kontak" class="bg-maroon-deep pt-14 pb-6 text-cream">
     <div class="mx-auto max-w-7xl px-6">
         <div class="grid gap-8 md:grid-cols-3">
 
@@ -83,9 +83,7 @@
             </div>
         </div>
 
-        <div class="h-[1px] bg-gold/20 my-6 w-full"></div>
-
-        <p class="text-center text-xs text-cream/50 font-light">
+        <p class="mt-8 text-center text-xs text-cream/50 font-light">
             © {{ date('Y') }} SILART · Sanggar Rantiang Tagok.
             Adat Basandi Syarak, Syarak Basandi Kitabullah.
         </p>

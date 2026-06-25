@@ -45,6 +45,32 @@
 
 <div class="space-y-4">
 
+    {{-- ─── STATUS DIBATALKAN ────────────────────────────────────────────────── --}}
+    @if($pesanan->status === 'dibatalkan')
+        <div class="rounded-2xl border border-red-200 bg-red-50 px-5 py-5">
+            <div class="flex items-start gap-3">
+                <div class="flex h-9 w-9 items-center justify-center rounded-full bg-red-100 border border-red-200 shrink-0 mt-0.5">
+                    <i data-lucide="x-circle" class="h-4 w-4 text-red-600"></i>
+                </div>
+                <div class="flex-1">
+                    <p class="text-sm font-semibold text-red-800">Pesanan Ditolak / Dibatalkan</p>
+                    <p class="text-xs text-red-600 mt-0.5">Pesanan ini tidak dapat diproses lebih lanjut.</p>
+                    @if($pesanan->alasan_penolakan)
+                        <div class="mt-3 rounded-xl border border-red-200 bg-white px-4 py-3">
+                            <p class="text-[10px] font-semibold uppercase tracking-wider text-red-500 mb-1">Alasan dari Admin</p>
+                            <p class="text-sm text-red-700">{{ $pesanan->alasan_penolakan }}</p>
+                        </div>
+                    @endif
+                    <a href="{{ route('public.katalog.index') }}"
+                       class="mt-4 inline-flex items-center gap-1.5 rounded-full bg-[#4A0F1A] px-5 py-2 text-xs font-semibold text-[#FAF3E0] hover:bg-[#7B1C2E] transition">
+                        <i data-lucide="search" class="h-3 w-3"></i>
+                        Lihat Layanan Lain
+                    </a>
+                </div>
+            </div>
+        </div>
+    @endif
+
     {{-- ─── A. MENUNGGU KONFIRMASI ─────────────────────────────────────────── --}}
     @if($pesanan->isMenungguKonfirmasi())
         {{-- Status Banner --}}

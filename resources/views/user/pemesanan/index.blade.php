@@ -79,6 +79,11 @@
                     <p class="text-xs text-[#4A2E28]/60 mt-0.5">
                         {{ $jenis }} &middot; {{ $p->tanggal_pakai?->format('d M Y') ?? '-' }}
                     </p>
+                    @if($p->status === 'dibatalkan' && $p->alasan_penolakan)
+                        <p class="text-xs text-red-500 mt-1 truncate">
+                            <span class="font-semibold">Alasan:</span> {{ $p->alasan_penolakan }}
+                        </p>
+                    @endif
                 </div>
             </div>
             <div class="shrink-0 text-right">

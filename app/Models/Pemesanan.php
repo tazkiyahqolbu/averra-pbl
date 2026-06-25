@@ -14,7 +14,7 @@ class Pemesanan extends Model
         'kode_pemesanan', 'user_id', 'zona_id',
         'tanggal_pemesanan', 'tanggal_pakai', 'jenis',
         'lokasi', 'ongkos_lokasi', 'no_hp', 'nama_pemesan',
-        'catatan', 'total_harga', 'status',
+        'catatan', 'alasan_penolakan', 'total_harga', 'status',
     ];
 
     protected $casts = [

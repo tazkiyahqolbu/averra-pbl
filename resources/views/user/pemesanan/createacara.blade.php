@@ -362,5 +362,81 @@
             }));
         });
     </script>
+
+    {{-- ── Modal: Tinggalkan Halaman? ── --}}
+    <div id="leave-modal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 px-4">
+        <div class="w-full max-w-xs rounded-2xl bg-white border border-[#E2D4C0] shadow-2xl p-6 text-center">
+            <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-amber-50 border border-amber-200">
+                <i data-lucide="alert-triangle" class="h-5 w-5 text-amber-500"></i>
+            </div>
+            <h3 class="font-serif text-lg font-light text-[#4A0F1A]">Tinggalkan halaman?</h3>
+            <p class="mt-1 text-sm text-[#4A2E28]/60">Data yang sudah kamu isi akan hilang jika kamu meninggalkan halaman ini.</p>
+            <div class="mt-5 flex gap-2">
+                <button id="leave-cancel"
+                        class="flex-1 rounded-full border border-[#E2D4C0] bg-white py-2.5 text-sm font-semibold text-[#4A0F1A] hover:bg-[#FAF3E0] transition">
+                    Tetap di Sini
+                </button>
+                <button id="leave-confirm"
+                        class="flex-1 rounded-full bg-gradient-to-r from-[#D6B35C] to-[#B8983A] py-2.5 text-sm font-semibold text-[#4A0F1A] transition hover:scale-[1.02]">
+                    Ya, Tinggalkan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function () {
+        let formDirty = false;
+        let leaveTarget = null;
+        const modal = document.getElementById('leave-modal');
+
+        // Tandai form "kotor" ketika ada input dari user
+        document.querySelectorAll('input, select, textarea').forEach(el => {
+            el.addEventListener('input',  () => { formDirty = true; });
+            el.addEventListener('change', () => { formDirty = true; });
+        });
+
+        // Reset dirty saat form di-submit
+        document.querySelector('form[method="POST"]')
+            ?.addEventListener('submit', () => { formDirty = false; });
+
+        // Dialog native browser: tombol back, refresh, tutup tab
+        window.addEventListener('beforeunload', function (e) {
+            if (!formDirty) return;
+            e.preventDefault();
+            e.returnValue = '';
+        });
+
+        // Intercept klik link navigasi
+        document.addEventListener('click', function (e) {
+            if (!formDirty) return;
+            const link = e.target.closest('a[href]');
+            if (!link) return;
+            const href = link.getAttribute('href');
+            if (!href || href.startsWith('#') || href.startsWith('javascript:')) return;
+
+            e.preventDefault();
+            leaveTarget = href;
+            modal.classList.remove('hidden');
+        });
+
+        document.getElementById('leave-cancel')?.addEventListener('click', () => {
+            modal.classList.add('hidden');
+            leaveTarget = null;
+        });
+
+        document.getElementById('leave-confirm')?.addEventListener('click', () => {
+            formDirty = false;
+            if (leaveTarget) window.location.href = leaveTarget;
+        });
+
+        modal?.addEventListener('click', function (e) {
+            if (e.target === this) {
+                modal.classList.add('hidden');
+                leaveTarget = null;
+            }
+        });
+    })();
+    </script>
 </body>
 </html>
