@@ -107,3 +107,12 @@
 .scroll-delay-4 { transition-delay: 0.32s; }
 .scroll-delay-5 { transition-delay: 0.40s; }
 .scroll-delay-6 { transition-delay: 0.48s; }
+
+/* Cegah scrollbar horizontal muncul/hilang saat animasi */
+html {
+    overflow-x: hidden;
+    scrollbar-gutter: stable;
+}
+body {
+    overflow-x: hidden;
+}
