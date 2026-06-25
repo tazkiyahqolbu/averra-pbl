@@ -5,13 +5,20 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
+    private function getUser(): User
+    {
+        $user = Auth::user();
+        assert($user instanceof User);
+        return $user;
+    }
+
     public function index()
     {
-        /** @var User $user */
-        $user = auth()->user();
+        $user = $this->getUser();
         return view('user.profile.index', compact('user'));
     }
 
@@ -22,9 +29,7 @@ class ProfileController extends Controller
             'no_hp' => 'nullable|string|max:20',
         ]);
 
-        /** @var User $user */
-        $user = auth()->user();
-        $user->update($request->only('nama', 'no_hp'));
+        $this->getUser()->update($request->only('nama', 'no_hp'));
 
         return back()->with('success', 'Profil berhasil diperbarui.');
     }
@@ -35,12 +40,10 @@ class ProfileController extends Controller
             'profile_photo' => 'required|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        /** @var User $user */
-        $user = auth()->user();
         /** @var \Illuminate\Http\UploadedFile $file */
         $file = $request->file('profile_photo');
         $path = $file->store('profile-photos', 'public');
-        $user->update(['profile_photo' => $path]);
+        $this->getUser()->update(['profile_photo' => $path]);
 
         return back()->with('success', 'Foto profil berhasil diperbarui.');
     }
