@@ -1,13 +1,12 @@
 @extends('user.layouts.app')
 
 @section('content')
-@php $u = auth()->user(); @endphp
 
 {{-- Header --}}
 <div class="mb-7">
     <p class="text-[10px] tracking-[0.4em] text-[#C8960C] uppercase font-semibold">— DASHBOARD —</p>
     <h1 class="mt-1 font-serif text-3xl font-light text-[#4A0F1A]">
-        Selamat datang, <em class="not-italic font-medium">{{ $u?->nama ?? $u?->name ?? 'Tamu' }}</em>
+        Selamat datang, <em class="not-italic font-medium">{{ $user?->nama ?? 'Tamu' }}</em>
     </h1>
     <div class="mt-3 h-[1px] w-16 bg-gradient-to-r from-[#C8960C] to-transparent"></div>
 </div>
@@ -16,11 +15,11 @@
 <div class="mb-4 flex items-center justify-between rounded-2xl border border-[#E2D4C0] bg-white shadow-[0_2px_8px_rgba(74,15,26,0.06)] px-6 py-5">
     <div class="flex items-center gap-4">
         <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#4A0F1A] text-base font-bold text-[#FAF3E0]">
-            {{ strtoupper(substr($u?->nama ?? $u?->name ?? 'U', 0, 1)) }}
+            {{ strtoupper(substr($user?->nama ?? 'U', 0, 1)) }}
         </div>
         <div>
-            <p class="font-serif text-base font-medium text-[#4A0F1A]">{{ $u?->nama ?? $u?->name ?? '' }}</p>
-            <p class="text-sm text-[#4A2E28]/70">{{ $u?->email ?? '' }}</p>
+            <p class="font-serif text-base font-medium text-[#4A0F1A]">{{ $user?->nama ?? '' }}</p>
+            <p class="text-sm text-[#4A2E28]/70">{{ $user?->email ?? '' }}</p>
         </div>
     </div>
     <a href="{{ route('user.profile.index') }}"
