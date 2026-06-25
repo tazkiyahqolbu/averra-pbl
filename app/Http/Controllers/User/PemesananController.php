@@ -149,6 +149,16 @@ class PemesananController extends Controller
 
             if ($jenisItem === 'barang') {
                 $model    = Barang::findOrFail($itemId);
+                $jumlahDiminta = max(1, (int) ($request->jumlah_unit ?? 1));
+
+                // Cek stok sebelum menyimpan apapun — tolak lebih awal agar tidak ada
+                // data setengah masuk jika stok ternyata tidak mencukupi
+                if ($model->stok < $jumlahDiminta) {
+                    throw \Illuminate\Validation\ValidationException::withMessages([
+                        'katalog_id' => "Stok {$model->nama_barang} tidak mencukupi. Tersisa: {$model->stok}.",
+                    ]);
+                }
+
                 $harga    = (float) $model->harga;
                 $barangId = $itemId;
                 $jenis    = 'sewa_barang';
