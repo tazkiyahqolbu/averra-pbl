@@ -20,8 +20,4 @@ class TestimoniFactory extends Factory
         ];
     }
 
-    public function belumDipublikasikan(): static
-    {
-        return $this->state(fn (array $attributes) => ['dipublikasikan' => false]);
-    }
 }
