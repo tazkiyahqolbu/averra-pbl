@@ -177,11 +177,8 @@ class PemesananController extends Controller
         }
         $subtotal = $harga * $jumlah * $durasi;
 
-        // Total dari form (sudah include ongkos dari Alpine), fallback hitung manual
-        $totalHarga = (float) $request->total_harga;
-        if ($totalHarga <= 0) {
-            $totalHarga = $subtotal + $ongkosLokasi;
-        }
+        // Hitung total di server — nilai dari form tidak dipercaya karena bisa dimanipulasi
+        $totalHarga = $subtotal + $ongkosLokasi;
 
         // Buat Pemesanan
         $pemesanan = Pemesanan::create([
