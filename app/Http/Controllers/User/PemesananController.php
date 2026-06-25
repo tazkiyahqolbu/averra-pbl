@@ -13,6 +13,7 @@ use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\StoreBookingRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
@@ -135,93 +136,95 @@ class PemesananController extends Controller
 
     public function store(StoreBookingRequest $request): RedirectResponse
     {
+        // Bungkus seluruh proses dalam transaksi — kalau ada yang gagal di tengah,
+        // semua perubahan sebelumnya otomatis dibatalkan (rollback)
+        $pemesanan = DB::transaction(function () use ($request) {
 
-        // Parse "barang-3" → ['barang', '3']
-        [$jenisItem, $itemId] = explode('-', $request->katalog_id, 2);
+            // Parse "barang-3" → ['barang', '3']
+            [$jenisItem, $itemId] = explode('-', $request->katalog_id, 2);
 
-        $harga    = 0;
-        $barangId = $jasaId = $paketId = null;
-        $jenis    = 'acara';
+            $harga    = 0;
+            $barangId = $jasaId = $paketId = null;
+            $jenis    = 'acara';
 
-        if ($jenisItem === 'barang') {
-            $model    = Barang::findOrFail($itemId);
-            $harga    = (float) $model->harga;
-            $barangId = $itemId;
-            $jenis    = 'sewa_barang';
-        } elseif ($jenisItem === 'jasa') {
-            $model  = Jasa::findOrFail($itemId);
-            $harga  = (float) $model->harga;
-            $jasaId = $itemId;
-        } else {
-            $model   = Paket::findOrFail($itemId);
-            $harga   = (float) $model->harga;
-            $paketId = $itemId;
-        }
+            if ($jenisItem === 'barang') {
+                $model    = Barang::findOrFail($itemId);
+                $harga    = (float) $model->harga;
+                $barangId = $itemId;
+                $jenis    = 'sewa_barang';
+            } elseif ($jenisItem === 'jasa') {
+                $model  = Jasa::findOrFail($itemId);
+                $harga  = (float) $model->harga;
+                $jasaId = $itemId;
+            } else {
+                $model   = Paket::findOrFail($itemId);
+                $harga   = (float) $model->harga;
+                $paketId = $itemId;
+            }
 
-        // Zona & ongkos
-        $zonaId       = $request->filled('zona_lokasi_id') ? $request->zona_lokasi_id : null;
-        $ongkosLokasi = 0;
-        if ($zonaId) {
-            $ongkosLokasi = (float) (ZonaLokasi::find($zonaId)?->biaya ?? 0);
-        }
+            // Zona & ongkos
+            $zonaId       = $request->filled('zona_lokasi_id') ? $request->zona_lokasi_id : null;
+            $ongkosLokasi = $zonaId ? (float) (ZonaLokasi::find($zonaId)?->biaya ?? 0) : 0;
 
-        // Tanggal pakai
-        $tanggalPakai = $request->tanggal_pelaksanaan ?? $request->tanggal_ambil;
+            // Tanggal pakai
+            $tanggalPakai = $request->tanggal_pelaksanaan ?? $request->tanggal_ambil;
 
-        // Durasi & subtotal
-        $jumlah   = max(1, (int) ($request->jumlah_unit ?? 1));
-        $durasi   = 1;
-        if ($jenis === 'sewa_barang' && $request->tanggal_ambil && $request->tanggal_kembali) {
-            $durasi = max(1, Carbon::parse($request->tanggal_ambil)
-                ->diffInDays(Carbon::parse($request->tanggal_kembali)) + 1);
-        }
-        $subtotal = $harga * $jumlah * $durasi;
+            // Durasi & subtotal
+            $jumlah = max(1, (int) ($request->jumlah_unit ?? 1));
+            $durasi = 1;
+            if ($jenis === 'sewa_barang' && $request->tanggal_ambil && $request->tanggal_kembali) {
+                $durasi = max(1, Carbon::parse($request->tanggal_ambil)
+                    ->diffInDays(Carbon::parse($request->tanggal_kembali)) + 1);
+            }
+            $subtotal = $harga * $jumlah * $durasi;
 
-        // Hitung total di server — nilai dari form tidak dipercaya karena bisa dimanipulasi
-        $totalHarga = $subtotal + $ongkosLokasi;
+            // Hitung total di server — nilai dari form tidak dipercaya karena bisa dimanipulasi
+            $totalHarga = $subtotal + $ongkosLokasi;
 
-        // Buat Pemesanan
-        $pemesanan = Pemesanan::create([
-            'kode_pemesanan'    => 'PMB-' . strtoupper(Str::random(8)),
-            'user_id'           => Auth::id(),
-            'zona_id'           => $zonaId,
-            'tanggal_pemesanan' => now()->toDateString(),
-            'tanggal_pakai'     => $tanggalPakai,
-            'jenis'             => $jenis,
-            'lokasi'            => $request->alamat_lengkap,
-            'ongkos_lokasi'     => $ongkosLokasi,
-            'no_hp'             => $request->no_hp,
-            'nama_pemesan'      => $request->nama_pemesan,
-            'catatan'           => $request->keterangan_acara,
-            'total_harga'       => $totalHarga,
-            'status'            => 'menunggu',
-        ]);
+            // Buat Pemesanan
+            $pemesanan = Pemesanan::create([
+                'kode_pemesanan'    => 'PMB-' . strtoupper(Str::random(8)),
+                'user_id'           => Auth::id(),
+                'zona_id'           => $zonaId,
+                'tanggal_pemesanan' => now()->toDateString(),
+                'tanggal_pakai'     => $tanggalPakai,
+                'jenis'             => $jenis,
+                'lokasi'            => $request->alamat_lengkap,
+                'ongkos_lokasi'     => $ongkosLokasi,
+                'no_hp'             => $request->no_hp,
+                'nama_pemesan'      => $request->nama_pemesan,
+                'catatan'           => $request->keterangan_acara,
+                'total_harga'       => $totalHarga,
+                'status'            => 'menunggu',
+            ]);
 
-        // Buat DetailPemesanan
-        $pemesanan->detailPemesanans()->create([
-            'jenis_item'      => $jenisItem,
-            'barang_id'       => $barangId,
-            'jasa_id'         => $jasaId,
-            'paket_id'        => $paketId,
-            'jumlah'          => $jumlah,
-            'harga'           => $harga,
-            'subtotal'        => $subtotal,
-            'tanggal_ambil'   => $request->tanggal_ambil,
-            'tanggal_kembali' => $request->tanggal_kembali,
-        ]);
+            // Buat DetailPemesanan
+            $pemesanan->detailPemesanans()->create([
+                'jenis_item'      => $jenisItem,
+                'barang_id'       => $barangId,
+                'jasa_id'         => $jasaId,
+                'paket_id'        => $paketId,
+                'jumlah'          => $jumlah,
+                'harga'           => $harga,
+                'subtotal'        => $subtotal,
+                'tanggal_ambil'   => $request->tanggal_ambil,
+                'tanggal_kembali' => $request->tanggal_kembali,
+            ]);
 
-        // Catat pilihan metode bayar di tabel pembayaran
-        $metodeBayar = $request->metode_bayar ?? 'dp';
-        $tahap = $metodeBayar === 'lunas' ? 'langsung' : 'dp';
-        $pemesanan->pembayarans()->create([
-            'kode_transaksi'    => 'TRX-' . strtoupper(Str::random(8)),
-            'tahap'             => $tahap,
-            'persen_dp'         => $tahap === 'langsung' ? 100 : 50,
-            'jumlah_bayar'      => $tahap === 'langsung' ? $totalHarga : round($totalHarga * 0.5),
-            'metode_pembayaran' => 'transfer',
-            'status'            => 'menunggu',
-            'dibayar_pada'      => null,
-        ]);
+            // Catat pilihan metode bayar di tabel pembayaran
+            $tahap = ($request->metode_bayar ?? 'dp') === 'lunas' ? 'langsung' : 'dp';
+            $pemesanan->pembayarans()->create([
+                'kode_transaksi'    => 'TRX-' . strtoupper(Str::random(8)),
+                'tahap'             => $tahap,
+                'persen_dp'         => $tahap === 'langsung' ? 100 : 50,
+                'jumlah_bayar'      => $tahap === 'langsung' ? $totalHarga : round($totalHarga * 0.5),
+                'metode_pembayaran' => 'transfer',
+                'status'            => 'menunggu',
+                'dibayar_pada'      => null,
+            ]);
+
+            return $pemesanan;
+        });
 
         return redirect()->route('user.pemesanan.submitted', $pemesanan->id);
     }
