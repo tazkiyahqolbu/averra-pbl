@@ -12,7 +12,9 @@
             <h1 class="admin-title text-3xl">Kategori Barang</h1>
             <p class="admin-subtitle mt-1 text-sm">Kelola kategori untuk data barang sewa.</p>
         </div>
-        <a href="{{ route('admin.kategori-barang.create') }}" class="admin-btn-primary"> + Tambah Kategori</a>
+        <a href="{{ route('admin.kategori-barang.create') }}" class="admin-btn-primary">
+            + Tambah Kategori
+        </a>
     </div>
 
     <div class="grid gap-5 xl:grid-cols-3">
@@ -33,8 +35,8 @@
                         @foreach ($kategori as $item)
                             <tr class="hover:bg-[#FAF3E0]">
                                 <td class="admin-table-td">{{ $loop->iteration }}</td>
-                                <td class="admin-table-td font-semibold text-[#4A0F1A]">{{ $item['nama'] }}</td>
-                                <td class="admin-table-td text-sm text-[#4A2E28]">{{ $item['deskripsi'] }}</td>
+                                <td class="admin-table-td font-semibold text-[#4A0F1A]">{{ $item->nama }}</td>
+                                <td class="admin-table-td text-sm text-[#4A2E28]">{{ $item->deskripsi }}</td>
                                 <td class="admin-table-td text-right">
                                     <div class="flex justify-end gap-2">
                                         <a href="{{ route('admin.kategori-barang.edit', $item->id) }}" class="admin-btn-secondary px-4 py-2">
