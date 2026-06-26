@@ -7,29 +7,9 @@
     ];
 @endphp
 
-{{-- Overlay Mobile --}}
-<div
-    x-show="sidebarOpen"
-    x-transition.opacity
-    class="fixed inset-0 z-40 bg-black/50 lg:hidden"
-    @click="sidebarOpen = false"
-    x-cloak
-></div>
-
-<aside
-    :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-    class="fixed left-0 top-0 z-50 flex h-screen w-56 transform flex-col overflow-y-auto transition-transform duration-300 lg:translate-x-0"
+<div class="w-56 flex-shrink-0"></div>
+<aside class="w-56 flex flex-col h-screen fixed top-0 left-0 overflow-y-auto z-40"
     style="background: linear-gradient(to bottom, #5C1520 0%, #4A0F1A 50%, #3A0A12 100%);">
-
-    {{-- Mobile Close --}}
-    <div class="flex justify-end lg:hidden px-4 pt-4">
-        <button
-            @click="sidebarOpen = false"
-            class="rounded-lg p-2 hover:bg-white/10 text-white transition"
-        >
-            ✕
-        </button>
-    </div>
 
     {{-- Logo --}}
     <div class="px-5 py-6 border-b border-white/10">
