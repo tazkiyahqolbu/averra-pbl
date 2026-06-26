@@ -18,9 +18,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn() => view('public.Beranda'))->name('public.beranda');
 
+// Midtrans webhook - tanpa auth middleware
+Route::post('/pembayaran/callback', [App\Http\Controllers\User\PembayaranController::class, 'callback'])->name('pembayaran.callback');
+
 // Halaman publik
 Route::get('/katalog',       [KatalogController::class, 'index'])->name('public.katalog.index');
 Route::get('/katalog/{slug}', [KatalogController::class, 'show'])->name('katalog.show');
+Route::view('/galeri-kami',  'public.galeri.index')->name('public.galeri.index');
+Route::view('/tentang', 'public.tentang.index')->name('public.tentang.index');
 
 // Testimoni
 Route::middleware('auth')->post('/testimoni/{pemesanan_id}', function ($pemesanan_id) {
@@ -57,7 +62,9 @@ Route::middleware('auth')->name('user.')->group(function () {
     Route::get('/pemesanan/{id}/invoice', [PemesananController::class, 'invoice'])->name('pemesanan.invoice');
 
     // Pembayaran
-    Route::post('/pembayaran/upload', [PembayaranController::class, 'upload'])->name('pembayaran.upload');
+    Route::get('/pembayaran/{id}/pilih',     [PembayaranController::class, 'pilih'])->name('pembayaran.pilih');
+    Route::post('/pembayaran/{id}/initiate', [PembayaranController::class, 'initiate'])->name('pembayaran.initiate');
+    Route::get('/pembayaran/finish',         [PembayaranController::class, 'finish'])->name('pembayaran.finish');
 
     // Profile
     Route::get('/profil', [ProfileController::class, 'index'])->name('profile.index');
@@ -103,10 +110,8 @@ Route::middleware(['auth', 'role:admin'])
         Route::patch('/pemesanan/{id}/tolak',          [AdminPemesananController::class, 'tolak'])->name('pemesanan.tolak');
 
         // Pembayaran
-        Route::get('/pembayaran',                          [AdminPembayaranController::class, 'index'])->name('pembayaran.index');
-        Route::get('/pembayaran/{id}',                     [AdminPembayaranController::class, 'show'])->name('pembayaran.show');
-        Route::patch('/pembayaran/{id}/verifikasi',        [AdminPembayaranController::class, 'verifikasi'])->name('pembayaran.verifikasi');
-        Route::patch('/pembayaran/{id}/tolak',             [AdminPembayaranController::class, 'tolak'])->name('pembayaran.tolak');
+        Route::get('/pembayaran',      [AdminPembayaranController::class, 'index'])->name('pembayaran.index');
+        Route::get('/pembayaran/{id}', [AdminPembayaranController::class, 'show'])->name('pembayaran.show');
     });
 
 // Admin view-only routes (preview frontend)
