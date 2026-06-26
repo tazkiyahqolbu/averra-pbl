@@ -1,0 +1,83 @@
+[33mbd70cc2[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32msiti[m[33m, [m[1;31morigin/siti[m[33m)[m Merge branch 'siti' of https://github.com/tazkiyahqolbu/averra-pbl into siti
+[33m19fa29c[m feat(user):mengubah tampilan dashboard pada profil,pemesanan,pembayaran dan layouts
+[33me21562e[m[33m ([m[1;31morigin/develop[m[33m, [m[1;32mdevelop[m[33m)[m Merge pull request #25 from tazkiyahqolbu/zikra
+[33m7a44359[m feat(admin): tambah halaman kategori, pemesanan, dan  pembayaran
+[33m96c79be[m Revert "feat:membuat tampilan dashboard dan layouts pada user"
+[33m9f725e2[m feat:membuat tampilan dashboard dan layouts pada user
+[33m609ad70[m Merge pull request #22 from tazkiyahqolbu/zikra
+[33m398024d[m feat(frontend): tambah halaman barang, kategori dan revisi autentikasi
+[33mb25ccee[m Merge pull request #21 from tazkiyahqolbu/siti
+[33m1c15349[m Merge branch 'develop' into siti
+[33m8a68089[m Merge pull request #19 from tazkiyahqolbu/zikra
+[33mc698aa0[m Merge branch 'develop' into zikra
+[33ma99c4fd[m Merge pull request #20 from tazkiyahqolbu/tartiwi
+[33m1b2158f[m Merge branch 'develop' into tartiwi
+[33m6bb2f1b[m feat: membuat controller jasa dan integrasi crud ke view index, create, edit
+[33m97a4093[m feat(admin): tambah halaman manajemen paket
+[33mc06b461[m feat:menambah tampilan beranda
+[33m5d2aa1a[m Merge pull request #18 from tazkiyahqolbu/main
+[33m674d7c9[m docs: menambahkan dokumentasi fitur (features.md)
+[33m27f939a[m Merge pull request #17 from tazkiyahqolbu/tazkiyah
+[33m8d29f84[m feat: tambah controller dashboard user dan perbaiki route sementara
+[33mc65146b[m Merge pull request #16 from tazkiyahqolbu/tazkiyah
+[33m55b192e[m fix: selesaikan merge conflict pada halaman dashboard user
+[33mab38e52[m feat: membuat tampilan dashboard dan layouts pada user
+[33mb65b18c[m feat: membuat tampilan dashboard dan layouts pada user
+[33m7c8286e[m Merge branch 'develop' of https://github.com/tazkiyahqolbu/averra-pbl into tartiwi
+[33mae25e93[m Merge pull request #15 from tazkiyahqolbu/revert-14-siti
+[33m8d64e8a[m Revert "feat : menambah tampilan dashboar dan layouts pada user"
+[33mdc19698[m Merge pull request #14 from tazkiyahqolbu/siti
+[33m5a66af8[m Merge pull request #13 from tazkiyahqolbu/zikra
+[33mac7a4b7[m feat(admin): tambah layout dashboard, sidebar logout, dan halaman jasa
+[33m2b51c79[m feat : menambah tampilan dashboar dan layouts
+[33m0268fe1[m fix: ganti route sidebar yang belum terdefinisi dengan # sementara
+[33m0d0a01a[m Merge branch 'tazkiyah' into develop
+[33ma3e3d48[m Merge branch 'zikra' into develop
+[33mecbfcbc[m[33m ([m[1;31morigin/zikra[m[33m)[m feat(admin): implementasi struktur view dan styling dashboard admin
+[33mf9c905f[m[33m ([m[1;31morigin/tazkiyah[m[33m)[m feat: tambahkan AdminDashboardController dan aktifkan route dashboard admin
+[33m67c31b2[m feat(admin): implementasi struktur view dan styling dashboard admin
+[33meeabd7a[m Merge branch 'develop' of https://github.com/tazkiyahqolbu/averra-pbl into zikra
+[33m53483fe[m Merge branch 'tazkiyah' into develop
+[33m6648072[m fix: redirect root URL ke halaman login
+[33mcc8e4ec[m docs: sinkronisasi dokumentasi dari main ke develop
+[33me60f941[m fix: tambahkan route dan view placeholder dashboard user dan admin
+[33me7217e8[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m docs: perbaiki versi Laravel dari 11 menjadi 13 di README.md
+[33m4e9f631[m docs: menambahkan alpinejs pada daftar dependency frontend di installation.md
+[33m6e52350[m docs: menambahkan analisis dependency tailwindcss, @tailwindcss/vite, dan alpinejs
+[33m3f598ed[m docs: salin docs/ dan README dari branch develop
+[33m55017dc[m docs: pindahkan dan rename dependency-analysis.md ke docs/dependency.md
+[33m82cf5ff[m Merge pull request #10 from tazkiyahqolbu/tazkiyah
+[33mcbb55d7[m Merge remote-tracking branch 'origin/develop' into tazkiyah
+[33m792d005[m refactor: restrukturisasi folder, perbaiki seeder, bersihkan routes
+[33m07b9f20[m Merge remote-tracking branch 'origin/develop' into tartiwi
+[33m997f9f4[m Merge pull request #9 from tazkiyahqolbu/tazkiyah
+[33m0e6077b[m refactor(dashboard): pindahkan view dashboard ke root views
+[33m4479660[m docs: tambah dokumentasi instalasi
+[33m8230f16[m Create installation.md
+[33md5c4da3[m Delete docs
+[33m2a27441[m Create docs
+[33me56a9e4[m docs: update README dan screenshot proyek
+[33m55e3c24[m Merge pull request #8 from tazkiyahqolbu/tazkiyah
+[33mdd4a4d7[m feat(sprint2): autentikasi, dashboard admin & user, integrasi role Spatie
+[33mf629e28[m Merge pull request #6 from tazkiyahqolbu/fitur-dependency
+[33m95f5b4a[m Merge remote-tracking branch 'origin/develop' into tartiwi
+[33mb780d17[m Merge pull request #7 from tazkiyahqolbu/tazkiyah
+[33m411755c[m Install dependencies
+[33mcc34aa7[m MTerima kasih atas laporan progres yang telah disampaikan. Agar penyelesaian dapat berjalan efektif, saya mengusulkan agar kita menentukan prioritas pekerjaan terlebih dahulu. Menurut rekan-rekan, apakah perbaikan bug checkout perlu diselesaikan lebih dahulu dibandingkan penyesuaian tampilan?Terima kasih atas laporan progres yang telah disampaikan. Agar penyelesaian dapat berjalan efektif, saya mengusulkan agar kita menentukan prioritas pekerjaan terlebih dahulu. Menurut rekan-rekan, apakah perbaikan bug checkout perlu diselesaikan lebih dahulu dibandingkan penyesuaian tampilan?Terima kasih atas laporan progres yang telah disampaikan. Agar penyelesaian dapat berjalan efektif, saya mengusulkan agar kita menentukan prioritas pekerjaan terlebih dahulu. Menurut rekan-rekan, apakah perbaikan bug checkout perlu diselesaikan lebih dahulu dibandingkan penyesuaian tampilan?Terima kasih atas laporan progres yang telah disampaikan. Agar penyelesaian dapat berjalan efektif, saya mengusulkan agar kita menentukan prioritas pekerjaan terlebih dahulu. Menurut rekan-rekan, apakah perbaikan bug checkout perlu diselesaikan lebih dahulu dibandingkan penyesuaian tampilan?erge remote-tracking branch 'origin/develop' into tartiwi
+[33m362d9ef[m feat (sprint2): setup role spatie - HasRoles di User, RoleSeeder, assign role, hapus kolom peran
+[33m75444ef[m Merge branch 'develop' ke tazkiyah (tarik dependency: spatie, dompdf, phpspreadsheet)
+[33mbc2829a[m[33m ([m[1;32mmain[m[33m)[m feat(sprint-1): tambah factory dan seeder statis
+[33m39b18bd[m refactor(sprint-1): rename booking->pemesanan & payment->pembayaran, standarisasi field _path, perbaikan FK dan relasi model
+[33m0747c0d[m Update dependency-analysis.md
+[33m85f3088[m Merge pull request #1 from tazkiyahqolbu/fitur-dependency
+[33m3f1cd1d[m feat: menambahkan dependency phpoffice/phpspreadsheet, barryvdh/laravel-dompdf, spatie/laravel-permission
+[33m975459e[m Delete dependency-analysis.md
+[33mf8bb9ad[m add dependency-analysis.md
+[33md1aba19[m Add files via upload
+[33ma9aa1e4[m feat(sprint1): tambah 21 migration dan model beserta relasi lengkap
+[33m27371b5[m Merge branch 'develop' of https://github.com/tazkiyahqolbu/averra-pbl into tazkiyah
+[33mfc181a0[m[33m ([m[1;31morigin/tartiwi[m[33m)[m Sinkronisasi awal Laravel ke branch tartiwi
+[33mc6c0cc8[m Sinkronisasi awal Laravel ke branch tazkiyah
+[33m272d720[m Merge branch main ke develop
+[33m7a0f675[m Setup: Framework Laravel Berhasil Masuk
+[33mb0e99a3[m first commit
