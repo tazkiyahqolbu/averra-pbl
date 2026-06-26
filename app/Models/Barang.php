@@ -13,7 +13,7 @@ class Barang extends Model
 
     protected $fillable = [
         'kategori_barang_id', 'nama_barang', 'deskripsi',
-        'harga', 'nilai_barang', 'stok', 'thumbnail_path', 'aktif', // ← url_thumbnail → thumbnail_path
+        'harga', 'nilai_barang', 'stok', 'thumbnail_path', 'aktif',
     ];
 
     protected $casts = [
@@ -35,7 +35,7 @@ class Barang extends Model
 
     public function detailPemesanans()
     {
-        return $this->hasMany(DetailPemesanan::class); // ← bookingDetails → detailPemesanans
+        return $this->hasMany(DetailPemesanan::class);
     }
 
     public function getThumbnailUrlAttribute(): ?string
