@@ -5,9 +5,9 @@
 @section('content')
 @php
     $badgeMap = [
-        'menunggu'      => ['label' => 'Menunggu Verifikasi', 'class' => 'badge-warning'],
-        'terverifikasi' => ['label' => 'Terverifikasi',        'class' => 'badge-active'],
-        'ditolak'       => ['label' => 'Ditolak',              'class' => 'badge-inactive'],
+        'menunggu'      => ['label' => 'Menunggu Pembayaran', 'class' => 'badge-warning'],
+        'terverifikasi' => ['label' => 'Berhasil',             'class' => 'badge-active'],
+        'ditolak'       => ['label' => 'Dibatalkan / Gagal',   'class' => 'badge-inactive'],
     ];
     $badge = $badgeMap[$pembayaran->status] ?? ['label' => ucfirst($pembayaran->status), 'class' => 'badge-neutral'];
 
@@ -22,7 +22,7 @@
     <div class="admin-page-header md:flex-row md:items-center md:justify-between">
         <div>
             <h1 class="admin-title text-3xl">#{{ $pembayaran->kode_transaksi }}</h1>
-            <p class="admin-subtitle mt-1 text-sm">Detail verifikasi bukti pembayaran pelanggan.</p>
+            <p class="admin-subtitle mt-1 text-sm">Detail transaksi pembayaran pelanggan via Midtrans.</p>
         </div>
         <span class="{{ $badge['class'] }}">{{ $badge['label'] }}</span>
     </div>
@@ -37,9 +37,22 @@
 
         {{-- Bukti Pembayaran --}}
         <div class="admin-card p-5 xl:col-span-2 space-y-4">
-            <h2 class="admin-title text-xl">Bukti Pembayaran</h2>
+            <h2 class="admin-title text-xl">Informasi Transaksi</h2>
 
-            @if($pembayaran->buktiUrl)
+            @if($pembayaran->metode_pembayaran === 'midtrans')
+                <div class="flex min-h-[280px] items-center justify-center rounded-3xl border border-dashed border-blue-200 bg-blue-50">
+                    <div class="text-center space-y-2 p-6">
+                        <div class="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white border border-blue-200 mb-3">
+                            <i data-lucide="credit-card" class="h-7 w-7 text-blue-500"></i>
+                        </div>
+                        <p class="font-semibold text-blue-800">Pembayaran via Midtrans</p>
+                        <p class="text-sm text-blue-600">Pembayaran ini diproses otomatis melalui Midtrans.<br>Tidak ada bukti upload manual.</p>
+                        @if($pembayaran->gateway_transaction_id)
+                            <p class="text-xs text-blue-500 mt-2">Transaction ID: <strong>{{ $pembayaran->gateway_transaction_id }}</strong></p>
+                        @endif
+                    </div>
+                </div>
+            @elseif($pembayaran->buktiUrl)
                 @if(str_ends_with(strtolower($pembayaran->bukti_pembayaran_path ?? ''), '.pdf'))
                     <div class="flex items-center justify-center rounded-3xl border border-dashed border-[#E2D4C0] bg-[#FAF3E0] p-10">
                         <div class="text-center">
@@ -52,7 +65,6 @@
                         </div>
                     </div>
                 @else
-                    {{-- Lightbox sederhana pakai Alpine --}}
                     <div x-data="{ open: false }">
                         <div class="rounded-3xl overflow-hidden border border-[#E2D4C0] bg-[#FAF3E0] cursor-zoom-in"
                              @click="open = true" title="Klik untuk perbesar">
@@ -61,7 +73,6 @@
                         </div>
                         <p class="text-xs text-[#4A2E28]/60 mt-2 text-center">Klik gambar untuk memperbesar</p>
 
-                        {{-- Modal lightbox --}}
                         <div x-show="open" x-cloak
                              class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
                              @click.self="open = false"
@@ -108,6 +119,10 @@
                     </p>
                     <hr class="admin-divider">
                     <p>
+                        <span class="admin-muted">Metode</span><br>
+                        <strong>{{ $pembayaran->metode_pembayaran === 'midtrans' ? 'Midtrans (Online)' : 'Transfer Manual' }}</strong>
+                    </p>
+                    <p>
                         <span class="admin-muted">Tahap</span><br>
                         <strong>{{ $tahapLabel[$pembayaran->tahap] ?? $pembayaran->tahap }}</strong>
                     </p>
@@ -140,40 +155,24 @@
                 </div>
             </div>
 
-            {{-- Aksi Admin --}}
+            {{-- Status --}}
             <div class="admin-card p-5">
-                <h2 class="admin-title mb-4 text-xl">Aksi Admin</h2>
+                <h2 class="admin-title mb-4 text-xl">Status Transaksi</h2>
 
-                @if($pembayaran->status === 'menunggu')
-                    {{-- Verifikasi --}}
-                    <form method="POST" action="{{ route('admin.pembayaran.verifikasi', $pembayaran->id) }}">
-                        @csrf @method('PATCH')
-                        <button type="submit" class="admin-btn-primary w-full">Verifikasi Pembayaran</button>
-                    </form>
-
-                    {{-- Tolak --}}
-                    <form method="POST" action="{{ route('admin.pembayaran.tolak', $pembayaran->id) }}" class="mt-3 space-y-2">
-                        @csrf @method('PATCH')
-                        <label class="admin-label">Alasan Penolakan <span class="text-red-500">*</span></label>
-                        <textarea name="catatan_penolakan" class="admin-textarea" rows="3"
-                                  placeholder="Contoh: Gambar tidak jelas, nominal tidak sesuai..."
-                                  required>{{ old('catatan_penolakan') }}</textarea>
-                        @error('catatan_penolakan')
-                            <p class="text-red-500 text-xs">{{ $message }}</p>
-                        @enderror
-                        <button type="submit" class="admin-btn-danger w-full mt-2">Tolak Pembayaran</button>
-                    </form>
-
-                @elseif($pembayaran->status === 'terverifikasi')
+                @if($pembayaran->status === 'terverifikasi')
                     <div class="flex items-center gap-2 bg-green-50 border border-green-200 rounded-2xl px-4 py-3">
                         <i data-lucide="check-circle" class="h-5 w-5 text-green-600 shrink-0"></i>
-                        <p class="text-sm font-semibold text-green-800">Pembayaran sudah diverifikasi</p>
+                        <p class="text-sm font-semibold text-green-800">Pembayaran berhasil diproses</p>
                     </div>
-
+                @elseif($pembayaran->status === 'menunggu')
+                    <div class="flex items-center gap-2 bg-yellow-50 border border-yellow-200 rounded-2xl px-4 py-3">
+                        <i data-lucide="clock" class="h-5 w-5 text-yellow-600 shrink-0"></i>
+                        <p class="text-sm font-semibold text-yellow-800">Menunggu pembayaran dari pelanggan</p>
+                    </div>
                 @elseif($pembayaran->status === 'ditolak')
                     <div class="flex items-center gap-2 bg-red-50 border border-red-200 rounded-2xl px-4 py-3">
                         <i data-lucide="x-circle" class="h-5 w-5 text-red-600 shrink-0"></i>
-                        <p class="text-sm font-semibold text-red-800">Pembayaran ditolak</p>
+                        <p class="text-sm font-semibold text-red-800">Pembayaran dibatalkan / kadaluarsa</p>
                     </div>
                 @endif
 
