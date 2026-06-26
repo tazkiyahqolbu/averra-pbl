@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Barang;
 use App\Models\KategoriBarang;
+use App\Models\FotoBarang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -36,6 +37,7 @@ class BarangController extends Controller
             'nilai_barang' => 'required|numeric',
             'stok' => 'required|integer',
             'thumbnail_path' => 'nullable|image',
+            'foto_tambahan.*' => 'nullable|image',
         ]);
 
         $thumbnail = null;
@@ -47,7 +49,7 @@ class BarangController extends Controller
                 ->store('barang', 'public');
         }
 
-        Barang::create([
+        $barang = Barang::create([
 
             'kategori_barang_id' => $request->kategori_barang_id,
             'nama_barang' => $request->nama_barang,
@@ -59,6 +61,23 @@ class BarangController extends Controller
             'aktif' => $request->aktif ?? 1,
 
         ]);
+
+        if ($request->hasFile('foto_tambahan')) {
+
+        foreach ($request->file('foto_tambahan') as $index => $foto) {
+
+            $path = $foto->store('barang', 'public');
+
+            FotoBarang::create([
+                'barang_id' => $barang->id,
+                'foto_path' => $path,
+                'keterangan' => $barang->nama_barang,
+                'urutan'    => $index + 1,
+            ]);
+
+        }
+
+    }
 
         return redirect()
             ->route('admin.barang.index')
