@@ -139,7 +139,12 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('/pembayaran',      [AdminPembayaranController::class, 'index'])->name('pembayaran.index');
         Route::get('/pembayaran/{id}', [AdminPembayaranController::class, 'show'])->name('pembayaran.show');
 
-        Route::resource('kategori-barang', KategoriBarangController::class);
+        Route::get('/kategori-barang', [KategoriBarangController::class, 'index'])->name('kategori-barang.index');
+        Route::get('/kategori-barang/create', [KategoriBarangController::class, 'create'])->name('kategori-barang.create');
+        Route::post('/kategori-barang', [KategoriBarangController::class, 'store'])->name('kategori-barang.store');
+        Route::get('/kategori-barang/{id}/edit', [KategoriBarangController::class, 'edit'])->name('kategori-barang.edit');
+        Route::put('/kategori-barang/{id}', [KategoriBarangController::class, 'update'])->name('kategori-barang.update');
+        Route::delete('/kategori-barang/{id}', [KategoriBarangController::class, 'destroy'])->name('kategori-barang.destroy');
     });
 
 // Admin view-only routes (preview frontend)
