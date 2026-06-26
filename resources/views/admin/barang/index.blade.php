@@ -3,13 +3,6 @@
 @section('title', 'Kelola Barang')
 
 @section('content')
-@php
-    $barang = [
-        ['nama' => 'Kamera Canon EOS R50', 'kategori' => 'Kamera', 'harga' => 'Rp 200.000/hari', 'stok' => 3, 'nilai' => 'Rp 8.000.000', 'status' => 'Aktif'],
-        ['nama' => 'Tripod Video', 'kategori' => 'Perlengkapan', 'harga' => 'Rp 50.000/hari', 'stok' => 5, 'nilai' => 'Rp 750.000', 'status' => 'Aktif'],
-        ['nama' => 'Sound Portable', 'kategori' => 'Audio/Sound', 'harga' => 'Rp 300.000/hari', 'stok' => 1, 'nilai' => 'Rp 4.000.000', 'status' => 'Nonaktif'],
-    ];
-@endphp
 
 <div class="admin-section">
     <div class="admin-page-header md:flex-row md:items-center md:justify-between">
@@ -29,26 +22,46 @@
     </div>
 
     <div class="space-y-4">
-        @foreach ($barang as $item)
+        @foreach ($barangs as $item)
             <div class="admin-card p-5">
                 <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                     <div class="flex gap-4">
+                        @if($item->thumbnail_path)
+
+                        <img src="{{ asset('storage/'.$item->thumbnail_path) }}" class="admin-thumb object-cover">
+                        @else
                         <div class="admin-thumb flex items-center justify-center bg-[#FAF3E0]">
-                            <i data-lucide="package" class="h-5 w-5 text-[#C8960C]/70"></i>
+                            IMG
                         </div>
+                        @endif
                         <div>
                             <div class="flex flex-wrap items-center gap-2">
-                                <h2 class="font-heading text-xl font-bold text-[#4A0F1A]">{{ $item['nama'] }}</h2>
-                                <span class="{{ $item['status'] === 'Aktif' ? 'badge-active' : 'badge-inactive' }}">{{ $item['status'] }}</span>
+                                <h2 class="font-heading text-xl font-bold text-[#4A0F1A]">{{ $item->nama_barang }}</h2>
+                                <span class="{{ $item->aktif ? 'badge-active' : 'badge-inactive' }}">{{ $item->aktif ? 'Aktif' : 'Nonaktif' }}</span>
                             </div>
-                            <p class="admin-muted mt-1 text-sm">Kategori: {{ $item['kategori'] }}</p>
-                            <p class="mt-1 text-sm text-[#4A2E28]">Harga: <strong class="text-[#4A0F1A]">{{ $item['harga'] }}</strong> | Stok: <strong class="text-[#4A0F1A]">{{ $item['stok'] }} unit</strong></p>
-                            <p class="mt-1 text-sm text-[#4A2E28]">Nilai Barang: <strong class="text-[#4A0F1A]">{{ $item['nilai'] }}</strong></p>
+                            <p class="admin-muted mt-1 text-sm">Kategori: {{ $item->kategori->nama }}</p>
+                            <p class="mt-1 text-sm text-[#4A2E28]">Harga: <strong class="text-[#4A0F1A]">Rp {{ number_format($item->harga,0,',','.') }}</strong> | Stok: <strong class="text-[#4A0F1A]">{{ $item->stok }} unit</strong></p>
+                            <p class="mt-1 text-sm text-[#4A2E28]">Nilai Barang: <strong class="text-[#4A0F1A]">Rp {{ number_format($item->nilai_barang,0,',','.') }}</strong></p>
                         </div>
                     </div>
                     <div class="flex gap-2">
-                        <a href="{{ route('admin.barang.edit') }}" class="admin-btn-secondary py-2">Edit</a>
-                        <button class="{{ $item['status'] === 'Aktif' ? 'admin-btn-danger' : 'admin-btn-primary' }} py-2">{{ $item['status'] === 'Aktif' ? 'Nonaktifkan' : 'Aktifkan' }}</button>
+                        <a href="{{ route('admin.barang.edit',$item->id) }}" class="admin-btn-secondary py-2">Edit</a>
+                        <form action="{{ route('admin.barang.destroy',$item->id) }}"
+                            method="POST"
+                            onsubmit="return confirm('Yakin ingin menghapus barang ini?')">
+
+                            @csrf
+                            @method('DELETE')
+
+                            <button
+                                type="submit"
+                                class="admin-btn-danger py-2">
+
+                                Hapus
+
+                            </button>
+
+                        </form>
                     </div>
                 </div>
             </div>

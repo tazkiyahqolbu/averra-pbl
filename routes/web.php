@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\JasaController;
 use App\Http\Controllers\Admin\PaketController;
 use App\Http\Controllers\Admin\KategoriPaketController;
+use App\Http\Controllers\Admin\BarangController;
 use App\Http\Controllers\Admin\PemesananController as AdminPemesananController;
 use App\Http\Controllers\Admin\PembayaranController as AdminPembayaranController;
 use App\Http\Controllers\AuthController;
@@ -95,13 +96,29 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('/pembayaran/{id}',                     [AdminPembayaranController::class, 'show'])->name('pembayaran.show');
         Route::patch('/pembayaran/{id}/verifikasi',        [AdminPembayaranController::class, 'verifikasi'])->name('pembayaran.verifikasi');
         Route::patch('/pembayaran/{id}/tolak',             [AdminPembayaranController::class, 'tolak'])->name('pembayaran.tolak');
+
+        // Barang
+        Route::get('/barang', [BarangController::class,'index'])
+            ->name('barang.index');
+
+        Route::get('/barang/create', [BarangController::class,'create'])
+            ->name('barang.create');
+
+        Route::post('/barang', [BarangController::class,'store'])
+            ->name('barang.store');
+
+        Route::get('/barang/{id}/edit', [BarangController::class,'edit'])
+            ->name('barang.edit');
+
+        Route::put('/barang/{id}', [BarangController::class,'update'])
+            ->name('barang.update');
+
+        Route::delete('/barang/{id}', [BarangController::class,'destroy'])
+            ->name('barang.destroy');
     });
 
 // Admin view-only routes (preview frontend)
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::view('/barang',        'admin.barang.index')->name('barang.index');
-    Route::view('/barang/create', 'admin.barang.create')->name('barang.create');
-    Route::view('/barang/edit',   'admin.barang.edit')->name('barang.edit');
     Route::view('/kategori-barang', 'admin.kategori-barang.index')->name('kategori-barang.index');
     Route::view('/kategori-jasa',   'admin.kategori-jasa.index')->name('kategori-jasa.index');
     Route::view('/pengembalian',    'admin.pengembalian.index')->name('pengembalian.index');
