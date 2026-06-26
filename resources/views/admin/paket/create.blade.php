@@ -61,53 +61,109 @@
                     <input id="thumbnail_path" name="thumbnail_path" type="file" accept="image/*" class="admin-file">
                 </div>
 
-                <div class="flex items-center gap-3 rounded-2xl border border-[#E2D4C0] bg-[#ffffff] p-4">
-                    <input id="aktif" name="aktif" type="checkbox" value="1" checked class="h-5 w-5 rounded border-[#E2D4C0] text-[#4A0F1A]">
-                    <div>
-                        <label for="aktif" class="font-semibold text-[#4a0f1a]">Paket Aktif</label>
-                        <p class="admin-muted text-xs">Jika aktif, paket dapat ditampilkan pada katalog.</p>
+                <div>
+                    <label class="admin-label">Status</label>
+                    <div class="flex flex-wrap gap-3">
+                        <label class="rounded-2xl border border-[#E2D4C0] bg-[#ffffff] px-4 py-3 text-sm"><input type="radio" name="aktif" value="1" checked> Aktif</label>
+                        <label class="rounded-2xl border border-[#E2D4C0] bg-[#ffffff] px-4 py-3 text-sm"><input type="radio" name="aktif" value="0"> Nonaktif</label>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="admin-card p-6 space-y-4">
-            <h2 class="admin-title text-xl">Isi Paket</h2>
-            <div class="grid gap-3 md:grid-cols-4">
-                <select class="admin-select"><option>Jasa</option><option>Barang</option></select>
-                <select class="admin-select md:col-span-2"><option>Pilih item</option><option>MC Profesional</option><option>Dekorasi Pelaminan</option></select>
-                <input type="number" class="admin-input" placeholder="Qty">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="admin-title text-xl">Isi Paket</h2>
+                    <p class="admin-muted mt-1 text-sm">Pilih dari daftar jasa atau ketik nama item sendiri. Tipe "Opsional" berarti item bisa dipilih customer dengan biaya tambahan.</p>
+                </div>
+                <button type="button" onclick="tambahItem()" class="admin-btn-secondary">+ Tambah Item</button>
             </div>
-            <button type="button" class="admin-btn-secondary">+ Tambah Item</button>
-            <div class="space-y-2 text-sm">
-                <div class="flex justify-between rounded-2xl bg-[#FAF3E0] p-3"><span>Fotografer 2 Orang x2</span><button class="font-semibold text-red-600">Hapus</button></div>
-                <div class="flex justify-between rounded-2xl bg-[#FAF3E0] p-3"><span>MC Profesional x1</span><button class="font-semibold text-red-600">Hapus</button></div>
-            </div>
-        </div>
 
-        <div class="admin-card p-6 space-y-4">
-            <h2 class="admin-title text-xl">Item Opsional</h2>
-            <div class="grid gap-3 md:grid-cols-3">
-                <select class="admin-select"><option>Pilih item opsional</option><option>Fotografer Extra</option><option>Dekorasi Outdoor</option></select>
-                <input type="text" class="admin-input" placeholder="Harga tambahan">
-                <button type="button" class="admin-btn-secondary">+ Tambah</button>
-            </div>
-            <div class="space-y-2 text-sm">
-                <div class="flex justify-between rounded-2xl bg-[#FAF3E0] p-3"><span>Fotografer Extra +Rp 300.000</span><button class="font-semibold text-red-600">Hapus</button></div>
+            <div id="item-container" class="space-y-4">
+                <p id="empty-notice" class="rounded-2xl border border-dashed border-[#E2D4C0] p-8 text-center admin-muted text-sm">
+                    Belum ada item. Klik "+ Tambah Item" untuk menambahkan.
+                </p>
             </div>
         </div>
 
         <div class="admin-card p-6">
-            <div class="grid gap-4 md:grid-cols-2">
-                <div><label class="admin-label">Foto Utama *</label><input type="file" class="admin-file"></div>
-                <div><label class="admin-label">Foto Tambahan</label><input type="file" class="admin-file" multiple></div>
+            <div>
+                <label class="admin-label">Foto Paket</label>
+                <p class="admin-muted mb-2 text-xs">Bisa upload lebih dari satu foto.</p>
+                <input name="foto_paket[]" type="file" class="admin-file" multiple accept="image/*">
             </div>
         </div>
 
         <div class="flex justify-end gap-3">
             <a href="{{ route('admin.paket.index') }}" class="admin-btn-secondary">Batal</a>
-            <button type="button" class="admin-btn-primary">Simpan</button>
+            <button type="submit" class="admin-btn-primary">Simpan</button>
         </div>
     </form>
 </div>
+
+<script>
+let itemCount = 0;
+const jasaList = @json($jasaList ?? []);
+
+function tambahItem() {
+    const notice = document.getElementById('empty-notice');
+    if (notice) notice.remove();
+
+    const i = itemCount++;
+    const container = document.getElementById('item-container');
+
+    const jasaOptions = jasaList.length
+        ? jasaList.map(j => `<option value="${j.id}" data-nama="${j.nama_jasa}">${j.nama_jasa}</option>`).join('')
+        : '<option disabled>Belum ada data jasa (hubungi backend)</option>';
+
+    container.insertAdjacentHTML('beforeend', `
+        <div class="item-row rounded-2xl border border-[#E2D4C0] bg-white p-5 space-y-4">
+            <div class="flex items-center justify-between">
+                <span class="text-sm font-semibold text-[#4A0F1A]">Item ${i + 1}</span>
+                <button type="button" onclick="this.closest('.item-row').remove()" class="text-sm font-semibold text-red-500 hover:text-red-700">Hapus</button>
+            </div>
+            <div class="grid gap-4 md:grid-cols-2">
+                <div class="md:col-span-2">
+                    <label class="admin-label">Pilih dari Jasa <span class="admin-muted text-xs">(opsional — atau ketik nama di bawah)</span></label>
+                    <select onchange="isiNamaDariJasa(this, ${i})" class="admin-select">
+                        <option value="">-- Pilih jasa --</option>
+                        ${jasaOptions}
+                    </select>
+                    <input type="hidden" name="jasa_id[]" id="jasa_id_${i}" value="">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="admin-label">Nama Item <span class="text-red-600">*</span></label>
+                    <input id="nama_item_${i}" name="nama_item[]" type="text" class="admin-input" placeholder="Nama item (terisi otomatis jika pilih jasa di atas)">
+                </div>
+                <div>
+                    <label class="admin-label">Jumlah</label>
+                    <input name="jumlah[]" type="number" min="1" value="1" class="admin-input">
+                </div>
+                <div>
+                    <label class="admin-label">Tipe</label>
+                    <select name="tipe[]" class="admin-select">
+                        <option value="wajib">Wajib</option>
+                        <option value="opsional">Opsional (+biaya tambahan)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="admin-label">Harga Tambahan</label>
+                    <input name="harga_tambahan[]" type="number" min="0" value="0" class="admin-input">
+                </div>
+                <div>
+                    <label class="admin-label">Keterangan</label>
+                    <input name="keterangan[]" type="text" class="admin-input" placeholder="Opsional">
+                </div>
+            </div>
+        </div>
+    `);
+}
+
+function isiNamaDariJasa(select, index) {
+    const selected = select.options[select.selectedIndex];
+    document.getElementById('nama_item_' + index).value = selected.dataset.nama ?? '';
+    document.getElementById('jasa_id_' + index).value = selected.value;
+}
+</script>
 @endsection

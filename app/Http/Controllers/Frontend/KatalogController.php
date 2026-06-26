@@ -122,7 +122,7 @@ class KatalogController extends Controller
                 'stok'      => null,
             ];
         } elseif ($type === 'paket' && $typeId) {
-            $model = Paket::findOrFail($typeId);
+            $model = Paket::with('paketDetails.jasa')->findOrFail($typeId);
 
             $testimonis = Testimoni::where('dipublikasikan', true)
                 ->whereHas('pemesanan', fn($q) => $q->whereHas('detailPemesanans',
@@ -148,6 +148,7 @@ class KatalogController extends Controller
                 'color'     => null,
                 'material'  => null,
                 'stok'      => null,
+                'details'   => $model->paketDetails,
             ];
         } elseif ($type === 'barang' && $typeId) {
             $model = Barang::findOrFail($typeId);
