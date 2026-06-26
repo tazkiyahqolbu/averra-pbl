@@ -15,18 +15,14 @@ class PembayaranController extends Controller
     {
         $status = request('status', 'semua');
 
-        $query = Pembayaran::with(['pemesanan.user'])
-            ->whereNotNull('bukti_pembayaran_path')
-            ->latest();
+        $query = Pembayaran::with(['pemesanan.user'])->latest();
 
         if ($status !== 'semua') {
             $query->where('status', $status);
         }
 
         $pembayarans   = $query->get();
-        $countMenunggu = Pembayaran::whereNotNull('bukti_pembayaran_path')
-            ->where('status', 'menunggu')
-            ->count();
+        $countMenunggu = 0;
 
         return view('admin.pembayaran.index', compact('pembayarans', 'countMenunggu'));
     }
