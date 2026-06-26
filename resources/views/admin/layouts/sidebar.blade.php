@@ -66,12 +66,12 @@
                 Dashboard
             </a>
 
-            <a href="#"
+            <a href="{{ route('admin.pemesanan.index')}}"
                class="{{ $menuClass }}">
                 Pemesanan
             </a>
 
-            <a href="#"
+            <a href="{{ route('admin.pembayaran.index')}}"
                class="{{ $menuClass }}">
                 Pembayaran
             </a>
@@ -81,9 +81,17 @@
                 Jasa
             </a>
 
+            <a href="{{ route('admin.kategori-jasa.index')}}" class="{{ $menuClass }}">
+                Kategori Jasa
+            </a>
+
             <a href="{{ route('admin.paket.index') }}"
                class="{{ request()->routeIs('admin.paket.*') ? "$menuClass $activeClass" : $menuClass }}">
                 Paket
+            </a>
+
+            <a href="{{ route('admin.kategori-paket.index')}}" class="{{ $menuClass }}">
+                Kategori Paket
             </a>
 
             <a href="{{ route('admin.barang.index') }}"
@@ -91,12 +99,8 @@
                 Barang
             </a>
 
-            <a href="#" class="{{ $menuClass }}">
+            <a href="{{ route('admin.kategori-barang.index')}}" class="{{ $menuClass }}">
                 Kategori Barang
-            </a>
-
-            <a href="#" class="{{ $menuClass }}">
-                Kategori Paket
             </a>
 
             <a href="#" class="{{ $menuClass }}">
