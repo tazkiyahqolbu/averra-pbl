@@ -12,6 +12,7 @@ use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\User\PemesananController;
 use App\Http\Controllers\User\PembayaranController;
 use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\ForgotPasswordController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +34,13 @@ Route::get('/register',        [AuthController::class, 'showRegister'])->name('r
 Route::post('/register',       [AuthController::class, 'register']);
 Route::get('/register/sukses', [AuthController::class, 'showRegisterSuccess'])->name('register.success');
 Route::post('/logout',   [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+// Forgot Password
+Route::get('/lupa-password', [ForgotPasswordController::class, 'showForgotPassword'])->name('password.request');
+Route::post('/lupa-password', [ForgotPasswordController::class, 'sendOtp'])->name('password.send-otp');
+Route::get('/verifikasi-otp', [ForgotPasswordController::class, 'showVerifyOtp'])->name('password.verify-otp');
+Route::post('/verifikasi-otp', [ForgotPasswordController::class, 'verifyOtp'])->name('password.check-otp');
+Route::get('/reset-password', [ForgotPasswordController::class, 'showResetPassword'])->name('password.reset-form');
+Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('password.update');
 
 // ── Rute User ─────────────────────────────────────────────────────────────────
 Route::middleware('auth')->name('user.')->group(function () {
