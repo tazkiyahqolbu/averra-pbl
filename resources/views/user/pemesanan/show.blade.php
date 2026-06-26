@@ -1,12 +1,13 @@
 @extends('user.layouts.app')
 
 @section('content')
+php
 @php
-    $pembayaranAktif = $pesanan->pembayarans->sortBy('id')->first();
-    $sudahUpload     = $pembayaranAktif && $pembayaranAktif->bukti_pembayaran_path;
-    $statusBukti     = $pembayaranAktif?->status;
-    $isTahapLunas    = $pembayaranAktif && $pembayaranAktif->tahap === 'langsung';
-    $jumlahBayar     = $pembayaranAktif ? (float) $pembayaranAktif->jumlah_bayar : (float) $pesanan->total_harga * 0.5;
+    $dpVerifikasi = $pesanan->pembayarans->where('tahap', 'dp')->where('status', 'terverifikasi')->first();
+    $isPelunasan  = $dpVerifikasi !== null;
+    $sisaBayar    = $isPelunasan
+        ? max(0, (float) $pesanan->total_harga - (float) $dpVerifikasi->jumlah_bayar)
+        : (float) $pesanan->total_harga;
 @endphp
 
 {{-- Header --}}
@@ -106,62 +107,42 @@
         </div>
     @endif
 
-    {{-- ─── B. MENUNGGU PEMBAYARAN (dikonfirmasi) ──────────────────────────── --}}
-    @if($pesanan->isMenungguPembayaran())
-        {{-- Status Banner --}}
-        <div class="rounded-2xl border border-blue-200 bg-blue-50 px-5 py-4 flex items-center gap-3">
-            <i data-lucide="credit-card" class="h-5 w-5 text-blue-600 shrink-0"></i>
-            <div>
-                <p class="text-sm font-semibold text-blue-800">
-                    {{ $isTahapLunas ? 'Menunggu Pembayaran Lunas' : 'Menunggu Pembayaran DP' }}
-                </p>
-                <p class="text-xs text-blue-600 mt-0.5">Pesanan dikonfirmasi — silakan transfer dan upload bukti pembayaran</p>
+{{-- ─── B. MENUNGGU PEMBAYARAN (dikonfirmasi) ──────────────────────────── --}}
+@if($pesanan->isMenungguPembayaran())
+    <div class="rounded-2xl border border-blue-200 bg-blue-50 px-5 py-4 flex items-center gap-3">
+        <i data-lucide="credit-card" class="h-5 w-5 text-blue-600 shrink-0"></i>
+        <div>
+            <p class="text-sm font-semibold text-blue-800">Pesanan Dikonfirmasi — Lanjutkan Pembayaran</p>
+            <p class="text-xs text-blue-600 mt-0.5">Silakan pilih metode pembayaran untuk melanjutkan</p>
+        </div>
+    </div>
+
+    <div class="rounded-2xl border border-[#E2D4C0] bg-white shadow-[0_2px_8px_rgba(74,15,26,0.06)] p-6 space-y-5">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="rounded-xl border border-[#E2D4C0] bg-[#FAF3E0] p-4">
+                <p class="text-[10px] uppercase tracking-wider text-[#4A2E28]/50 mb-1">Total Pesanan</p>
+                <p class="font-serif font-bold text-[#C8960C] text-xl">Rp {{ number_format($pesanan->total_harga, 0, ',', '.') }}</p>
+            </div>
+            <div class="rounded-xl border border-[#E2D4C0] bg-[#FAF3E0] p-4">
+                <p class="text-[10px] uppercase tracking-wider text-[#4A2E28]/50 mb-1">DP 50%</p>
+                <p class="font-serif font-semibold text-[#4A0F1A] text-lg">Rp {{ number_format($pesanan->total_harga * 0.5, 0, ',', '.') }}</p>
             </div>
         </div>
 
-        <div class="rounded-2xl border border-[#E2D4C0] bg-white shadow-[0_2px_8px_rgba(74,15,26,0.06)] p-6 space-y-5">
-            {{-- Info tagihan --}}
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div class="rounded-xl border border-[#E2D4C0] bg-[#FAF3E0] p-4">
-                    <p class="text-[10px] uppercase tracking-wider text-[#4A2E28]/50 mb-1">Tahap</p>
-                    <p class="font-semibold text-[#4A0F1A]">{{ $isTahapLunas ? 'Lunas' : 'DP 50%' }}</p>
-                </div>
-                <div class="rounded-xl border border-[#C8960C]/40 bg-[#FAF3E0] p-4">
-                    <p class="text-[10px] uppercase tracking-wider text-[#4A2E28]/50 mb-1">Jumlah yang Harus Dibayar</p>
-                    <p class="font-serif font-bold text-[#C8960C] text-xl">Rp {{ number_format($jumlahBayar, 0, ',', '.') }}</p>
-                </div>
+        @if(session('info'))
+            <div class="flex items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm font-medium text-blue-800">
+                <i data-lucide="info" class="h-4 w-4 shrink-0"></i>
+                {{ session('info') }}
             </div>
+        @endif
 
-            {{-- Rekening --}}
-            <div class="rounded-xl border border-[#C8960C]/30 bg-[#FAF3E0] p-4">
-                <p class="text-[10px] uppercase tracking-wider text-[#4A2E28]/50 mb-2">Transfer ke Rekening</p>
-                <p class="font-serif font-bold text-[#4A0F1A] text-lg">Bank BCA — 1234567890</p>
-                <p class="text-sm text-[#4A2E28]/60">a.n AVERRA EVENT</p>
-            </div>
-
-            {{-- Upload status --}}
-            @if($statusBukti === 'menunggu' && $sudahUpload)
-                <div class="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4">
-                    <i data-lucide="clock" class="h-4 w-4 text-amber-600 mt-0.5 shrink-0"></i>
-                    <div>
-                        <p class="text-sm font-semibold text-amber-800">Bukti pembayaran sedang diverifikasi admin</p>
-                        <p class="text-xs text-amber-600 mt-1">Dikirim pada {{ $pembayaranAktif->dibayar_pada?->format('d F Y, H.i') }}</p>
-                    </div>
-                </div>
-            @elseif($statusBukti === 'ditolak')
-                <div class="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4">
-                    <i data-lucide="x-circle" class="h-4 w-4 text-red-500 mt-0.5 shrink-0"></i>
-                    <div>
-                        <p class="text-sm font-semibold text-red-700">Bukti pembayaran ditolak</p>
-                        <p class="text-sm text-red-600 mt-1">Alasan: {{ $pembayaranAktif->catatan_penolakan ?? '-' }}</p>
-                    </div>
-                </div>
-                @include('user.pemesanan.upload-form-pembayaran', ['label' => 'Upload Ulang Bukti Pembayaran'])
-            @else
-                @include('user.pemesanan.upload-form-pembayaran', ['label' => 'Upload Bukti Pembayaran'])
-            @endif
-        </div>
-    @endif
+        <a href="{{ route('user.pembayaran.pilih', $pesanan->id) }}"
+           class="flex items-center justify-center gap-2 w-full rounded-xl bg-gradient-to-br from-[#6B1625] to-[#3A0A12] px-6 py-3.5 text-sm font-semibold text-[#FAF3E0] shadow-[0_4px_14px_rgba(74,15,26,0.3)] hover:shadow-[0_6px_18px_rgba(74,15,26,0.4)] hover:from-[#7B1C2E] transition-all duration-200">
+            <i data-lucide="credit-card" class="w-4 h-4"></i>
+            Bayar Sekarang
+        </a>
+    </div>
+@endif
 
     {{-- ─── C. BERLANGSUNG ─────────────────────────────────────────────────── --}}
     @if($pesanan->isBerlangsung())
@@ -296,35 +277,18 @@
             @endif
 
             {{-- Pelunasan --}}
-            @if($pesanan->metode_bayar === 'dp')
+            @if($isPelunasan)
                 <div class="border-t border-[#E2D4C0] pt-5 space-y-3">
                     <p class="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#C8960C]">Pelunasan Pembayaran</p>
-
-                    @if($pelunasanRecord && $pelunasanRecord->status === 'menunggu' && $pelunasanRecord->bukti_pembayaran_path)
-                        <div class="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4">
-                            <i data-lucide="clock" class="h-4 w-4 text-amber-600 mt-0.5 shrink-0"></i>
-                            <div>
-                                <p class="text-sm font-semibold text-amber-800">Bukti pelunasan sedang diverifikasi admin</p>
-                                <p class="text-xs text-amber-600 mt-1">Dikirim pada {{ $pelunasanRecord->dibayar_pada?->format('d F Y, H.i') }}</p>
-                            </div>
-                        </div>
-                    @elseif($pelunasanRecord && $pelunasanRecord->status === 'ditolak')
-                        <div class="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4">
-                            <i data-lucide="x-circle" class="h-4 w-4 text-red-500 mt-0.5 shrink-0"></i>
-                            <div>
-                                <p class="text-sm font-semibold text-red-700">Bukti pelunasan ditolak</p>
-                                <p class="text-sm text-red-600 mt-1">Alasan: {{ $pelunasanRecord->catatan_penolakan ?? '-' }}</p>
-                            </div>
-                        </div>
-                        @include('user.pemesanan.upload-form-pembayaran', ['label' => 'Upload Ulang Bukti Pelunasan', 'sisaBayar' => $sisaBayar])
-                    @else
-                        <div class="rounded-xl border border-[#C8960C]/30 bg-[#FAF3E0] p-4">
-                            <p class="text-[10px] uppercase tracking-wider text-[#4A2E28]/50 mb-1">Sisa Pelunasan</p>
-                            <p class="font-serif font-bold text-[#C8960C] text-xl">Rp {{ number_format($sisaBayar, 0, ',', '.') }}</p>
-                            <p class="text-xs text-[#4A2E28]/50 mt-1">Bank BCA — 1234567890 (a.n AVERRA EVENT)</p>
-                        </div>
-                        @include('user.pemesanan.upload-form-pembayaran', ['label' => 'Upload Bukti Pelunasan', 'sisaBayar' => $sisaBayar])
-                    @endif
+                    <div class="rounded-xl border border-[#C8960C]/30 bg-[#FAF3E0] p-4">
+                        <p class="text-[10px] uppercase tracking-wider text-[#4A2E28]/50 mb-1">Sisa Pelunasan</p>
+                        <p class="font-serif font-bold text-[#C8960C] text-xl">Rp {{ number_format($sisaBayar, 0, ',', '.') }}</p>
+                    </div>
+                    <a href="{{ route('user.pembayaran.pilih', $pesanan->id) }}"
+                    class="flex items-center justify-center gap-2 w-full rounded-xl bg-gradient-to-br from-[#6B1625] to-[#3A0A12] px-6 py-3.5 text-sm font-semibold text-[#FAF3E0] shadow-[0_4px_14px_rgba(74,15,26,0.3)] hover:shadow-[0_6px_18px_rgba(74,15,26,0.4)] hover:from-[#7B1C2E] transition-all duration-200">
+                        <i data-lucide="credit-card" class="w-4 h-4"></i>
+                        Bayar Pelunasan
+                    </a>
                 </div>
             @else
                 <div class="border-t border-[#E2D4C0] pt-4 flex items-center gap-2 text-sm font-semibold text-green-700">
