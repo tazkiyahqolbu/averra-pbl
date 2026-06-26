@@ -22,13 +22,13 @@
 @endphp
 
 {{-- Header --}}
-<div class="mb-7 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+<div class="mb-7 flex items-end justify-between">
     <div>
         <p class="text-[10px] tracking-[0.4em] text-[#C8960C] uppercase font-semibold">— RIWAYAT —</p>
         <h1 class="mt-0.5 font-serif text-3xl font-light text-[#4A0F1A]">Pemesanan Saya</h1>
     </div>
     <a href="{{ route('user.pemesanan.create.acara') }}"
-       class="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-br from-[#6B1625] to-[#3A0A12] px-5 py-2.5 text-sm font-semibold text-[#FAF3E0] shadow-[0_4px_14px_rgba(74,15,26,0.35)] hover:shadow-[0_6px_18px_rgba(74,15,26,0.45)] hover:from-[#7B1C2E] transition-all duration-200 w-full sm:w-auto">
+       class="inline-flex items-center gap-2 rounded-full bg-gradient-to-br from-[#6B1625] to-[#3A0A12] px-5 py-2.5 text-sm font-semibold text-[#FAF3E0] shadow-[0_4px_14px_rgba(74,15,26,0.35)] hover:shadow-[0_6px_18px_rgba(74,15,26,0.45)] hover:from-[#7B1C2E] transition-all duration-200">
         <i data-lucide="plus" class="h-4 w-4"></i> Buat Pesanan
     </a>
 </div>
