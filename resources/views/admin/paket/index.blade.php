@@ -4,6 +4,12 @@
 
 @section('content')
 
+@if(session('success'))
+<div class="mb-4 rounded-lg bg-green-100 border border-green-300 p-4 text-green-700">
+    {{ session('success') }}
+</div>
+@endif
+
 <div class="admin-section">
     <div class="admin-page-header md:flex-row md:items-center md:justify-between">
         <div>
@@ -16,7 +22,7 @@
     <div class="admin-card p-5">
         <div class="grid gap-3 md:grid-cols-3">
             <div><label class="admin-label">Cari Paket</label><input type="text" class="admin-input" placeholder="Cari nama paket..."></div>
-            <div><label class="admin-label">Kategori</label><select class="admin-select"><option>Semua</option><option>Paket Pernikahan</option><option>Paket Hiburan</option></select></div>
+            <div><label class="admin-label">Kategori</label><select class="admin-select"><option>Semua</option></select></div>
             <div><label class="admin-label">Status</label><select class="admin-select"><option>Semua</option><option>Aktif</option><option>Nonaktif</option></select></div>
         </div>
     </div>
@@ -26,7 +32,7 @@
             <table class="w-full border-collapse">
                 <thead class="border-b border-[#E2D4C0] bg-[#FAF3E0]">
                     <tr>
-                        <th class="admin-table-th w-16">#</th>
+                        <th class="admin-table-th w-12">#</th>
                         <th class="admin-table-th">Thumbnail</th>
                         <th class="admin-table-th">Nama Paket</th>
                         <th class="admin-table-th">Kategori</th>
@@ -43,11 +49,11 @@
                             <td class="admin-table-td font-semibold text-[#4A2E28]">{{ $index + 1 }}</td>
 
                             <td class="admin-table-td">
-                                @if (!empty($item['thumbnail_path']))
-                                    <img src="{{ asset('storage/' . $item['thumbnail_path']) }}" alt="{{ $item['nama_paket'] }}" class="admin-thumb">
+                                @if($item->thumbnail_path)
+                                    <img src="{{ asset('storage/'.$item->thumbnail_path) }}" class="admin-thumb object-cover">
                                 @else
-                                    <div class="admin-thumb flex items-center justify-center text-xs font-semibold text-[#4A2E28]">
-                                        IMG
+                                    <div class="admin-thumb flex items-center justify-center bg-[#FAF3E0]">
+                                        <i data-lucide="image" class="h-5 w-5 text-[#C8960C]/50"></i>
                                     </div>
                                 @endif
                             </td>
@@ -56,39 +62,28 @@
                                 <p class="font-semibold text-[#4A0F1A]">{{ $item->nama_paket }}</p>
                             </td>
 
-                            <td class="admin-table-td">
-                                {{ $item->kategori->nama ?? '-' }}
-                            </td>
+                            <td class="admin-table-td text-[#4A2E28]">{{ $item->kategori->nama ?? '-' }}</td>
 
                             <td class="admin-table-td font-semibold text-[#4A0F1A]">
                                 Rp {{ number_format($item->harga, 0, ',', '.') }}
                             </td>
 
-                            <td class="admin-table-td">{{ $item->keterangan_acara }}</td>
+                            <td class="admin-table-td text-[#4A2E28]">{{ $item->keterangan_acara ?? '-' }}</td>
 
                             <td class="admin-table-td">
-                                @if ($item->aktif)
-                                    <span class="badge-active">Aktif ✓</span>
-
-                                @else
-                                    <span class="badge-inactive">● Nonaktif</span>
-                                @endif
+                                <span class="{{ $item->aktif ? 'badge-active' : 'badge-inactive' }}">
+                                    {{ $item->aktif ? 'Aktif ✓' : '● Nonaktif' }}
+                                </span>
                             </td>
 
-                            <td class="admin-table-td">
-                                <div class="flex justify-end gap-2">
-                                    <a href="{{ route('admin.paket.edit', $item->id) }}" class="admin-btn-secondary px-3 py-2 text-xs">Edit</a>
-                                    <form action="{{ route('admin.paket.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus paket ini?')">
-
-                                        @csrf
-                                        @method('DELETE')
-
-                                        <button type="submit"
-                                                class="admin-btn-danger px-3 py-2 text-xs">
-
-                                            Hapus
-
-                                        </button>
+                            <td class="admin-table-td text-right">
+                                <div class="flex items-center justify-end gap-2">
+                                    <a href="{{ route('admin.paket.edit', $item->id) }}"
+                                       class="admin-btn-secondary px-3 py-2 text-xs">Edit</a>
+                                    <form action="{{ route('admin.paket.destroy', $item->id) }}" method="POST"
+                                          onsubmit="return confirm('Yakin hapus paket ini?')">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="admin-btn-danger px-3 py-2 text-xs">Hapus</button>
                                     </form>
                                 </div>
                             </td>

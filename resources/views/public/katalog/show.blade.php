@@ -253,6 +253,63 @@
                     @endif
                 </div>
 
+                {{-- Daftar Item Paket --}}
+                @if($item->type === 'paket' && isset($item->details) && $item->details->isNotEmpty())
+                    @php
+                        $itemWajib     = $item->details->where('tipe', 'wajib');
+                        $itemOpsional  = $item->details->where('tipe', 'opsional');
+                    @endphp
+                    <div class="rounded-2xl border border-[#E2D4C0] bg-[#FFFDF7] p-5 space-y-4">
+                        <h4 class="flex items-center gap-2 font-serif text-base font-medium text-[#4A0F1A]">
+                            <i data-lucide="package-check" class="h-4 w-4 text-[#C8A84B]"></i>
+                            Sudah Termasuk dalam Paket
+                        </h4>
+                        <ul class="space-y-2">
+                            @foreach($itemWajib as $detail)
+                                <li class="flex items-center gap-3 text-sm text-[#4A2E28]">
+                                    <i data-lucide="check-circle" class="h-4 w-4 shrink-0 text-[#C8A84B]"></i>
+                                    <span>
+                                        {{ $detail->nama_item ?? $detail->jasa?->nama_jasa ?? '-' }}
+                                        @if($detail->jumlah > 1)
+                                            <span class="text-[#4A2E28]/60">× {{ $detail->jumlah }} orang</span>
+                                        @endif
+                                    </span>
+                                    @if($detail->keterangan)
+                                        <span class="text-xs text-[#4A2E28]/50 italic">— {{ $detail->keterangan }}</span>
+                                    @endif
+                                </li>
+                            @endforeach
+                        </ul>
+
+                        @if($itemOpsional->isNotEmpty())
+                            <div class="border-t border-[#E2D4C0] pt-4">
+                                <h5 class="mb-2 flex items-center gap-2 text-sm font-semibold text-[#4A0F1A]">
+                                    <i data-lucide="plus-circle" class="h-4 w-4 text-[#C8A84B]"></i>
+                                    Item Opsional (Biaya Tambahan)
+                                </h5>
+                                <ul class="space-y-2">
+                                    @foreach($itemOpsional as $detail)
+                                        <li class="flex items-center justify-between text-sm text-[#4A2E28]">
+                                            <span class="flex items-center gap-3">
+                                                <i data-lucide="circle-plus" class="h-4 w-4 shrink-0 text-[#4A2E28]/40"></i>
+                                                {{ $detail->nama_item ?? $detail->jasa?->nama_jasa ?? '-' }}
+                                                @if($detail->jumlah > 1)
+                                                    <span class="text-[#4A2E28]/60">× {{ $detail->jumlah }}</span>
+                                                @endif
+                                            </span>
+                                            @if($detail->harga_tambahan > 0)
+                                                <span class="font-semibold text-[#C8A84B]">
+                                                    +Rp{{ number_format($detail->harga_tambahan, 0, ',', '.') }}
+                                                </span>
+                                            @endif
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                    </div>
+                @endif
+
                 {{-- CTA --}}
                 <div class="pt-1">
                     @if($item->available)

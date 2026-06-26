@@ -22,56 +22,81 @@
     <div class="admin-card p-5">
         <div class="grid gap-3 md:grid-cols-3">
             <div><label class="admin-label">Cari Barang</label><input type="text" class="admin-input" placeholder="Cari nama barang..."></div>
-            <div><label class="admin-label">Kategori</label><select class="admin-select"><option>Semua</option><option>Kamera</option><option>Audio/Sound</option><option>Perlengkapan</option></select></div>
+            <div><label class="admin-label">Kategori</label><select class="admin-select"><option>Semua</option></select></div>
             <div><label class="admin-label">Status</label><select class="admin-select"><option>Semua</option><option>Aktif</option><option>Nonaktif</option></select></div>
         </div>
     </div>
 
-    <div class="space-y-4">
-        @foreach ($barangs as $item)
-            <div class="admin-card p-5">
-                <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                    <div class="flex gap-4">
-                        @if($item->thumbnail_path)
+    <div class="admin-table-wrapper">
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse">
+                <thead class="border-b border-[#E2D4C0] bg-[#FAF3E0]">
+                    <tr>
+                        <th class="admin-table-th w-12">#</th>
+                        <th class="admin-table-th">Thumbnail</th>
+                        <th class="admin-table-th">Nama Barang</th>
+                        <th class="admin-table-th">Kategori</th>
+                        <th class="admin-table-th">Harga Sewa</th>
+                        <th class="admin-table-th">Stok</th>
+                        <th class="admin-table-th">Status</th>
+                        <th class="admin-table-th text-right">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-[#E2D4C0]">
+                    @forelse ($barangs as $index => $item)
+                        <tr class="hover:bg-[#FAF3E0]/50">
+                            <td class="admin-table-td font-semibold text-[#4A2E28]">{{ $index + 1 }}</td>
 
-                        <img src="{{ asset('storage/'.$item->thumbnail_path) }}" class="admin-thumb object-cover">
-                        @else
-                        <div class="admin-thumb flex items-center justify-center bg-[#FAF3E0]">
-                            IMG
-                        </div>
-                        @endif
-                        <div>
-                            <div class="flex flex-wrap items-center gap-2">
-                                <h2 class="font-heading text-xl font-bold text-[#4A0F1A]">{{ $item->nama_barang }}</h2>
-                                <span class="{{ $item->aktif ? 'badge-active' : 'badge-inactive' }}">{{ $item->aktif ? 'Aktif' : 'Nonaktif' }}</span>
-                            </div>
-                            <p class="admin-muted mt-1 text-sm">Kategori: {{ $item->kategori->nama }}</p>
-                            <p class="mt-1 text-sm text-[#4A2E28]">Harga: <strong class="text-[#4A0F1A]">Rp {{ number_format($item->harga,0,',','.') }}</strong> | Stok: <strong class="text-[#4A0F1A]">{{ $item->stok }} unit</strong></p>
-                            <p class="mt-1 text-sm text-[#4A2E28]">Nilai Barang: <strong class="text-[#4A0F1A]">Rp {{ number_format($item->nilai_barang,0,',','.') }}</strong></p>
-                        </div>
-                    </div>
-                    <div class="flex gap-2">
-                        <a href="{{ route('admin.barang.edit',$item->id) }}" class="admin-btn-secondary py-2">Edit</a>
-                        <form action="{{ route('admin.barang.destroy',$item->id) }}"
-                            method="POST"
-                            onsubmit="return confirm('Yakin ingin menghapus barang ini?')">
+                            <td class="admin-table-td">
+                                @if($item->thumbnail_path)
+                                    <img src="{{ asset('storage/'.$item->thumbnail_path) }}" class="admin-thumb object-cover">
+                                @else
+                                    <div class="admin-thumb flex items-center justify-center bg-[#FAF3E0]">
+                                        <i data-lucide="image" class="h-5 w-5 text-[#C8960C]/50"></i>
+                                    </div>
+                                @endif
+                            </td>
 
-                            @csrf
-                            @method('DELETE')
+                            <td class="admin-table-td">
+                                <p class="font-semibold text-[#4A0F1A]">{{ $item->nama_barang }}</p>
+                            </td>
 
-                            <button
-                                type="submit"
-                                class="admin-btn-danger py-2">
+                            <td class="admin-table-td text-[#4A2E28]">{{ $item->kategori->nama ?? '-' }}</td>
 
-                                Hapus
+                            <td class="admin-table-td font-semibold text-[#4A0F1A]">
+                                Rp {{ number_format($item->harga, 0, ',', '.') }}
+                            </td>
 
-                            </button>
+                            <td class="admin-table-td text-[#4A2E28]">{{ $item->stok }} unit</td>
 
-                        </form>
-                    </div>
-                </div>
-            </div>
-        @endforeach
+                            <td class="admin-table-td">
+                                <span class="{{ $item->aktif ? 'badge-active' : 'badge-inactive' }}">
+                                    {{ $item->aktif ? 'Aktif ✓' : '● Nonaktif' }}
+                                </span>
+                            </td>
+
+                            <td class="admin-table-td text-right">
+                                <div class="flex items-center justify-end gap-2">
+                                    <a href="{{ route('admin.barang.edit', $item->id) }}"
+                                       class="admin-btn-secondary px-3 py-2 text-xs">Edit</a>
+                                    <form action="{{ route('admin.barang.destroy', $item->id) }}" method="POST"
+                                          onsubmit="return confirm('Yakin hapus barang ini?')">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="admin-btn-danger px-3 py-2 text-xs">Hapus</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="8" class="admin-table-td">
+                                <div class="admin-empty">Belum ada data barang.</div>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 @endsection

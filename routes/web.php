@@ -85,6 +85,7 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('/jasa',             [JasaController::class, 'index'])->name('jasa.index');
         Route::get('/jasa/create',      [JasaController::class, 'create'])->name('jasa.create');
         Route::post('/jasa',            [JasaController::class, 'store'])->name('jasa.store');
+        Route::get('/jasa/{id}',        [JasaController::class, 'show'])->name('jasa.show');
         Route::get('/jasa/{id}/edit',   [JasaController::class, 'edit'])->name('jasa.edit');
         Route::put('/jasa/{id}',        [JasaController::class, 'update'])->name('jasa.update');
         Route::delete('/jasa/{id}',     [JasaController::class, 'destroy'])->name('jasa.destroy');
@@ -93,6 +94,7 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('/paket',              [PaketController::class, 'index'])->name('paket.index');
         Route::get('/paket/create',       [PaketController::class, 'create'])->name('paket.create');
         Route::post('/paket',             [PaketController::class, 'store'])->name('paket.store');
+        Route::get('/paket/{id}',         [PaketController::class, 'show'])->name('paket.show');
         Route::get('/paket/{id}/edit',    [PaketController::class, 'edit'])->name('paket.edit');
         Route::put('/paket/{id}',         [PaketController::class, 'update'])->name('paket.update');
         Route::delete('/paket/{id}',      [PaketController::class, 'destroy'])->name('paket.destroy');
@@ -125,6 +127,9 @@ Route::middleware(['auth', 'role:admin'])
 
         Route::post('/barang', [BarangController::class,'store'])
             ->name('barang.store');
+
+        Route::get('/barang/{id}', [BarangController::class,'show'])
+            ->name('barang.show');
 
         Route::get('/barang/{id}/edit', [BarangController::class,'edit'])
             ->name('barang.edit');
