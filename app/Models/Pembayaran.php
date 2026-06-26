@@ -17,6 +17,7 @@ class Pembayaran extends Model
         'metode_pembayaran', 'bukti_pembayaran_path',
         'status', 'diverifikasi_oleh', 'diverifikasi_pada',
         'catatan_penolakan',
+        'snap_token', 'gateway_transaction_id', 'gateway_status',
     ];
 
     protected $casts = [

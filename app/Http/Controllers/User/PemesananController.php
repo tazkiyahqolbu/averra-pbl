@@ -227,20 +227,8 @@ class PemesananController extends Controller
                 $model->decrement('stok', $jumlah);
             }
 
-            // Catat pilihan metode bayar di tabel pembayaran
-            $tahap = ($request->metode_bayar ?? 'dp') === 'lunas' ? 'langsung' : 'dp';
-            $pemesanan->pembayarans()->create([
-                'kode_transaksi'    => 'TRX-' . strtoupper(Str::random(8)),
-                'tahap'             => $tahap,
-                'persen_dp'         => $tahap === 'langsung' ? 100 : 50,
-                'jumlah_bayar'      => $tahap === 'langsung' ? $totalHarga : round($totalHarga * 0.5),
-                'metode_pembayaran' => 'transfer',
-                'status'            => 'menunggu',
-                'dibayar_pada'      => null,
-            ]);
-
             return $pemesanan;
-        });
+        }); 
 
         return redirect()->route('user.pemesanan.submitted', $pemesanan->id);
     }
