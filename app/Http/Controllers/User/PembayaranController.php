@@ -45,7 +45,7 @@ class PembayaranController extends Controller
         return view('user.pemesanan.pilih-pembayaran', compact('pesanan', 'isPelunasan'));
     }
 
-    public function initiate(Request $request, int $id): RedirectResponse
+    public function initiate(Request $request, int $id): View|RedirectResponse
     {
         $pesanan = Pemesanan::where('user_id', Auth::id())
             ->with(['pembayarans', 'user'])
@@ -109,7 +109,7 @@ class PembayaranController extends Controller
 
         $pembayaran->update(['snap_token' => $snapToken]);
 
-        return redirect("https://app.sandbox.midtrans.com/snap/v2/vtweb/{$snapToken}");
+        return view('user.pemesanan.snap-payment', compact('snapToken', 'pembayaran', 'pesanan'));
     }
 
     public function finish(Request $request): RedirectResponse

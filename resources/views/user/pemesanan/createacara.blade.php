@@ -16,7 +16,7 @@
 
     @include('public.layouts.navbar')
 
-    <div class="mx-auto max-w-2xl px-4 sm:px-6 pt-24 sm:pt-32 pb-16 sm:pb-24">
+    <div class="mx-auto max-w-2xl px-6 pt-32 pb-24">
 
         {{-- Back --}}
         <div class="mb-8">
@@ -85,12 +85,12 @@
 
                 {{-- ── STEP 1: Detail Pesanan ── --}}
                 <div x-show="step === 1" x-transition.opacity>
-                    <div class="border-b border-[#E2D4C0] px-4 py-5 sm:px-7 sm:pt-7 sm:pb-5">
+                    <div class="border-b border-[#E2D4C0] px-7 pt-7 pb-5">
                         <p class="text-[10px] tracking-[0.3em] text-[#C8960C] uppercase font-semibold">Langkah 1 dari 3</p>
                         <h3 class="mt-0.5 font-serif text-xl font-medium text-[#4A0F1A]">Detail Pesanan</h3>
                     </div>
 
-                    <div class="space-y-5 p-4 sm:p-7">
+                    <div class="space-y-5 p-7">
                         {{-- Item dipilih --}}
                         @if($item)
                             <input type="hidden" name="katalog_id" value="{{ $item['id'] }}">
@@ -146,7 +146,7 @@
                         </div>
                     </div>
 
-                    <div class="flex justify-end px-4 pb-5 sm:px-7 sm:pb-7">
+                    <div class="flex justify-end px-7 pb-7">
                         <button type="button" x-on:click="nextStep()" x-bind:disabled="!selectedKatalogId"
                                 class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#D6B35C] to-[#B8983A] px-7 py-3 font-serif font-semibold text-[#4A0F1A] shadow-sm transition duration-200 hover:scale-[1.02] disabled:opacity-40 disabled:scale-100 disabled:cursor-not-allowed">
                             Lanjut <i data-lucide="arrow-right" class="h-4 w-4"></i>
@@ -156,12 +156,12 @@
 
                 {{-- ── STEP 2: Lokasi ── --}}
                 <div x-show="step === 2" x-transition.opacity style="display:none">
-                    <div class="border-b border-[#E2D4C0] px-4 py-5 sm:px-7 sm:pt-7 sm:pb-5">
+                    <div class="border-b border-[#E2D4C0] px-7 pt-7 pb-5">
                         <p class="text-[10px] tracking-[0.3em] text-[#C8960C] uppercase font-semibold">Langkah 2 dari 3</p>
                         <h3 class="mt-0.5 font-serif text-xl font-medium text-[#4A0F1A]">Informasi & Lokasi</h3>
                     </div>
 
-                    <div class="space-y-5 p-4 sm:p-7">
+                    <div class="space-y-5 p-7">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label class="mb-2 block text-[10px] font-semibold uppercase tracking-[0.25em] text-[#4A0F1A]">
@@ -223,7 +223,7 @@
                         </div>
                     </div>
 
-                    <div class="flex items-center justify-between px-4 pb-5 sm:px-7 sm:pb-7">
+                    <div class="flex items-center justify-between px-7 pb-7">
                         <button type="button" x-on:click="prevStep()"
                                 class="inline-flex items-center gap-1.5 text-sm text-[#4A2E28] hover:text-[#4A0F1A] transition">
                             <i data-lucide="arrow-left" class="h-4 w-4"></i> Kembali
@@ -237,12 +237,12 @@
 
                 {{-- ── STEP 3: Pembayaran ── --}}
                 <div x-show="step === 3" x-transition.opacity style="display:none">
-                    <div class="border-b border-[#E2D4C0] px-4 py-5 sm:px-7 sm:pt-7 sm:pb-5">
+                    <div class="border-b border-[#E2D4C0] px-7 pt-7 pb-5">
                         <p class="text-[10px] tracking-[0.3em] text-[#C8960C] uppercase font-semibold">Langkah 3 dari 3</p>
                         <h3 class="mt-0.5 font-serif text-xl font-medium text-[#4A0F1A]">Ringkasan & Pembayaran</h3>
                     </div>
 
-                    <div class="space-y-5 p-4 sm:p-7">
+                    <div class="space-y-5 p-7">
                         {{-- Ringkasan harga --}}
                         <div class="overflow-hidden rounded-2xl border border-[#E2D4C0]">
                             <div class="flex items-center justify-between px-5 py-3.5 text-sm">
@@ -304,7 +304,7 @@
                         </div>
                     </div>
 
-                    <div class="flex items-center justify-between px-4 pb-5 sm:px-7 sm:pb-7">
+                    <div class="flex items-center justify-between px-7 pb-7">
                         <button type="button" x-on:click="prevStep()"
                                 class="inline-flex items-center gap-1.5 text-sm text-[#4A2E28] hover:text-[#4A0F1A] transition">
                             <i data-lucide="arrow-left" class="h-4 w-4"></i> Kembali

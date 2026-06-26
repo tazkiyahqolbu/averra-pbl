@@ -7,9 +7,9 @@
     $statusAktif = request('status', 'semua');
     $statusMap = [
         'semua'        => 'Semua',
-        'menunggu'     => 'Menunggu Verifikasi',
-        'terverifikasi'=> 'Terverifikasi',
-        'ditolak'      => 'Ditolak',
+        'menunggu'     => 'Menunggu Pembayaran',
+        'terverifikasi'=> 'Berhasil',
+        'ditolak'      => 'Dibatalkan / Gagal',
     ];
     $badgeMap = [
         'menunggu'      => 'badge-warning',
@@ -27,7 +27,7 @@
     <div>
         <h1 class="admin-title text-3xl">Pembayaran</h1>
         <p class="admin-subtitle mt-1 text-sm">
-            Verifikasi bukti transfer pelanggan — DP, pelunasan, dan denda.
+            Riwayat transaksi pembayaran pelanggan via Midtrans.
         </p>
     </div>
 
@@ -71,9 +71,9 @@
                 @php
                     $badge = $badgeMap[$pembayaran->status] ?? 'badge-neutral';
                     $statusLabel = match($pembayaran->status) {
-                        'menunggu'      => 'Menunggu Verifikasi',
-                        'terverifikasi' => 'Terverifikasi',
-                        'ditolak'       => 'Ditolak',
+                        'menunggu'      => 'Menunggu Pembayaran',
+                        'terverifikasi' => 'Berhasil',
+                        'ditolak'       => 'Dibatalkan / Gagal',
                         default         => ucfirst($pembayaran->status),
                     };
                 @endphp
@@ -104,14 +104,8 @@
 
                         <div class="flex flex-wrap gap-2 lg:flex-col lg:items-end">
                             <a href="{{ route('admin.pembayaran.show', $pembayaran->id) }}"
-                               class="admin-btn-secondary text-sm">Lihat Bukti</a>
+                               class="admin-btn-secondary text-sm">Lihat Detail</a>
 
-                            @if($pembayaran->status === 'menunggu')
-                                <form method="POST" action="{{ route('admin.pembayaran.verifikasi', $pembayaran->id) }}">
-                                    @csrf @method('PATCH')
-                                    <button type="submit" class="admin-btn-primary text-sm w-full">Verifikasi</button>
-                                </form>
-                            @endif
                         </div>
                     </div>
                 </div>

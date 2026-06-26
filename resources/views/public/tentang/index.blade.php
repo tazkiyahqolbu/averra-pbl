@@ -35,7 +35,7 @@
 </head>
 <body class="min-h-screen bg-[#FAF3E0] text-[#4A0F1A] antialiased selection:bg-[#C8A84B]/30 pt-20">
 
-    @include('User.layouts.navbar')
+    @include('public.layouts.navbar')
 
     {{-- ══ HERO TENTANG ══ --}}
     <section class="relative isolate py-24 px-6 text-center">
@@ -113,7 +113,7 @@
         </div>
     </section>
 
-    @include('User.layouts.footer')
+    @include('public.layouts.footer')
 
     <script>
         window.addEventListener('load', () => lucide.createIcons());

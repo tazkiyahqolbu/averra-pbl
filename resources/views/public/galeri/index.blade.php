@@ -35,7 +35,7 @@
 </head>
 <body class="min-h-screen bg-paper text-primary antialiased pt-20">
 
-    @include('User.layouts.navbar')
+    @include('public.layouts.navbar')
 
     {{-- HERO SECTION --}}
     <section class="relative bg-paper py-24 px-6 text-center border-b border-primary/10">
@@ -108,7 +108,7 @@
         </div>
     </section>
 
-    @include('User.layouts.footer')
+    @include('public.layouts.footer')
 
     <script>
         window.addEventListener('load', () => lucide.createIcons());
