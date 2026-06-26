@@ -28,8 +28,8 @@
 
                     {{-- Avatar --}}
                     <div class="h-24 w-24 rounded-full overflow-hidden border-2 border-[#C8960C]/40 bg-[#4A0F1A] shadow-sm">
-                        @if ($user && $user->profile_photo)
-                            <img src="{{ asset('storage/' . $user->profile_photo) }}" alt="Foto Profil"
+                        @if ($user && $user->foto_profil)
+                            <img src="{{ asset('storage/' . $user->foto_profil) }}" alt="Foto Profil"
                                 class="h-full w-full object-cover">
                         @else
                             <div

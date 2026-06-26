@@ -43,7 +43,7 @@ class ProfileController extends Controller
         /** @var \Illuminate\Http\UploadedFile $file */
         $file = $request->file('profile_photo');
         $path = $file->store('profile-photos', 'public');
-        $this->getUser()->update(['profile_photo' => $path]);
+        $this->getUser()->update(['foto_profil' => $path]);
 
         return back()->with('success', 'Foto profil berhasil diperbarui.');
     }
