@@ -197,6 +197,91 @@
                 </svg>
             </button>
         </nav>
+
+        <!-- Mobile Menu Panel -->
+        <div x-show="open"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 -translate-y-4"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             x-transition:leave="transition ease-in duration-150"
+             x-cloak
+             class="lg:hidden border-t border-[#C8A84B]/20 bg-[#4A0F1A]/95 backdrop-blur-lg px-6 py-6 shadow-2xl space-y-4">
+            <div class="flex flex-col gap-3.5">
+                <a href="{{ url('/') }}" class="text-sm font-medium tracking-wide text-[#FAF3E0] hover:text-[#C8A84B] transition py-1.5 border-b border-[#C8A84B]/10">
+                    Beranda
+                </a>
+                <a href="{{ url('/layanan') }}" class="text-sm font-medium tracking-wide text-[#FAF3E0] hover:text-[#C8A84B] transition py-1.5 border-b border-[#C8A84B]/10">
+                    Layanan
+                </a>
+                <a href="{{ url('/katalog') }}" class="text-sm font-medium tracking-wide text-[#FAF3E0] hover:text-[#C8A84B] transition py-1.5 border-b border-[#C8A84B]/10">
+                    Katalog
+                </a>
+                <a href="{{ url('/galeri') }}" class="text-sm font-medium tracking-wide text-[#FAF3E0] hover:text-[#C8A84B] transition py-1.5 border-b border-[#C8A84B]/10">
+                    Galeri
+                </a>
+                <a href="{{ url('/booking') }}" class="text-sm font-medium tracking-wide text-[#FAF3E0] hover:text-[#C8A84B] transition py-1.5 border-b border-[#C8A84B]/10">
+                    Pemesanan
+                </a>
+                <a href="{{ url('/testimoni') }}" class="text-sm font-medium tracking-wide text-[#FAF3E0] hover:text-[#C8A84B] transition py-1.5 border-b border-[#C8A84B]/10">
+                    Testimoni
+                </a>
+            </div>
+
+            <div class="pt-2">
+                @auth
+                    <div class="flex flex-col gap-2">
+                        <a href="/dashboard" class="flex items-center justify-center gap-2 rounded-full border border-[#C8A84B]/40 bg-[#7B1C2E]/50 px-5 py-2.5 text-[#FAF3E0] hover:bg-[#7B1C2E]/70 transition text-sm">
+                            Dashboard
+                        </a>
+                        <div x-data="{ confirmLogout: false }" class="mt-2">
+                            <button @click="confirmLogout = true" class="w-full flex items-center justify-center gap-2 rounded-full border border-[#C8A84B]/60 px-5 py-2.5 text-[#E8D7A3] hover:bg-[#C8A84B] hover:text-[#4A0F1A] transition text-sm">
+                                Logout
+                            </button>
+                            <template x-teleport="body">
+                                <div x-show="confirmLogout" x-cloak x-transition:enter="transition ease-out duration-150"
+                                    x-transition:enter-start="opacity-0 scale-95"
+                                    x-transition:enter-end="opacity-100 scale-100"
+                                    x-transition:leave="transition ease-in duration-100"
+                                    x-transition:leave-start="opacity-100 scale-100"
+                                    x-transition:leave-end="opacity-0 scale-95"
+                                    class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 px-4"
+                                    x-on:click.self="confirmLogout = false">
+                                    <div class="w-full max-w-xs rounded-2xl bg-white border border-[#E2D4C0] shadow-2xl p-6">
+                                        <div class="flex flex-col items-center text-center">
+                                            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-red-50 border border-red-200 mb-4">
+                                                <i data-lucide="log-out" class="h-5 w-5 text-red-500"></i>
+                                            </div>
+                                            <h3 class="font-serif text-lg font-light text-[#4A0F1A]">Yakin ingin keluar?</h3>
+                                            <p class="mt-1 text-sm text-[#4A2E28]/60">Kamu perlu login kembali untuk mengakses akun.</p>
+                                        </div>
+                                        <div class="mt-5 flex gap-2">
+                                            <button x-on:click="confirmLogout = false" class="flex-1 rounded-full border border-[#E2D4C0] bg-white py-2.5 text-sm font-semibold text-[#4A0F1A] hover:bg-[#FAF3E0] transition">
+                                                Batal
+                                            </button>
+                                            <form method="POST" action="/logout" class="flex-1">
+                                                @csrf
+                                                <button type="submit" class="w-full rounded-full bg-gradient-to-br from-red-600 to-red-800 py-2.5 text-sm font-semibold text-white shadow-sm hover:from-red-700 hover:to-red-900 transition">
+                                                    Ya, Keluar
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                @else
+                    <div class="flex items-center gap-3 pt-2">
+                        <a href="/login" class="flex-1 text-center py-2.5 rounded-xl text-sm font-medium text-[#E8D7A3] hover:text-white border border-[#C8A84B]/30 hover:bg-white/5 transition duration-200">
+                            Masuk
+                        </a>
+                        <a href="/register" class="flex-1 text-center py-2.5 rounded-xl bg-[#C8A84B] text-sm font-semibold text-[#4A0F1A] hover:bg-[#FAF3E0] transition duration-200">
+                            Daftar
+                        </a>
+                    </div>
+                @endauth
+            </div>
+        </div>
     </header>
 
     <!-- Content -->
