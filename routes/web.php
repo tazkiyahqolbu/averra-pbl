@@ -12,13 +12,21 @@ use App\Http\Controllers\Frontend\KatalogController;
 use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\User\PemesananController;
 use App\Http\Controllers\User\PembayaranController;
+use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\ForgotPasswordController;
+
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn() => view('public.Beranda'))->name('public.beranda');
 
+// Midtrans webhook - tanpa auth middleware
+Route::post('/pembayaran/callback', [App\Http\Controllers\User\PembayaranController::class, 'callback'])->name('pembayaran.callback');
+
 // Halaman publik
 Route::get('/katalog',       [KatalogController::class, 'index'])->name('public.katalog.index');
 Route::get('/katalog/{slug}', [KatalogController::class, 'show'])->name('katalog.show');
+Route::view('/galeri-kami',  'public.galeri.index')->name('public.galeri.index');
+Route::view('/tentang', 'public.tentang.index')->name('public.tentang.index');
 
 // Testimoni
 Route::middleware('auth')->post('/testimoni/{pemesanan_id}', function ($pemesanan_id) {
@@ -32,6 +40,13 @@ Route::get('/register',        [AuthController::class, 'showRegister'])->name('r
 Route::post('/register',       [AuthController::class, 'register']);
 Route::get('/register/sukses', [AuthController::class, 'showRegisterSuccess'])->name('register.success');
 Route::post('/logout',   [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+// Forgot Password
+Route::get('/lupa-password', [ForgotPasswordController::class, 'showForgotPassword'])->name('password.request');
+Route::post('/lupa-password', [ForgotPasswordController::class, 'sendOtp'])->name('password.send-otp');
+Route::get('/verifikasi-otp', [ForgotPasswordController::class, 'showVerifyOtp'])->name('password.verify-otp');
+Route::post('/verifikasi-otp', [ForgotPasswordController::class, 'verifyOtp'])->name('password.check-otp');
+Route::get('/reset-password', [ForgotPasswordController::class, 'showResetPassword'])->name('password.reset-form');
+Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('password.update');
 
 // ── Rute User ─────────────────────────────────────────────────────────────────
 Route::middleware('auth')->name('user.')->group(function () {
@@ -48,10 +63,14 @@ Route::middleware('auth')->name('user.')->group(function () {
     Route::get('/pemesanan/{id}/invoice', [PemesananController::class, 'invoice'])->name('pemesanan.invoice');
 
     // Pembayaran
-    Route::post('/pembayaran/upload', [PembayaranController::class, 'upload'])->name('pembayaran.upload');
+    Route::get('/pembayaran/{id}/pilih',     [PembayaranController::class, 'pilih'])->name('pembayaran.pilih');
+    Route::post('/pembayaran/{id}/initiate', [PembayaranController::class, 'initiate'])->name('pembayaran.initiate');
+    Route::get('/pembayaran/finish',         [PembayaranController::class, 'finish'])->name('pembayaran.finish');
 
     // Profile
-    Route::get('/profil', fn() => view('user.profile.index'))->name('profile.index');
+    Route::get('/profil', [ProfileController::class, 'index'])->name('profile.index');
+    Route::put('/profil', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profil/foto', [ProfileController::class, 'updatePhoto'])->name('profile.photo.update');
 });
 
 // ── Rute Admin ────────────────────────────────────────────────────────────────
@@ -115,6 +134,8 @@ Route::middleware(['auth', 'role:admin'])
 
         Route::delete('/barang/{id}', [BarangController::class,'destroy'])
             ->name('barang.destroy');
+        Route::get('/pembayaran',      [AdminPembayaranController::class, 'index'])->name('pembayaran.index');
+        Route::get('/pembayaran/{id}', [AdminPembayaranController::class, 'show'])->name('pembayaran.show');
     });
 
 // Admin view-only routes (preview frontend)
