@@ -3,13 +3,6 @@
 @section('title', 'Galeri')
 
 @section('content')
-@php
-    $galeri = [
-        ['judul' => 'Pernikahan Andi & Siti', 'kategori' => 'Pernikahan'],
-        ['judul' => 'Pertunjukan Tari Minang', 'kategori' => 'Pertunjukan'],
-        ['judul' => 'Acara Hiburan Budaya', 'kategori' => 'Hiburan'],
-    ];
-@endphp
 
 <div class="admin-section">
     <div class="admin-page-header md:flex-row md:items-center md:justify-between">
@@ -28,19 +21,60 @@
     <div class="admin-gallery-grid">
         @foreach ($galeri as $item)
             <div class="admin-gallery-card">
-                <div class="flex h-44 items-center justify-center bg-[#FAF3E0]">
-                    <i data-lucide="image" class="h-12 w-12 text-[#E2D4C0]"></i>
-                </div>
+                <div class="h-44 overflow-hidden">
+
+            @if($item->media_path)
+            @if($item->jenis_media == 'foto')
+                <img
+                    src="{{ asset('storage/'.$item->media_path) }}"
+                    class="h-full w-full object-cover">
+            @else
+                <video
+                    class="h-full w-full object-cover"
+                    controls>
+                    <source
+                        src="{{ asset('storage/'.$item->media_path) }}">
+                </video>
+            @endif
+        @else
+            <div class="flex h-full items-center justify-center bg-[#FAF3E0]">
+                Tidak ada media
+            </div>
+        @endif
+
+        </div>
 
                 <div class="space-y-3 p-4">
                     <div>
-                        <p class="font-semibold text-[#4A0F1A]">{{ $item['judul'] }}</p>
-                        <p class="admin-muted text-sm">{{ $item['kategori'] }}</p>
+                        <p class="font-semibold text-[#4A0F1A]">{{ $item->judul }}</p>
+                        <p class="admin-muted text-sm">{{ $item->kategori }}</p>
                     </div>
 
                     <div class="flex gap-2">
-                        <button class="admin-btn-secondary flex-1 py-2">Edit</button>
-                        <button class="admin-btn-danger flex-1 py-2">Hapus</button>
+                        <a
+                        href="{{ route('admin.galeri.edit',$item->id) }}"
+                        class="admin-btn-secondary flex-1 py-2">
+                        Edit
+                        </a>
+
+                        <form
+                        action="{{ route('admin.galeri.destroy',$item->id) }}"
+                        method="POST"
+                        class="flex-1">
+
+                        @csrf
+                        @method('DELETE')
+
+                        <button
+                        type="submit"
+                        class="admin-btn-danger w-full py-2"
+                        onclick="return confirm('Yakin ingin menghapus?')">
+
+                        Hapus
+
+                        </button>
+
+                        </form>
                     </div>
                 </div>
             </div>
