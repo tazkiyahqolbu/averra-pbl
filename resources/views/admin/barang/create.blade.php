@@ -44,7 +44,7 @@
 
         <div class="grid gap-4 md:grid-cols-2">
             <div><label class="admin-label">Foto Utama *</label><input type="file" name="thumbnail_path" class="admin-file"></div>
-            <div><label class="admin-label">Foto Tambahan</label><input type="file" class="admin-file" multiple></div>
+            <div><label class="admin-label">Foto Tambahan</label><input type="file" name="foto_tambahan[]" class="admin-file" multiple></div>
         </div>
 
         <div class="flex justify-end gap-3">
