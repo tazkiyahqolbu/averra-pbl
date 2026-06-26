@@ -156,8 +156,29 @@ $gallery = [
             ];
         @endphp
 
-        <div class="mt-16 mx-auto max-w-5xl px-10 overflow-x-auto">
-            <div class="flex items-start min-w-[600px] pt-2">
+        <div class="mt-16 mx-auto max-w-5xl px-6 sm:px-10">
+            <!-- Mobile Stepper (Vertical) -->
+            <div class="flex flex-col md:hidden gap-8 relative pl-6 before:absolute before:left-[2.35rem] before:top-2 before:bottom-2 before:w-0.5 before:bg-[#C8A84B]/20">
+                @foreach($steps as $i => $s)
+                    <div class="flex gap-4 items-start relative scroll-fade scroll-delay-{{ $i + 1 }}">
+                        <div class="relative shrink-0 z-10">
+                            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-[#4A0F1A] shadow-md ring-4 ring-[#FAF3E0] transition-all duration-300">
+                                <i data-lucide="{{ $s['icon'] }}" class="h-5 w-5 text-[#C8A84B]"></i>
+                            </div>
+                            <span class="absolute -right-1 -top-1 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-[#C8A84B] text-[8px] font-bold text-[#4A0F1A]">
+                                {{ $s['num'] }}
+                            </span>
+                        </div>
+                        <div class="pt-1">
+                            <h3 class="font-serif text-base font-semibold text-[#4A0F1A] leading-snug">{{ $s['title'] }}</h3>
+                            <p class="mt-1 text-xs leading-relaxed text-[#4A2E28]">{{ $s['desc'] }}</p>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            <!-- Desktop Stepper (Horizontal) -->
+            <div class="hidden md:flex items-start pt-2">
                 @foreach($steps as $i => $s)
                     <div class="flex flex-1 flex-col items-center scroll-fade scroll-delay-{{ $i + 1 }}">
                         <div class="flex w-full items-center">
