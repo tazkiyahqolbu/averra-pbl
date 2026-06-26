@@ -15,20 +15,11 @@
 <body class="min-h-screen bg-[#FAF3E0] text-[#4A2E28] antialiased"
       style="font-family: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;">
 
-    <div x-data="{ sidebarOpen: false }" class="min-h-screen">
-        <!-- Mobile Header -->
-        <header class="sticky top-0 z-30 border-b border-white/10 bg-[#4A0F1A] px-4 py-3 lg:hidden flex items-center justify-between shadow-md">
-            <button @click="sidebarOpen = true" class="rounded-lg p-2 text-[#FAF3E0] hover:bg-white/10 transition">
-                <i data-lucide="menu" class="h-6 w-6"></i>
-            </button>
-            <h1 class="font-serif font-semibold tracking-wider text-[#FAF3E0] text-lg">SILART</h1>
-            <div class="w-10"></div>
-        </header>
-
+    <div class="flex min-h-screen">
         @include('user.layouts.sidebar')
 
-        <main class="min-h-screen lg:ml-56 transition-all duration-300">
-            <div class="p-4 sm:p-6 lg:p-10">
+        <main class="flex-1 min-w-0 overflow-auto">
+            <div class="p-8 lg:p-10">
                 @yield('content')
             </div>
         </main>

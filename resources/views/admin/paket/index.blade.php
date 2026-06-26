@@ -23,7 +23,7 @@
 
     <div class="admin-table-wrapper">
         <div class="overflow-x-auto">
-            <table class="w-full border-collapse min-w-[900px]">
+            <table class="w-full border-collapse">
                 <thead class="border-b border-[#E2D4C0] bg-[#FAF3E0]">
                     <tr>
                         <th class="admin-table-th w-16">#</th>
