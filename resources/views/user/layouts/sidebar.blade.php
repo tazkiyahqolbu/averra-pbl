@@ -26,9 +26,16 @@
     <div class="px-5 py-4 border-b border-white/10">
         <div class="flex items-center gap-3">
             <div
-                class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#C8960C]/40 bg-[#C8960C]/15 text-sm font-bold text-[#C8960C]">
-                {{ strtoupper(substr($authUser->nama ?? ($authUser->name ?? 'U'), 0, 1)) }}
+                class="h-9 w-9 shrink-0 rounded-full border border-[#C8960C]/40 overflow-hidden bg-[#C8960C]/15 flex items-center justify-center">
+                @if ($authUser->foto_profil)
+                    <img src="{{ asset('storage/' . $authUser->foto_profil) }}" alt="Foto Profil"
+                        class="h-full w-full object-cover">
+                @else
+                    <span
+                        class="text-sm font-bold text-[#C8960C]">{{ strtoupper(substr($authUser->nama ?? ($authUser->name ?? 'U'), 0, 1)) }}</span>
+                @endif
             </div>
+
             <div class="overflow-hidden">
                 <p class="text-[9px] uppercase tracking-widest text-[#C8960C]/60">Akun Saya</p>
                 <p class="text-sm font-semibold text-[#FAF3E0] truncate">
