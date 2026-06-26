@@ -3,29 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin — SILART</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Instrument+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+    <title>@yield('title', 'Admin SILART')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body class="bg-[#FAF3E0]" style="font-family: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;">
-    <div class="min-h-screen">
+
+<body class="bg-[#F8F3EA]">
+    <div x-data="{ sidebarOpen:false }" class="min-h-screen">
+
+        {{-- Mobile Header --}}
+        <header class="sticky top-0 z-30 border-b bg-white px-4 py-3 lg:hidden">
+            <div class="flex items-center justify-between">
+                <button @click="sidebarOpen = true" class="rounded-lg p-2 hover:bg-gray-100">
+                    ☰
+                </button>
+
+                <h1 class="font-semibold text-[#5A0B1A]">
+                    Admin SILART
+                </h1>
+            </div>
+        </header>
+
         @include('admin.layouts.sidebar')
 
-        <main class="min-h-screen overflow-y-auto lg:ml-64">
-            <div class="p-6 lg:p-8">
+        <main class="min-h-screen lg:ml-64">
+            <div class="mx-auto max-w-screen-2xl px-4 py-4 md:p-6">
                 @yield('content')
             </div>
         </main>
     </div>
 
     @stack('scripts')
-    <script>
-        window.addEventListener('load', () => { lucide.createIcons(); });
-    </script>
 </body>
 </html>

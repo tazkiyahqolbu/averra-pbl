@@ -12,7 +12,7 @@
 
     {{-- Profil singkat --}}
     <div
-        class="mb-4 flex items-center justify-between rounded-2xl border border-[#E2D4C0] bg-white shadow-[0_2px_8px_rgba(74,15,26,0.06)] px-6 py-5">
+        class="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between rounded-2xl border border-[#E2D4C0] bg-white shadow-[0_2px_8px_rgba(74,15,26,0.06)] px-6 py-5">
         <div class="flex items-center gap-4">
             <div class="h-12 w-12 shrink-0 rounded-full overflow-hidden bg-[#4A0F1A] flex items-center justify-center">
                 @if ($user?->foto_profil)
@@ -30,7 +30,7 @@
             </div>
         </div>
         <a href="{{ route('user.profile.index') }}"
-            class="rounded-full border border-[#4A0F1A]/25 bg-white px-4 py-2 text-xs font-semibold text-[#4A0F1A] shadow-sm hover:border-[#4A0F1A] hover:bg-[#4A0F1A] hover:text-[#FAF3E0] transition-all duration-200">
+            class="rounded-full border border-[#4A0F1A]/25 bg-white px-4 py-2 text-xs font-semibold text-[#4A0F1A] shadow-sm hover:border-[#4A0F1A] hover:bg-[#4A0F1A] hover:text-[#FAF3E0] transition-all duration-200 w-full sm:w-auto text-center">
             Edit Profil
         </a>
     </div>
@@ -58,7 +58,7 @@
 
     {{-- Pengembalian --}}
     @if ($statusCounts['pengembalian'] > 0)
-        <div class="mb-4 flex items-center justify-between rounded-2xl border border-orange-200 bg-orange-50 px-5 py-4">
+        <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between rounded-2xl border border-orange-200 bg-orange-50 px-5 py-4">
             <div class="flex items-center gap-3">
                 <i data-lucide="package-open" class="h-5 w-5 text-orange-600 shrink-0"></i>
                 <div>
@@ -69,7 +69,7 @@
                 </div>
             </div>
             <a href="{{ route('user.pemesanan.index', ['status' => 'pengembalian']) }}"
-                class="shrink-0 rounded-full border border-orange-400 bg-white px-4 py-1.5 text-xs font-semibold text-orange-700 shadow-sm hover:bg-orange-500 hover:text-white hover:border-orange-500 transition-all duration-200">
+                class="shrink-0 rounded-full border border-orange-400 bg-white px-4 py-1.5 text-xs font-semibold text-orange-700 shadow-sm hover:bg-orange-500 hover:text-white hover:border-orange-500 transition-all duration-200 w-full sm:w-auto text-center">
                 Cek
             </a>
         </div>
