@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\JasaController;
 use App\Http\Controllers\Admin\PaketController;
 use App\Http\Controllers\Admin\KategoriPaketController;
 use App\Http\Controllers\Admin\BarangController;
+use App\Http\Controllers\Admin\KategoriBarangController;
 use App\Http\Controllers\Admin\PemesananController as AdminPemesananController;
 use App\Http\Controllers\Admin\PembayaranController as AdminPembayaranController;
 use App\Http\Controllers\AuthController;
@@ -134,13 +135,15 @@ Route::middleware(['auth', 'role:admin'])
 
         Route::delete('/barang/{id}', [BarangController::class,'destroy'])
             ->name('barang.destroy');
+
         Route::get('/pembayaran',      [AdminPembayaranController::class, 'index'])->name('pembayaran.index');
         Route::get('/pembayaran/{id}', [AdminPembayaranController::class, 'show'])->name('pembayaran.show');
+
+        Route::resource('kategori-barang', KategoriBarangController::class);
     });
 
 // Admin view-only routes (preview frontend)
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::view('/kategori-barang', 'admin.kategori-barang.index')->name('kategori-barang.index');
     Route::view('/kategori-jasa',   'admin.kategori-jasa.index')->name('kategori-jasa.index');
     Route::view('/pengembalian',    'admin.pengembalian.index')->name('pengembalian.index');
     Route::view('/pengembalian/show', 'admin.pengembalian.show')->name('pengembalian.show');
