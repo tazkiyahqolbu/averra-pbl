@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\PaketController;
 use App\Http\Controllers\Admin\KategoriPaketController;
 use App\Http\Controllers\Admin\BarangController;
 use App\Http\Controllers\Admin\KategoriBarangController;
+use App\Http\Controllers\Admin\KategoriJasaController;
 use App\Http\Controllers\Admin\PemesananController as AdminPemesananController;
 use App\Http\Controllers\Admin\PembayaranController as AdminPembayaranController;
 use App\Http\Controllers\AuthController;
@@ -150,11 +151,17 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('/kategori-barang/{id}/edit', [KategoriBarangController::class, 'edit'])->name('kategori-barang.edit');
         Route::put('/kategori-barang/{id}', [KategoriBarangController::class, 'update'])->name('kategori-barang.update');
         Route::delete('/kategori-barang/{id}', [KategoriBarangController::class, 'destroy'])->name('kategori-barang.destroy');
+
+        Route::get('/kategori-jasa', [KategoriJasaController::class,'index'])->name('kategori-jasa.index');
+        Route::get('/kategori-jasa/create', [KategoriJasaController::class,'create'])->name('kategori-jasa.create');
+        Route::post('/kategori-jasa', [KategoriJasaController::class,'store'])->name('kategori-jasa.store');
+        Route::get('/kategori-jasa/{id}/edit', [KategoriJasaController::class,'edit'])->name('kategori-jasa.edit');
+        Route::put('/kategori-jasa/{id}', [KategoriJasaController::class,'update'])->name('kategori-jasa.update');
+        Route::delete('/kategori-jasa/{id}', [KategoriJasaController::class,'destroy'])->name('kategori-jasa.destroy');
     });
 
 // Admin view-only routes (preview frontend)
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::view('/kategori-jasa',   'admin.kategori-jasa.index')->name('kategori-jasa.index');
     Route::view('/pengembalian',    'admin.pengembalian.index')->name('pengembalian.index');
     Route::view('/pengembalian/show', 'admin.pengembalian.show')->name('pengembalian.show');
     Route::view('/laporan',         'admin.laporan.index')->name('laporan.index');

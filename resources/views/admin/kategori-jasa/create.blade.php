@@ -1,0 +1,82 @@
+@extends('admin.layouts.app')
+
+@section('title', 'Tambah Kategori Jasa')
+
+@section('content')
+
+<div class="admin-section">
+
+    <div>
+        <h1 class="admin-title text-3xl">
+            Tambah Kategori Jasa
+        </h1>
+
+        <p class="admin-subtitle mt-1 text-sm">
+            Tambahkan kategori baru untuk jasa.
+        </p>
+    </div>
+
+    <form
+        action="{{ route('admin.kategori-jasa.store') }}"
+        method="POST"
+        enctype="multipart/form-data"
+        class="admin-card p-6 space-y-5">
+
+        @csrf
+
+        <div>
+            <label class="admin-label">
+                Nama Kategori *
+            </label>
+
+            <input
+                type="text"
+                name="nama"
+                class="admin-input"
+                value="{{ old('nama') }}"
+                placeholder="Contoh: Rias Pengantin">
+        </div>
+
+        <div>
+            <label class="admin-label">
+                Deskripsi
+            </label>
+
+            <textarea
+                name="deskripsi"
+                rows="4"
+                class="admin-textarea">{{ old('deskripsi') }}</textarea>
+        </div>
+
+        <div>
+            <label class="admin-label">
+                Ikon
+            </label>
+
+            <input
+                type="file"
+                name="ikon_path"
+                class="admin-file">
+        </div>
+
+        <div class="flex justify-end gap-3">
+
+            <a
+                href="{{ route('admin.kategori-jasa.index') }}"
+                class="admin-btn-secondary">
+                Batal
+            </a>
+
+            <button
+                type="submit"
+                class="admin-btn-primary">
+                Simpan
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+@endsection
