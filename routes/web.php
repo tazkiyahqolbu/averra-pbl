@@ -7,6 +7,8 @@ use App\Http\Controllers\Admin\KategoriPaketController;
 use App\Http\Controllers\Admin\BarangController;
 use App\Http\Controllers\Admin\KategoriBarangController;
 use App\Http\Controllers\Admin\KategoriJasaController;
+use App\Http\Controllers\Admin\PengembalianBarangController;
+use App\Http\Controllers\Admin\GaleriController;
 use App\Http\Controllers\Admin\PemesananController as AdminPemesananController;
 use App\Http\Controllers\Admin\PembayaranController as AdminPembayaranController;
 use App\Http\Controllers\AuthController;
@@ -158,15 +160,33 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('/kategori-jasa/{id}/edit', [KategoriJasaController::class,'edit'])->name('kategori-jasa.edit');
         Route::put('/kategori-jasa/{id}', [KategoriJasaController::class,'update'])->name('kategori-jasa.update');
         Route::delete('/kategori-jasa/{id}', [KategoriJasaController::class,'destroy'])->name('kategori-jasa.destroy');
+
+        Route::prefix('pengembalian')
+            ->name('pengembalian.')
+            ->controller(PengembalianBarangController::class)
+            ->group(function () {
+
+                Route::get('/', 'index')->name('index');
+                Route::get('/{id}', 'show')->name('show');
+                Route::put('/{id}', 'update')->name('update');
+
+            });
+
+        Route::prefix('galeri')
+        ->name('galeri.')
+        ->group(function () {
+            Route::get('/', [GaleriController::class, 'index'])->name('index');
+            Route::get('/create', [GaleriController::class, 'create'])->name('create');
+            Route::post('/', [GaleriController::class, 'store'])->name('store');
+            Route::get('/{id}/edit', [GaleriController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [GaleriController::class, 'update'])->name('update');
+            Route::delete('/{id}', [GaleriController::class, 'destroy'])->name('destroy');
+        });
     });
 
 // Admin view-only routes (preview frontend)
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::view('/pengembalian',    'admin.pengembalian.index')->name('pengembalian.index');
-    Route::view('/pengembalian/show', 'admin.pengembalian.show')->name('pengembalian.show');
     Route::view('/laporan',         'admin.laporan.index')->name('laporan.index');
-    Route::view('/galeri',          'admin.galeri.index')->name('galeri.index');
-    Route::view('/galeri/create',   'admin.galeri.create')->name('galeri.create');
     Route::view('/testimoni',       'admin.testimoni.index')->name('testimoni.index');
     Route::view('/zona-lokasi',     'admin.zona-lokasi.index')->name('zona-lokasi.index');
     Route::view('/blokir-tanggal',  'admin.blokir-tanggal.index')->name('blokir-tanggal.index');
