@@ -17,4 +17,26 @@ class KategoriBarangController extends Controller
             compact('kategori')
         );
     }
+
+    public function create()
+    {
+        return view('admin.kategori-barang.create');
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nama' => 'required|max:255',
+            'deskripsi' => 'nullable',
+        ]);
+
+        KategoriBarang::create([
+            'nama' => $request->nama,
+            'deskripsi' => $request->deskripsi,
+        ]);
+
+        return redirect()
+            ->route('admin.kategori-barang.index')
+            ->with('success', 'Kategori berhasil ditambahkan.');
+    }
 }
