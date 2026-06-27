@@ -59,7 +59,7 @@
 
                                         <form action="{{ route('admin.kategori-paket.destroy', $kategori->id) }}"
                                             method="POST"
-                                            onsubmit="return confirm('Yakin ingin menghapus kategori ini?')">
+                                            onsubmit="return confirmDelete(event, 'Apakah Anda yakin ingin menghapus kategori ini?')">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="admin-btn-danger px-4 py-2">Hapus</button>

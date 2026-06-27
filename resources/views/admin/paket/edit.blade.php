@@ -168,7 +168,7 @@
                             </div>
 
                             <a href="{{ route('admin.paket.foto.destroy', $foto->id) }}" class="admin-btn-danger w-full justify-center px-3 py-2 text-xs"
-                            onclick="return confirm('Yakin ingin menghapus foto ini?')">
+                            onclick="return confirmDeleteLink(event, 'Apakah Anda yakin ingin menghapus foto ini?', this.href)">
 
                                 Hapus Foto
 

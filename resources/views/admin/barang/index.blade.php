@@ -80,7 +80,7 @@
                                     <a href="{{ route('admin.barang.edit', $item->id) }}"
                                        class="admin-btn-secondary px-3 py-2 text-xs">Edit</a>
                                     <form action="{{ route('admin.barang.destroy', $item->id) }}" method="POST"
-                                          onsubmit="return confirm('Yakin hapus barang ini?')">
+                                          onsubmit="return confirmDelete(event, 'Apakah Anda yakin ingin menghapus barang ini?')">
                                         @csrf @method('DELETE')
                                         <button type="submit" class="admin-btn-danger px-3 py-2 text-xs">Hapus</button>
                                     </form>

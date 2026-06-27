@@ -8,14 +8,33 @@
         <div class="mt-3 h-[1px] w-16 bg-gradient-to-r from-[#C8960C] to-transparent"></div>
     </div>
 
-    <div x-data="{ isEditing: false, showSecurity: false }">
+    <div x-data="{ 
+        isEditing: {{ $errors->has('nama') || $errors->has('no_hp') ? 'true' : 'false' }}, 
+        showPasswordModal: {{ $errors->has('password') || $errors->has('current_password') ? 'true' : 'false' }}, 
+        showCurrentPass: false, 
+        showNewPass: false, 
+        showConfirmPass: false 
+    }">
 
-        {{-- Alert --}}
+        {{-- Alert Sukses --}}
         @if (session('success'))
             <div
                 class="mb-5 flex items-center gap-2 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm font-medium text-green-800">
                 <i data-lucide="check-circle" class="h-4 w-4 shrink-0"></i>
                 {{ session('success') }}
+            </div>
+        @endif
+
+        {{-- Alert Error --}}
+        @if ($errors->any())
+            <div
+                class="mb-5 flex items-start gap-2 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-800">
+                <i data-lucide="alert-circle" class="h-4 w-4 shrink-0 mt-0.5"></i>
+                <div>
+                    @foreach ($errors->all() as $error)
+                        <p>{{ $error }}</p>
+                    @endforeach
+                </div>
             </div>
         @endif
 
@@ -64,7 +83,7 @@
                     </p>
                 </div>
 
-                {{-- Sisi kanan — Form --}}
+                {{-- Sisi kanan — Form Profil --}}
                 <div class="px-8 py-8">
                     <div class="mb-5 flex items-center justify-between">
                         <p class="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#C8960C]">Informasi Profil</p>
@@ -119,56 +138,120 @@
                         </div>
                     </form>
 
-                    {{-- Keamanan --}}
+                    {{-- Section Keamanan --}}
                     <div class="mt-8 border-t border-[#E2D4C0] pt-6">
-                        <div class="flex items-center justify-between mb-4">
-                            <p class="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#C8960C]">Keamanan</p>
-                            <button type="button" x-show="isEditing" x-cloak @click="showSecurity = !showSecurity"
-                                class="text-xs font-semibold text-[#4A0F1A] underline underline-offset-2 hover:text-[#C8960C] transition">
-                                <span x-text="showSecurity ? 'Tutup' : 'Ganti Password'"></span>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#C8960C]">Keamanan</p>
+                                <p class="text-sm font-medium text-[#4A0F1A] mt-1">Kata Sandi Akun</p>
+                                <p class="text-xs text-[#4A2E28]/50 mt-0.5">Perbarui kata sandi Anda secara berkala untuk menjaga keamanan akun.</p>
+                            </div>
+                            <button type="button" @click="showPasswordModal = true"
+                                class="inline-flex items-center gap-2 rounded-full border border-[#4A0F1A]/30 bg-white px-4 py-2 text-xs font-semibold text-[#4A0F1A] shadow-sm hover:border-[#4A0F1A] hover:bg-[#4A0F1A] hover:text-[#FAF3E0] transition-all duration-200">
+                                <i data-lucide="key-round" class="h-3.5 w-3.5"></i>
+                                Ganti Password
                             </button>
                         </div>
-
-                        <div x-show="isEditing && showSecurity" x-cloak>
-                            <form action="{{ route('user.profile.update') }}" method="POST" class="space-y-4">
-                                @csrf
-                                @method('PUT')
-
-                                <div>
-                                    <label
-                                        class="block text-[10px] uppercase tracking-wider text-[#4A2E28]/50 mb-2">Password
-                                        Saat Ini</label>
-                                    <input type="password" name="current_password"
-                                        class="w-full border-b border-[#E2D4C0] pb-2 bg-transparent outline-none transition text-sm font-semibold text-[#4A0F1A] focus:border-[#C8960C]">
-                                </div>
-                                <div>
-                                    <label
-                                        class="block text-[10px] uppercase tracking-wider text-[#4A2E28]/50 mb-2">Password
-                                        Baru</label>
-                                    <input type="password" name="password"
-                                        class="w-full border-b border-[#E2D4C0] pb-2 bg-transparent outline-none transition text-sm font-semibold text-[#4A0F1A] focus:border-[#C8960C]">
-                                </div>
-                                <div>
-                                    <label
-                                        class="block text-[10px] uppercase tracking-wider text-[#4A2E28]/50 mb-2">Konfirmasi
-                                        Password Baru</label>
-                                    <input type="password" name="password_confirmation"
-                                        class="w-full border-b border-[#E2D4C0] pb-2 bg-transparent outline-none transition text-sm font-semibold text-[#4A0F1A] focus:border-[#C8960C]">
-                                </div>
-                                <button type="submit"
-                                    class="rounded-full bg-gradient-to-br from-[#6B1625] to-[#3A0A12] px-6 py-2.5 text-sm font-semibold text-[#FAF3E0] shadow-[0_4px_14px_rgba(74,15,26,0.3)] hover:shadow-[0_6px_18px_rgba(74,15,26,0.4)] hover:from-[#7B1C2E] transition-all duration-200">
-                                    Simpan Password
-                                </button>
-                            </form>
-                        </div>
-
-                        <p x-show="!isEditing" class="text-sm text-[#4A2E28]/50">
-                            Klik "Edit Profil" untuk mengubah password.
-                        </p>
                     </div>
                 </div>
 
             </div>
         </div>
+
+        {{-- Modal Pop-up Ganti Password --}}
+        <div x-show="showPasswordModal" x-cloak
+            class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0">
+            
+            <div class="w-full max-w-md rounded-2xl border border-[#E2D4C0] bg-white p-6 shadow-2xl relative"
+                @click.away="showPasswordModal = false"
+                x-transition:enter="transition ease-out duration-200"
+                x-transition:enter-start="opacity-0 scale-95"
+                x-transition:enter-end="opacity-100 scale-100"
+                x-transition:leave="transition ease-in duration-150"
+                x-transition:leave-start="opacity-100 scale-100"
+                x-transition:leave-end="opacity-0 scale-95">
+                
+                <div class="flex items-center justify-between border-b border-[#E2D4C0] pb-4 mb-5">
+                    <div>
+                        <p class="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#C8960C]">Keamanan</p>
+                        <h3 class="font-serif text-xl font-medium text-[#4A0F1A]">Ganti Password</h3>
+                    </div>
+                    <button type="button" @click="showPasswordModal = false"
+                        class="rounded-full p-1.5 text-[#4A2E28]/40 hover:bg-[#FAF3E0] hover:text-[#4A0F1A] transition">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <form action="{{ route('user.profile.update') }}" method="POST" class="space-y-4">
+                    @csrf
+                    @method('PUT')
+
+                    {{-- Password Saat Ini --}}
+                    <div>
+                        <label class="block text-[10px] uppercase tracking-wider text-[#4A2E28]/70 font-semibold mb-1.5">Password Saat Ini</label>
+                        <div class="relative">
+                            <input :type="showCurrentPass ? 'text' : 'password'" name="current_password" required
+                                placeholder="Masukkan password saat ini"
+                                class="w-full rounded-xl border border-[#E2D4C0] bg-[#FAF3E0]/30 px-3.5 py-2.5 text-sm text-[#4A0F1A] outline-none transition focus:border-[#C8960C] focus:bg-white pr-10">
+                            <button type="button" @click="showCurrentPass = !showCurrentPass"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-[#4A2E28]/50 hover:text-[#4A0F1A] transition">
+                                <svg x-show="!showCurrentPass" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                                <svg x-show="showCurrentPass" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l18 18"/><path d="M10.6 10.6A2 2 0 0 0 12 14a2 2 0 0 0 1.4-3.4"/><path d="M9.9 5.2A9.3 9.3 0 0 1 12 5c6.5 0 10 7 10 7a17.8 17.8 0 0 1-3.1 4.2"/><path d="M6.2 6.2C3.5 8 2 12 2 12s3.5 7 10 7a9.4 9.4 0 0 0 4-.9"/></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    {{-- Password Baru --}}
+                    <div>
+                        <label class="block text-[10px] uppercase tracking-wider text-[#4A2E28]/70 font-semibold mb-1.5">Password Baru</label>
+                        <div class="relative">
+                            <input :type="showNewPass ? 'text' : 'password'" name="password" required
+                                placeholder="Minimal 8 karakter"
+                                class="w-full rounded-xl border border-[#E2D4C0] bg-[#FAF3E0]/30 px-3.5 py-2.5 text-sm text-[#4A0F1A] outline-none transition focus:border-[#C8960C] focus:bg-white pr-10">
+                            <button type="button" @click="showNewPass = !showNewPass"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-[#4A2E28]/50 hover:text-[#4A0F1A] transition">
+                                <svg x-show="!showNewPass" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                                <svg x-show="showNewPass" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l18 18"/><path d="M10.6 10.6A2 2 0 0 0 12 14a2 2 0 0 0 1.4-3.4"/><path d="M9.9 5.2A9.3 9.3 0 0 1 12 5c6.5 0 10 7 10 7a17.8 17.8 0 0 1-3.1 4.2"/><path d="M6.2 6.2C3.5 8 2 12 2 12s3.5 7 10 7a9.4 9.4 0 0 0 4-.9"/></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    {{-- Konfirmasi Password Baru --}}
+                    <div>
+                        <label class="block text-[10px] uppercase tracking-wider text-[#4A2E28]/70 font-semibold mb-1.5">Konfirmasi Password Baru</label>
+                        <div class="relative">
+                            <input :type="showConfirmPass ? 'text' : 'password'" name="password_confirmation" required
+                                placeholder="Ulangi password baru"
+                                class="w-full rounded-xl border border-[#E2D4C0] bg-[#FAF3E0]/30 px-3.5 py-2.5 text-sm text-[#4A0F1A] outline-none transition focus:border-[#C8960C] focus:bg-white pr-10">
+                            <button type="button" @click="showConfirmPass = !showConfirmPass"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-[#4A2E28]/50 hover:text-[#4A0F1A] transition">
+                                <svg x-show="!showConfirmPass" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                                <svg x-show="showConfirmPass" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l18 18"/><path d="M10.6 10.6A2 2 0 0 0 12 14a2 2 0 0 0 1.4-3.4"/><path d="M9.9 5.2A9.3 9.3 0 0 1 12 5c6.5 0 10 7 10 7a17.8 17.8 0 0 1-3.1 4.2"/><path d="M6.2 6.2C3.5 8 2 12 2 12s3.5 7 10 7a9.4 9.4 0 0 0 4-.9"/></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="pt-3 flex items-center justify-end gap-3">
+                        <button type="button" @click="showPasswordModal = false"
+                            class="rounded-full border border-[#E2D4C0] bg-white px-5 py-2 text-xs font-semibold text-[#4A0F1A] hover:bg-[#FAF3E0] transition">
+                            Batal
+                        </button>
+                        <button type="submit"
+                            class="rounded-full bg-gradient-to-br from-[#6B1625] to-[#3A0A12] px-6 py-2 text-xs font-semibold text-[#FAF3E0] shadow-[0_4px_14px_rgba(74,15,26,0.3)] hover:shadow-[0_6px_18px_rgba(74,15,26,0.4)] hover:from-[#7B1C2E] transition-all duration-200">
+                            Simpan Password
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
     </div>
 @endsection

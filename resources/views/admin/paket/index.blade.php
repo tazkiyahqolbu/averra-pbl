@@ -81,7 +81,7 @@
                                     <a href="{{ route('admin.paket.edit', $item->id) }}"
                                        class="admin-btn-secondary px-3 py-2 text-xs">Edit</a>
                                     <form action="{{ route('admin.paket.destroy', $item->id) }}" method="POST"
-                                          onsubmit="return confirm('Yakin hapus paket ini?')">
+                                          onsubmit="return confirmDelete(event, 'Apakah Anda yakin ingin menghapus paket ini?')">
                                         @csrf @method('DELETE')
                                         <button type="submit" class="admin-btn-danger px-3 py-2 text-xs">Hapus</button>
                                     </form>
