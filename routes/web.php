@@ -187,7 +187,25 @@ Route::middleware(['auth', 'role:admin'])
 // Admin view-only routes (preview frontend)
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::view('/laporan',         'admin.laporan.index')->name('laporan.index');
-    Route::view('/testimoni',       'admin.testimoni.index')->name('testimoni.index');
+    Route::get('/testimoni', function () {
+        $testimonis  = \App\Models\Testimoni::with([
+            'user',
+            'pemesanan.detailPemesanans.jasa',
+            'pemesanan.detailPemesanans.paket',
+            'pemesanan.detailPemesanans.barang',
+            'fotos',
+        ])->latest()->get();
+        $rataRating  = round($testimonis->avg('rating'), 1);
+        $totalUlasan = $testimonis->count();
+        return view('admin.testimoni.index', compact('testimonis', 'rataRating', 'totalUlasan'));
+    })->name('testimoni.index');
+
+    Route::patch('/testimoni/{id}/balas', function ($id) {
+        $t = \App\Models\Testimoni::findOrFail($id);
+        request()->validate(['dibalas' => 'required|string|max:1000']);
+        $t->update(['dibalas' => request('dibalas')]);
+        return redirect()->route('admin.testimoni.index')->with('success', 'Balasan berhasil disimpan.');
+    })->name('testimoni.balas');
     Route::view('/zona-lokasi',     'admin.zona-lokasi.index')->name('zona-lokasi.index');
     Route::view('/blokir-tanggal',  'admin.blokir-tanggal.index')->name('blokir-tanggal.index');
     Route::view('/akun',            'admin.akun.index')->name('akun.index');

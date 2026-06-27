@@ -60,7 +60,7 @@ class JasaController extends Controller
             'harga' => $request->harga,
             'maks_booking_harian' => $request->maks_booking_harian,
             'thumbnail_path' => $thumbnailPath,
-            'aktif' => $request->has('aktif'),
+            'aktif' => $request->input('aktif', 0) == 1,
         ]);
 
         if ($request->hasFile('foto_jasa')) {
@@ -143,7 +143,7 @@ class JasaController extends Controller
             'harga' => $request->harga,
             'maks_booking_harian' => $request->maks_booking_harian,
             'thumbnail_path' => $thumbnailPath,
-            'aktif' => $request->has('aktif'),
+            'aktif' => $request->input('aktif', 0) == 1,
         ]);
 
         if ($request->has('keterangan_foto')) {

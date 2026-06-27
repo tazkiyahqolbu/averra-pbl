@@ -9,3 +9,4 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command('reminder:pengembalian')->dailyAt('08:00');
+Schedule::command('pemesanan:auto-cancel')->everyFiveMinutes();
