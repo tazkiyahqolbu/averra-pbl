@@ -1,12 +1,15 @@
 @extends('user.layouts.app')
 
 @section('content')
-<div class="mb-6">
+<div class="flex flex-col items-center justify-start min-h-[60vh] py-4">
+<div class="w-full max-w-lg">
+
+<div class="mb-6 text-center">
     <p class="text-[10px] tracking-[0.4em] text-[#C8960C] uppercase font-semibold">— PEMBAYARAN —</p>
     <h1 class="mt-0.5 font-serif text-3xl font-light text-[#4A0F1A]">Proses Pembayaran</h1>
 </div>
 
-<div class="max-w-lg">
+<div>
     <div class="rounded-2xl border border-[#E2D4C0] bg-white shadow-[0_2px_8px_rgba(74,15,26,0.06)] p-8 text-center space-y-4">
 
         <div id="loading-state">
@@ -46,6 +49,9 @@
         <i data-lucide="arrow-left" class="h-3.5 w-3.5"></i>
         Kembali ke Detail Pesanan
     </a>
+</div>
+
+</div>
 </div>
 @endsection
 

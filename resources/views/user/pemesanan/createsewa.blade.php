@@ -59,7 +59,7 @@
                     <div class="absolute left-5 top-5 h-[1px] bg-[#C8960C] -translate-y-1/2 z-0 transition-all duration-500"
                          :style="'width: calc(' + ((step - 1) / 2 * 100) + '% - ' + ((step - 1) / 2 * 40) + 'px)'"></div>
 
-                    @foreach ([['Detail Sewa','1'], ['Pengiriman','2'], ['Pembayaran','3']] as [$label, $num])
+                    @foreach ([['Detail Sewa','1'], ['Pengiriman','2'], ['Ringkasan','3']] as [$label, $num])
                         <div class="relative z-10 flex flex-col items-center gap-2 w-20">
                             <div class="flex h-10 w-10 items-center justify-center rounded-full border-2 text-sm font-bold transition-all duration-300"
                                  :class="step >= {{ $num }} ? 'bg-[#4A0F1A] text-[#FAF3E0] border-[#4A0F1A] shadow-md' : 'bg-[#FFFDF7] text-[#4A2E28]/40 border-[#E2D4C0]'">
@@ -133,6 +133,7 @@
                                     Tanggal Ambil <span class="text-red-400">*</span>
                                 </label>
                                 <input type="date" name="tanggal_ambil" x-model="startDate" required
+                                       min="{{ date('Y-m-d') }}"
                                        class="w-full rounded-xl border border-[#E2D4C0] bg-white px-4 py-3 text-sm text-[#4A0F1A] focus:border-[#C8960C] focus:outline-none transition">
                             </div>
                             <div>
@@ -281,11 +282,11 @@
                     </div>
                 </div>
 
-                {{-- ── STEP 3: Ringkasan & Bayar ── --}}
+                {{-- ── STEP 3: Ringkasan ── --}}
                 <div x-show="step === 3" x-transition.opacity style="display:none">
                     <div class="border-b border-[#E2D4C0] px-7 pt-7 pb-5">
                         <p class="text-[10px] tracking-[0.3em] text-[#C8960C] uppercase font-semibold">Langkah 3 dari 3</p>
-                        <h3 class="mt-0.5 font-serif text-xl font-medium text-[#4A0F1A]">Ringkasan & Pembayaran</h3>
+                        <h3 class="mt-0.5 font-serif text-xl font-medium text-[#4A0F1A]">Ringkasan Pesanan</h3>
                     </div>
 
                     <div class="space-y-5 p-7">
@@ -313,46 +314,10 @@
                             </div>
                         </div>
 
-                        {{-- Metode bayar --}}
-                        <div>
-                            <p class="mb-3 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#4A0F1A]">Metode Pembayaran</p>
-                            <div class="space-y-3">
-                                <label class="flex cursor-pointer items-center gap-4 rounded-2xl border p-4 transition"
-                                       :class="paymentMethod === 'dp'
-                                           ? 'border-[#C8960C] bg-[#C8960C]/6'
-                                           : 'border-[#E2D4C0] hover:border-[#C8960C]/50'">
-                                    <input type="radio" name="metode_bayar" value="dp" x-model="paymentMethod"
-                                           class="shrink-0 accent-[#C8960C]">
-                                    <div class="flex-1">
-                                        <p class="text-sm font-semibold text-[#4A0F1A]">Uang Muka DP 50%</p>
-                                        <p class="mt-0.5 text-xs text-[#4A2E28]">Bayar setengah sekarang, sisanya setelah konfirmasi</p>
-                                    </div>
-                                    <span class="shrink-0 font-serif text-sm font-semibold text-[#C8960C]"
-                                          x-show="paymentMethod === 'dp'">
-                                        Rp <span x-text="formatRupiah(grandTotal * 0.5)"></span>
-                                    </span>
-                                </label>
-                                <label class="flex cursor-pointer items-center gap-4 rounded-2xl border p-4 transition"
-                                       :class="paymentMethod === 'lunas'
-                                           ? 'border-[#C8960C] bg-[#C8960C]/6'
-                                           : 'border-[#E2D4C0] hover:border-[#C8960C]/50'">
-                                    <input type="radio" name="metode_bayar" value="lunas" x-model="paymentMethod"
-                                           class="shrink-0 accent-[#C8960C]">
-                                    <div class="flex-1">
-                                        <p class="text-sm font-semibold text-[#4A0F1A]">Bayar Lunas</p>
-                                        <p class="mt-0.5 text-xs text-[#4A2E28]">Bayar penuh sekarang</p>
-                                    </div>
-                                    <span class="shrink-0 font-serif text-sm font-semibold text-[#C8960C]"
-                                          x-show="paymentMethod === 'lunas'">
-                                        Rp <span x-text="formatRupiah(grandTotal)"></span>
-                                    </span>
-                                </label>
-                            </div>
-                        </div>
-
+                        {{-- Info --}}
                         <div class="flex items-start gap-3 rounded-2xl border border-[#E2D4C0] bg-[#FAF3E0] px-4 py-3 text-xs text-[#4A2E28]">
                             <i data-lucide="info" class="mt-0.5 h-4 w-4 shrink-0 text-[#C8960C]"></i>
-                            <p>Pesanan dikonfirmasi admin dalam 1×24 jam. Pembayaran dilakukan melalui transfer setelah konfirmasi.</p>
+                            <p>Pesanan akan dikonfirmasi admin dalam <strong>1×24 jam</strong>. Setelah dikonfirmasi, kamu dapat memilih metode pembayaran (DP 50% atau lunas) dan melanjutkan ke Midtrans.</p>
                         </div>
                     </div>
 
