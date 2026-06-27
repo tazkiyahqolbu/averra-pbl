@@ -65,7 +65,7 @@ class PaketController extends Controller
         'keterangan_acara' => $request->keterangan_acara,
         'catatan' => $request->catatan,
         'thumbnail_path' => $thumbnailPath,
-        'aktif' => $request->has('aktif'),
+        'aktif' => $request->input('aktif', 1) == 1,
     ]);
 
     if ($request->nama_item) {
@@ -166,7 +166,7 @@ class PaketController extends Controller
             'keterangan_acara' => $request->keterangan_acara,
             'catatan' => $request->catatan,
             'thumbnail_path' => $thumbnailPath,
-            'aktif' => $request->has('aktif'),
+            'aktif' => $request->input('aktif', 1) == 1,
         ]);
 
         if ($request->foto_id) {
