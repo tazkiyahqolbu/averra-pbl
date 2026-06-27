@@ -9,53 +9,78 @@
         <p class="admin-subtitle mt-1 text-sm">Lengkapi data jasa sesuai katalog layanan Sanggar Rantiang Tagok.</p>
     </div>
 
-    <form class="admin-card p-6 space-y-5">
+    @if($errors->any())
+        <div class="rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-700">
+            <p class="font-semibold mb-1">Terdapat kesalahan:</p>
+            <ul class="list-disc list-inside space-y-0.5">
+                @foreach($errors->all() as $e) <li>{{ $e }}</li> @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <form action="{{ route('admin.jasa.store') }}" method="POST" enctype="multipart/form-data" class="admin-card p-6 space-y-5">
+        @csrf
+
         <div class="grid gap-4 md:grid-cols-2">
             <div>
                 <label class="admin-label">Nama Jasa *</label>
-                <input type="text" class="admin-input" placeholder="Contoh: MC Pernikahan">
+                <input type="text" name="nama_jasa" class="admin-input" placeholder="Contoh: MC Pernikahan"
+                       value="{{ old('nama_jasa') }}">
             </div>
             <div>
                 <label class="admin-label">Kategori *</label>
-                <select class="admin-select"><option>Pilih kategori</option><option>MC</option><option>Pertunjukan Tari</option><option>Makeup</option><option>Band/Akustik</option></select>
+                <select name="kategori_jasa_id" class="admin-select">
+                    <option value="">Pilih kategori</option>
+                    @foreach($kategoris as $kat)
+                        <option value="{{ $kat->id }}" {{ old('kategori_jasa_id') == $kat->id ? 'selected' : '' }}>
+                            {{ $kat->nama }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
             <div>
                 <label class="admin-label">Harga *</label>
-                <input type="text" class="admin-input" placeholder="Rp 1.500.000">
+                <input type="number" name="harga" class="admin-input" placeholder="1500000" min="0"
+                       value="{{ old('harga') }}">
             </div>
             <div>
                 <label class="admin-label">Maks. Booking/Hari *</label>
-                <input type="number" class="admin-input" placeholder="4" min="1">
+                <input type="number" name="maks_booking_harian" class="admin-input" placeholder="4" min="1"
+                       value="{{ old('maks_booking_harian') }}">
             </div>
         </div>
 
         <div>
             <label class="admin-label">Deskripsi</label>
-            <textarea class="admin-textarea" placeholder="Jelaskan layanan, durasi, dan ketentuan jasa..."></textarea>
+            <textarea name="deskripsi" class="admin-textarea" placeholder="Jelaskan layanan, durasi, dan ketentuan jasa...">{{ old('deskripsi') }}</textarea>
         </div>
 
         <div>
             <label class="admin-label">Status</label>
             <div class="flex flex-wrap gap-3">
-                <label class="rounded-2xl border border-[#E2D4C0] bg-[#ffffff] px-4 py-3 text-sm"><input type="radio" name="aktif" value="1" checked> Aktif</label>
-                <label class="rounded-2xl border border-[#E2D4C0] bg-[#ffffff] px-4 py-3 text-sm"><input type="radio" name="aktif" value="0"> Nonaktif</label>
+                <label class="rounded-2xl border border-[#E2D4C0] bg-[#ffffff] px-4 py-3 text-sm">
+                    <input type="radio" name="aktif" value="1" {{ old('aktif', '1') == '1' ? 'checked' : '' }}> Aktif
+                </label>
+                <label class="rounded-2xl border border-[#E2D4C0] bg-[#ffffff] px-4 py-3 text-sm">
+                    <input type="radio" name="aktif" value="0" {{ old('aktif') == '0' ? 'checked' : '' }}> Nonaktif
+                </label>
             </div>
         </div>
 
         <div class="grid gap-4 md:grid-cols-2">
             <div>
-                <label class="admin-label">Foto Utama *</label>
-                <input type="file" class="admin-file">
+                <label class="admin-label">Foto Utama</label>
+                <input type="file" name="thumbnail_path" class="admin-file" accept="image/*">
             </div>
             <div>
                 <label class="admin-label">Foto Tambahan</label>
-                <input type="file" class="admin-file" multiple>
+                <input type="file" name="foto_jasa[]" class="admin-file" multiple accept="image/*">
             </div>
         </div>
 
         <div class="flex justify-end gap-3">
             <a href="{{ route('admin.jasa.index') }}" class="admin-btn-secondary">Batal</a>
-            <button type="button" class="admin-btn-primary">Simpan</button>
+            <button type="submit" class="admin-btn-primary">Simpan</button>
         </div>
     </form>
 </div>

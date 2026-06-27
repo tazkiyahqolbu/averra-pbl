@@ -127,7 +127,7 @@
         </div>
 
         <div class="space-y-5">
-            {{-- Riwayat Status --}}
+            {{-- Info Pemesanan --}}
             <div class="admin-card p-5">
                 <h2 class="admin-title mb-4 text-xl">Info Pemesanan</h2>
                 <div class="space-y-3 text-sm">
@@ -135,6 +135,29 @@
                         <strong>{{ $pemesanan->created_at->format('d M Y H.i') }}</strong>
                         <p class="admin-muted">Pesanan masuk</p>
                     </div>
+
+                    @if($pemesanan->status === 'menunggu')
+                        @php
+                            $deadline   = $pemesanan->created_at->addHours(24);
+                            $sisaMenit  = (int) now()->diffInMinutes($deadline, false);
+                            $sisaJam    = (int) floor(abs($sisaMenit) / 60);
+                            $menitSisa  = abs($sisaMenit) % 60;
+                            $sudahLewat = $sisaMenit <= 0;
+                        @endphp
+                        <div class="rounded-2xl border p-3
+                            {{ $sudahLewat ? 'border-red-200 bg-red-50' : ($sisaMenit < 180 ? 'border-orange-200 bg-orange-50' : 'border-amber-200 bg-amber-50') }}">
+                            <p class="text-xs font-semibold
+                                {{ $sudahLewat ? 'text-red-700' : ($sisaMenit < 180 ? 'text-orange-700' : 'text-amber-700') }}">
+                                @if($sudahLewat)
+                                    ⚠ Batas konfirmasi sudah lewat — akan dibatalkan otomatis
+                                @else
+                                    ⏱ Sisa waktu konfirmasi: {{ $sisaJam }}j {{ $menitSisa }}m
+                                @endif
+                            </p>
+                            <p class="mt-0.5 text-xs admin-muted">Deadline: {{ $deadline->format('d M Y, H.i') }} WIB</p>
+                        </div>
+                    @endif
+
                     <div class="rounded-2xl bg-[#FAF3E0] p-3">
                         <strong class="text-[#4A2E28]">Status saat ini</strong>
                         <p class="font-semibold text-[#4A0F1A]">{{ $badge['label'] }}</p>
