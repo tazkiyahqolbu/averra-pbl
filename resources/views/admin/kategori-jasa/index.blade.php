@@ -53,7 +53,7 @@
                                         <a href="{{ route('admin.kategori-jasa.edit', $item->id) }}" class="admin-btn-secondary px-4 py-2">
                                             Edit
                                         </a>
-                                        <form action="{{ route('admin.kategori-jasa.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus kategori ini?')">
+                                        <form action="{{ route('admin.kategori-jasa.destroy', $item->id) }}" method="POST" onsubmit="return confirmDelete(event, 'Apakah Anda yakin ingin menghapus kategori ini?')">
 
                                             @csrf
                                             @method('DELETE')

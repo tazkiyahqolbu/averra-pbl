@@ -23,6 +23,8 @@
         </main>
     </div>
 
+    @include('admin.components.delete-modal')
+
     @stack('scripts')
     <script>
         window.addEventListener('load', () => { lucide.createIcons(); });

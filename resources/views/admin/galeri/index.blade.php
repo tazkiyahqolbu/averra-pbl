@@ -60,15 +60,15 @@
                         <form
                         action="{{ route('admin.galeri.destroy',$item->id) }}"
                         method="POST"
-                        class="flex-1">
+                        class="flex-1"
+                        onsubmit="return confirmDelete(event, 'Apakah Anda yakin ingin menghapus foto galeri ini?')">
 
                         @csrf
                         @method('DELETE')
 
                         <button
                         type="submit"
-                        class="admin-btn-danger w-full py-2"
-                        onclick="return confirm('Yakin ingin menghapus?')">
+                        class="admin-btn-danger w-full py-2">
 
                         Hapus
 

@@ -170,7 +170,7 @@
                         <i data-lucide="pencil" class="mr-2 h-4 w-4"></i> Edit Paket
                     </a>
                     <form action="{{ route('admin.paket.destroy', $paket->id) }}" method="POST"
-                          onsubmit="return confirm('Yakin ingin menghapus paket ini?')">
+                          onsubmit="return confirmDelete(event, 'Apakah Anda yakin ingin menghapus paket ini?')">
                         @csrf @method('DELETE')
                         <button type="submit"
                                 class="admin-btn-danger flex w-full items-center justify-center py-2.5 text-sm">

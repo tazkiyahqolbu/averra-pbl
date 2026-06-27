@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Masuk — Sanggar Rantiang Tagok</title>
+    <title>Reset Password — Sanggar Rantiang Tagok</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -66,15 +66,15 @@
 
             <div>
                 <p class="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-[#e8b96a]/70">
-                    Layanan Digital Sanggar
+                    Satu Langkah Lagi
                 </p>
                 <h2 class="font-heading text-4xl font-bold leading-snug text-white xl:text-5xl">
-                    Melestarikan<br>
-                    Seni & Budaya<br>
-                    <em class="not-italic text-[#e8b96a]">Minangkabau</em>
+                    Buat Password<br>
+                    Baru Akun Anda<br>
+                    <em class="not-italic text-[#e8b96a]">Aman & Kuat</em>
                 </h2>
                 <p class="mt-5 max-w-xs text-sm leading-relaxed text-white/50">
-                    Pesan kostum, daftar acara, atau kelola layanan sanggar — semua tersedia dalam satu platform.
+                    Buat kata sandi baru minimal 8 karakter untuk mengamankan akun Anda kembali.
                 </p>
             </div>
 
@@ -95,15 +95,9 @@
             </div>
 
             <div class="mb-7">
-                <h1 class="font-heading text-3xl font-bold text-[#4A0F1A]">Selamat Datang</h1>
-                <p class="mt-1.5 text-sm text-[#7a5d58]">Masuk ke akun Anda untuk melanjutkan.</p>
+                <h1 class="font-heading text-3xl font-bold text-[#4A0F1A]">Reset Password</h1>
+                <p class="mt-1.5 text-sm text-[#7a5d58]">Silakan masukkan kata sandi baru Anda.</p>
             </div>
-
-            @if (session('success'))
-                <div class="mb-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
-                    {{ session('success') }}
-                </div>
-            @endif
 
             @if ($errors->any())
                 <div class="mb-5 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800">
@@ -113,41 +107,28 @@
                 </div>
             @endif
 
-            <form action="{{ url('/login') }}" method="POST" class="space-y-4">
+            <form action="{{ route('password.update') }}" method="POST" class="space-y-4">
                 @csrf
 
+                {{-- Password Baru --}}
                 <div>
-                    <label for="email" class="auth-label">Email</label>
-                    <div class="relative">
-                        <svg class="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#a08070]"
-                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect width="20" height="16" x="2" y="4" rx="2"/>
-                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
-                        </svg>
-                        <input id="email" name="email" type="email" required
-                            value="{{ old('email') }}" placeholder="nama@email.com"
-                            class="auth-input pl-10 pr-4 focus:border-[#7b1c2e] focus:ring-2 focus:ring-[#7b1c2e]/10">
-                    </div>
-                </div>
-
-                <div>
-                    <label for="password" class="auth-label">Password</label>
+                    <label for="password" class="auth-label">Password Baru</label>
                     <div class="relative">
                         <svg class="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#a08070]"
                              viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <rect width="18" height="11" x="3" y="11" rx="2"/>
                             <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                         </svg>
-                        <input id="password" name="password" type="password" required
-                            placeholder="Masukkan password"
+                        <input id="password" name="password" type="password" required autofocus
+                            placeholder="Minimal 8 karakter"
                             class="auth-input pl-10 pr-11 focus:border-[#7b1c2e] focus:ring-2 focus:ring-[#7b1c2e]/10">
                         <button type="button"
                             class="absolute right-3 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-lg text-[#a08070] transition hover:bg-[#f3eadc] hover:text-[#5A0B1A]"
                             aria-label="Tampilkan password"
                             onclick="
                                 const input = document.getElementById('password');
-                                const eye = document.getElementById('eye-icon');
-                                const eyeOff = document.getElementById('eye-off-icon');
+                                const eye = document.getElementById('eye-password');
+                                const eyeOff = document.getElementById('eye-off-password');
                                 if (input.type === 'password') {
                                     input.type = 'text';
                                     eye.classList.add('hidden');
@@ -160,11 +141,11 @@
                                     this.setAttribute('aria-label', 'Tampilkan password');
                                 }
                             ">
-                            <svg id="eye-icon" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg id="eye-password" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/>
                                 <circle cx="12" cy="12" r="3"/>
                             </svg>
-                            <svg id="eye-off-icon" class="hidden h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg id="eye-off-password" class="hidden h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M3 3l18 18"/>
                                 <path d="M10.6 10.6A2 2 0 0 0 12 14a2 2 0 0 0 1.4-3.4"/>
                                 <path d="M9.9 5.2A9.3 9.3 0 0 1 12 5c6.5 0 10 7 10 7a17.8 17.8 0 0 1-3.1 4.2"/>
@@ -174,49 +155,63 @@
                     </div>
                 </div>
 
-                <div class="flex justify-end">
-                    <a href="{{ route('password.request') }}" id="go-forgot" class="text-xs font-medium text-[#7b1c2e] hover:underline">
-                        Lupa password?
-                    </a>
+                {{-- Konfirmasi Password --}}
+                <div>
+                    <label for="password_confirmation" class="auth-label">Konfirmasi Password Baru</label>
+                    <div class="relative">
+                        <svg class="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#a08070]"
+                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect width="18" height="11" x="3" y="11" rx="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                        <input id="password_confirmation" name="password_confirmation" type="password" required
+                            placeholder="Ulangi password baru"
+                            class="auth-input pl-10 pr-11 focus:border-[#7b1c2e] focus:ring-2 focus:ring-[#7b1c2e]/10">
+                        <button type="button"
+                            class="absolute right-3 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-lg text-[#a08070] transition hover:bg-[#f3eadc] hover:text-[#5A0B1A]"
+                            aria-label="Tampilkan konfirmasi password"
+                            onclick="
+                                const input = document.getElementById('password_confirmation');
+                                const eye = document.getElementById('eye-confirm');
+                                const eyeOff = document.getElementById('eye-off-confirm');
+                                if (input.type === 'password') {
+                                    input.type = 'text';
+                                    eye.classList.add('hidden');
+                                    eyeOff.classList.remove('hidden');
+                                    this.setAttribute('aria-label', 'Sembunyikan konfirmasi password');
+                                } else {
+                                    input.type = 'password';
+                                    eye.classList.remove('hidden');
+                                    eyeOff.classList.add('hidden');
+                                    this.setAttribute('aria-label', 'Tampilkan konfirmasi password');
+                                }
+                            ">
+                            <svg id="eye-confirm" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            <svg id="eye-off-confirm" class="hidden h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 3l18 18"/>
+                                <path d="M10.6 10.6A2 2 0 0 0 12 14a2 2 0 0 0 1.4-3.4"/>
+                                <path d="M9.9 5.2A9.3 9.3 0 0 1 12 5c6.5 0 10 7 10 7a17.8 17.8 0 0 1-3.1 4.2"/>
+                                <path d="M6.2 6.2C3.5 8 2 12 2 12s3.5 7 10 7a9.4 9.4 0 0 0 4-.9"/>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
 
-                <button type="submit" class="auth-btn-primary hover:opacity-90 hover:shadow-lg active:scale-[0.98]">
-                    Masuk
+                <button type="submit" class="auth-btn-primary mt-2 hover:opacity-90 hover:shadow-lg active:scale-[0.98]">
+                    Simpan Password Baru
                 </button>
             </form>
-
-            <p class="mt-5 text-center text-sm text-[#7a5d58]">
-                Belum punya akun?
-                <a href="{{ route('register') }}" id="go-register" class="font-semibold text-[#7b1c2e] hover:underline">
-                    Daftar di sini
-                </a>
-            </p>
-
-            <div class="mt-6 rounded-xl border border-[#e2d4c0] bg-[#faf7f2] p-4">
-                <p class="mb-2.5 text-xs font-semibold text-[#5A0B1A]">Demo Akun</p>
-                <div class="space-y-1.5">
-                    <div class="flex items-center justify-between rounded-lg border border-[#ead8b8] bg-white px-3 py-2 text-xs">
-                        <span class="font-semibold text-[#4a0f1a]">Admin</span>
-                        <span class="text-[#7a5d58]">admin@rantiang.com / password</span>
-                    </div>
-                    <div class="flex items-center justify-between rounded-lg border border-[#ead8b8] bg-white px-3 py-2 text-xs">
-                        <span class="font-semibold text-[#4a0f1a]">User</span>
-                        <span class="text-[#7a5d58]">user@rantiang.com / password</span>
-                    </div>
-                </div>
-            </div>
 
         </div>
     </main>
 
     <script>
-        document.getElementById('go-register')?.addEventListener('click', function (e) {
-            e.preventDefault();
-            authGo(this.href);
-        });
-        document.getElementById('go-forgot')?.addEventListener('click', function (e) {
-            e.preventDefault();
-            authGo(this.href);
+        document.querySelector('form')?.addEventListener('submit', function () {
+            var v = document.getElementById('auth-veil');
+            if (v) { v.style.transition = 'none'; v.style.opacity = '1'; v.style.pointerEvents = 'auto'; }
         });
     </script>
 
