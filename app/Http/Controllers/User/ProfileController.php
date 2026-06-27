@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
@@ -24,12 +25,37 @@ class ProfileController extends Controller
 
     public function update(Request $request)
     {
+        $user = $this->getUser();
+
+        // Jika request berasal dari form ubah password
+        if ($request->has('current_password') || $request->filled('password')) {
+            $request->validate([
+                'current_password' => 'required',
+                'password'         => 'required|min:8|confirmed',
+            ]);
+
+            if (!Hash::check($request->current_password, $user->password)) {
+                return back()->withErrors(['current_password' => 'Password saat ini tidak sesuai.']);
+            }
+
+            if (Hash::check($request->password, $user->password)) {
+                return back()->withErrors(['password' => 'Password baru tidak boleh sama dengan password saat ini.']);
+            }
+
+            $user->update([
+                'password' => Hash::make($request->password),
+            ]);
+
+            return back()->with('success', 'Password berhasil diperbarui.');
+        }
+
+        // Update profil biasa (nama & no_hp)
         $request->validate([
             'nama'  => 'required|string|max:255',
             'no_hp' => 'nullable|string|max:20',
         ]);
 
-        $this->getUser()->update($request->only('nama', 'no_hp'));
+        $user->update($request->only('nama', 'no_hp'));
 
         return back()->with('success', 'Profil berhasil diperbarui.');
     }

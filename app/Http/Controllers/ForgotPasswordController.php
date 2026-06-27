@@ -85,10 +85,17 @@ class ForgotPasswordController extends Controller
         ]);
 
         $email = session('reset_email');
+        $user = User::where('email', $email)->first();
 
-        User::where('email', $email)->update([
-            'password' => Hash::make($request->password),
-        ]);
+        if ($user && Hash::check($request->password, $user->password)) {
+            return back()->withErrors(['password' => 'Password baru tidak boleh sama dengan password saat ini.']);
+        }
+
+        if ($user) {
+            $user->update([
+                'password' => Hash::make($request->password),
+            ]);
+        }
 
         PasswordResetOtp::where('email', $email)->delete();
 

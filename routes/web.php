@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\PengembalianBarangController;
 use App\Http\Controllers\Admin\GaleriController;
 use App\Http\Controllers\Admin\PemesananController as AdminPemesananController;
 use App\Http\Controllers\Admin\PembayaranController as AdminPembayaranController;
+use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Frontend\KatalogController;
 use App\Http\Controllers\User\DashboardController;
@@ -208,5 +209,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     })->name('testimoni.balas');
     Route::view('/zona-lokasi',     'admin.zona-lokasi.index')->name('zona-lokasi.index');
     Route::view('/blokir-tanggal',  'admin.blokir-tanggal.index')->name('blokir-tanggal.index');
-    Route::view('/akun',            'admin.akun.index')->name('akun.index');
+});
+
+// Admin akun (profil)
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/akun',              [AdminProfileController::class, 'index'])->name('akun.index');
+    Route::put('/akun/password',     [AdminProfileController::class, 'updatePassword'])->name('akun.password');
 });
