@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class PemesananController extends Controller
 {
@@ -41,7 +43,7 @@ class PemesananController extends Controller
         return view('user.pemesanan.index', compact('pesanans'));
     }
 
-    public function show($id): View
+    public function show($id): View|RedirectResponse
     {
         $pesanan = Pemesanan::where('user_id', Auth::id())
             ->with([
@@ -53,6 +55,10 @@ class PemesananController extends Controller
                 'testimoni',
             ])
             ->findOrFail($id);
+
+        if ($pesanan->isMenungguPembayaran()) {
+            return redirect()->route('user.pemesanan.invoice', $id);
+        }
 
         return view('user.pemesanan.show', compact('pesanan'));
     }
@@ -228,7 +234,7 @@ class PemesananController extends Controller
             }
 
             return $pemesanan;
-        }); 
+        });
 
         return redirect()->route('user.pemesanan.submitted', $pemesanan->id);
     }
@@ -258,5 +264,19 @@ class PemesananController extends Controller
         ])->where('user_id', Auth::id())->findOrFail($id);
 
         return view('user.invoice.show', compact('pesanan'));
+    }
+
+    public function cetakInvoice($id)
+    {
+        $pesanan = Pemesanan::with([
+            'detailPemesanans.barang',
+            'detailPemesanans.jasa',
+            'detailPemesanans.paket',
+            'zonaLokasi',
+            'pembayarans',
+        ])->where('user_id', Auth::id())->findOrFail($id);
+
+        $pdf = Pdf::loadView('user.invoice.pdf', compact('pesanan'));
+        return $pdf->download('invoice-' .$pesanan->kode_pemesanan . '.pdf');
     }
 }
