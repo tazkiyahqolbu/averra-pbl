@@ -1,12 +1,28 @@
-<x-mail::message>
-# Introduction
+@component('mail::message')
+# Pembayaran Berhasil!
 
-The body of your message.
+Halo **{{ $pesanan->nama_pemesan }}**,
 
-<x-mail::button :url="''">
-Button Text
-</x-mail::button>
+Pembayaran {{ $tahap === 'pelunasan' ? 'pelunasan' : 'DP' }} untuk pesanan Anda telah berhasil diverifikasi.
 
-Thanks,<br>
+| Keterangan | Detail |
+|---|---|
+| Kode Pesanan | {{ $pesanan->kode_pemesanan }} |
+| Tanggal Pakai | {{ $pesanan->tanggal_pakai->format('d M Y') }} |
+| Status Pesanan | {{ $tahap === 'pelunasan' ? 'Selesai' : 'Berlangsung' }} |
+| Total Harga | Rp {{ number_format($pesanan->total_harga, 0, ',', '.') }} |
+
+@if($tahap !== 'pelunasan')
+Silakan lakukan pelunasan pembayaran sebelum tanggal pakai.
+
+@component('mail::button', ['url' => route('user.pemesanan.show', $pesanan->id)])
+Lihat Detail Pesanan
+@endcomponent
+
+@else
+Terima kasih telah menggunakan layanan kami. Sampai jumpa di acara Anda!
+@endif
+
+Terima kasih,<br>
 {{ config('app.name') }}
-</x-mail::message>
+@endcomponent
