@@ -7,6 +7,9 @@ use App\Models\Pemesanan;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use App\Mail\InvoiceMail;
+use Illuminate\Support\Facades\Mail;
+
 
 class PemesananController extends Controller
 {
@@ -50,12 +53,15 @@ class PemesananController extends Controller
 
     public function konfirmasi($id): RedirectResponse
     {
-        $pemesanan = Pemesanan::findOrFail($id);
+        $pemesanan = Pemesanan::with('user')->findOrFail($id);
         $pemesanan->update(['status' => 'dikonfirmasi']);
+
+        Mail::to($pemesanan->user->email)->queue(new InvoiceMail($pemesanan));
 
         return redirect()->route('admin.pemesanan.index')
             ->with('success', "Pesanan #{$pemesanan->kode_pemesanan} berhasil dikonfirmasi.");
     }
+
 
     public function tolak(Request $request, $id): RedirectResponse
     {

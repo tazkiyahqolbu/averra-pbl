@@ -38,7 +38,7 @@ class ForgotPasswordController extends Controller
             'expires_at' => now()->addMinutes(10),
         ]);
 
-        Mail::to($request->email)->send(new OtpMail($otp));
+        Mail::to($request->email)->queue(new OtpMail($otp));
 
         return redirect()->route('password.verify-otp')
             ->with('email', $request->email);
