@@ -11,27 +11,53 @@
         </div>
     </div>
 
-    <form action="#" class="admin-card space-y-6 p-6">
-        <div class="grid gap-5 md:grid-cols-2">
+    <form
+    action="{{ route('admin.zona-lokasi.update', $zona->id) }}"
+    method="POST"
+    class="admin-card space-y-6 p-6">
+
+    @csrf
+    @method('PUT')
+        <div class="grid gap-5 md:grid-cols-3">
             <div>
                 <label class="admin-label">Nama Zona</label>
-                <input type="text" class="admin-input" value="Luar Kota Padang">
+                <input
+                type="text"
+                name="nama_zona"
+                class="admin-input"
+                value="{{ old('nama_zona', $zona->nama_zona) }}">
             </div>
 
             <div>
                 <label class="admin-label">Biaya Tambahan</label>
-                <input type="number" class="admin-input" value="500000">
+                <input
+                type="number"
+                name="biaya"
+                class="admin-input"
+                value="{{ old('biaya', $zona->biaya) }}">
             </div>
+
+            <div>
+            <label class="admin-label">Persentase Tambahan (%)</label>
+
+            <input
+                type="number"
+                name="persentase"
+                class="admin-input"
+                value="{{ old('persentase', $zona->persentase) }}">
+        </div>
         </div>
 
         <div>
             <label class="admin-label">Keterangan</label>
-            <textarea class="admin-textarea">Area luar Kota Padang dengan tambahan transportasi.</textarea>
+            <textarea
+        name="keterangan"
+        class="admin-textarea">{{ old('keterangan', $zona->keterangan) }}</textarea>
         </div>
 
         <div class="flex flex-col-reverse gap-3 border-t border-[#E2D4C0] pt-5 sm:flex-row sm:justify-end">
             <a href="{{ route('admin.zona-lokasi.index') }}" class="admin-btn-secondary">Kembali</a>
-            <button type="button" class="admin-btn-primary">Update Zona</button>
+            <button type="submit" class="admin-btn-primary">Update Zona</button>
         </div>
     </form>
 </section>
