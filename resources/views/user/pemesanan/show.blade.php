@@ -1,7 +1,7 @@
 @extends('user.layouts.app')
 
 @section('content')
-php
+
 @php
     $dpVerifikasi = $pesanan->pembayarans->where('tahap', 'dp')->where('status', 'terverifikasi')->first();
     $isPelunasan  = $dpVerifikasi !== null;
@@ -98,10 +98,6 @@ php
                 <div>
                     <p class="text-[10px] uppercase tracking-wider text-[#4A2E28]/50 mb-1">Total</p>
                     <p class="font-serif font-semibold text-[#C8960C]">Rp {{ number_format($pesanan->total_harga, 0, ',', '.') }}</p>
-                </div>
-                <div>
-                    <p class="text-[10px] uppercase tracking-wider text-[#4A2E28]/50 mb-1">Metode Bayar</p>
-                    <p class="font-semibold text-[#4A0F1A]">{{ $isTahapLunas ? 'Lunas' : 'DP 50%' }}</p>
                 </div>
             </div>
         </div>
@@ -320,7 +316,7 @@ php
                 <form action="{{ route('testimoni.store', $pesanan->id) }}" method="POST" enctype="multipart/form-data" class="space-y-5"
                       x-data="{ rating: 0, hoverRating: 0, fileName: '' }">
                     @csrf
-                    
+
                     {{-- Star rating --}}
                     <div class="text-center">
                         <div class="flex justify-center gap-2" x-on:mouseleave="hoverRating = 0">
