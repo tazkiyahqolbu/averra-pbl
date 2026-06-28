@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\KategoriBarangController;
 use App\Http\Controllers\Admin\KategoriJasaController;
 use App\Http\Controllers\Admin\PengembalianBarangController;
 use App\Http\Controllers\Admin\GaleriController;
+use App\Http\Controllers\Admin\ZonaLokasiController;
 use App\Http\Controllers\Admin\PemesananController as AdminPemesananController;
 use App\Http\Controllers\Admin\PembayaranController as AdminPembayaranController;
 use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
@@ -193,6 +194,19 @@ Route::middleware(['auth', 'role:admin'])
             Route::put('/{id}', [GaleriController::class, 'update'])->name('update');
             Route::delete('/{id}', [GaleriController::class, 'destroy'])->name('destroy');
         });
+
+        Route::prefix('zona-lokasi')
+        ->name('zona-lokasi.')
+        ->group(function () {
+
+            Route::get('/', [ZonaLokasiController::class, 'index'])->name('index');
+            Route::get('/create', [ZonaLokasiController::class, 'create'])->name('create');
+            Route::post('/', [ZonaLokasiController::class, 'store'])->name('store');
+            Route::get('/{id}/edit', [ZonaLokasiController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [ZonaLokasiController::class, 'update'])->name('update');
+            Route::delete('/{id}', [ZonaLokasiController::class, 'destroy'])->name('destroy');
+
+        });
     });
 
 // Admin view-only routes (preview frontend)
@@ -217,7 +231,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         $t->update(['dibalas' => request('dibalas')]);
         return redirect()->route('admin.testimoni.index')->with('success', 'Balasan berhasil disimpan.');
     })->name('testimoni.balas');
-    Route::view('/zona-lokasi',     'admin.zona-lokasi.index')->name('zona-lokasi.index');
     Route::view('/blokir-tanggal',  'admin.blokir-tanggal.index')->name('blokir-tanggal.index');
 });
 

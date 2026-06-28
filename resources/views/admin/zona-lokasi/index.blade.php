@@ -3,13 +3,6 @@
 @section('title', 'Zona Lokasi')
 
 @section('content')
-@php
-    $zones = [
-        ['nama' => 'Zona A', 'keterangan' => 'Dalam Kota', 'biaya' => 'Rp 30.000'],
-        ['nama' => 'Zona B', 'keterangan' => 'Luar Kota (<30km)', 'biaya' => 'Rp 60.000'],
-        ['nama' => 'Zona C', 'keterangan' => 'Luar Kota (>30km)', 'biaya' => 'Rp 100.000'],
-    ];
-@endphp
 
 <div class="admin-section">
     <div class="admin-page-header md:flex-row md:items-center md:justify-between">
@@ -20,7 +13,11 @@
             </p>
         </div>
 
-        <button class="admin-btn-primary">+ Tambah Zona</button>
+        <a href="{{ route('admin.zona-lokasi.create') }}" class="admin-btn-primary">
+
+        + Tambah Zona
+
+    </a>
     </div>
 
     <div class="admin-card p-6">
@@ -31,20 +28,40 @@
                         <th class="admin-table-th">Nama Zona</th>
                         <th class="admin-table-th">Keterangan</th>
                         <th class="admin-table-th">Biaya</th>
+                        <th class="admin-table-th">Persentase</th>
                         <th class="admin-table-th">Aksi</th>
                     </tr>
                 </thead>
 
                 <tbody class="divide-y divide-[#E2D4C0]">
-                    @foreach ($zones as $zone)
+                    @foreach ($zonaLokasi as $zona)
                         <tr>
-                            <td class="admin-table-td font-semibold">{{ $zone['nama'] }}</td>
-                            <td class="admin-table-td">{{ $zone['keterangan'] }}</td>
-                            <td class="admin-table-td">{{ $zone['biaya'] }}</td>
+                            <td class="admin-table-td font-semibold">{{ $zona->nama_zona }}</td>
+                            <td class="admin-table-td">{{ $zona->keterangan }}</td>
+                            <td class="admin-table-td">Rp {{ number_format($zona->biaya,0,',','.') }}</td>
+                            <td class="admin-table-td"> {{ $zona->persentase }}% </td>
                             <td class="admin-table-td">
                                 <div class="flex gap-2">
-                                    <button class="admin-btn-secondary py-2">Edit</button>
-                                    <button class="admin-btn-danger py-2">Hapus</button>
+                                    <a href="{{ route('admin.zona-lokasi.edit',$zona->id) }}" class="admin-btn-secondary py-2">
+                                        Edit
+                                    </a>
+                                    <form
+                                    action="{{ route('admin.zona-lokasi.destroy',$zona->id) }}"
+                                    method="POST">
+
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button
+                                        type="submit"
+                                        class="admin-btn-danger py-2"
+                                        onclick="return confirm('Yakin ingin menghapus zona ini?')">
+
+                                        Hapus
+
+                                    </button>
+
+                                </form>
                                 </div>
                             </td>
                         </tr>
