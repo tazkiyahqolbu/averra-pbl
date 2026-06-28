@@ -11,7 +11,7 @@ Pesanan Anda dengan kode **#{{ $pemesanan->kode_pemesanan }}** telah dikonfirmas
 | Tanggal Pakai | {{ $pemesanan->tanggal_pakai->format('d M Y') }} |
 | Total Harga | Rp {{ number_format($pemesanan->total_harga, 0, ',', '.') }} |
 
-@component('mail::button', ['url' => route('pemesanan.invoice', $pemesanan->id)])
+@component('mail::button', ['url' => route('user.pemesanan.invoice', $pemesanan->id)])
 Lihat Invoice
 @endcomponent
 
