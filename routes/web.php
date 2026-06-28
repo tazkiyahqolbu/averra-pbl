@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\KategoriJasaController;
 use App\Http\Controllers\Admin\PengembalianBarangController;
 use App\Http\Controllers\Admin\GaleriController;
 use App\Http\Controllers\Admin\ZonaLokasiController;
+use App\Http\Controllers\Admin\BlokirTanggalController;
 use App\Http\Controllers\Admin\PemesananController as AdminPemesananController;
 use App\Http\Controllers\Admin\PembayaranController as AdminPembayaranController;
 use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
@@ -78,6 +79,9 @@ Route::middleware('auth')->name('user.')->group(function () {
     Route::get('/profil', [ProfileController::class, 'index'])->name('profile.index');
     Route::put('/profil', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profil/foto', [ProfileController::class, 'updatePhoto'])->name('profile.photo.update');
+
+    Route::get('/unavailable-dates', [PemesananController::class, 'unavailableDates'])
+    ->name('unavailable-dates');
 });
 
 // ── Rute Admin ────────────────────────────────────────────────────────────────
@@ -195,6 +199,16 @@ Route::middleware(['auth', 'role:admin'])
             Route::delete('/{id}', [ZonaLokasiController::class, 'destroy'])->name('destroy');
 
         });
+
+            Route::get('/blokir-tanggal', [BlokirTanggalController::class, 'index'])
+                ->name('blokir-tanggal.index');
+
+            Route::post('/blokir-tanggal', [BlokirTanggalController::class, 'store'])
+                ->name('blokir-tanggal.store');
+
+            Route::delete('/blokir-tanggal/{id}', [BlokirTanggalController::class, 'destroy'])
+                ->name('blokir-tanggal.destroy');
+
     });
 
 // Admin view-only routes (preview frontend)
@@ -219,7 +233,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         $t->update(['dibalas' => request('dibalas')]);
         return redirect()->route('admin.testimoni.index')->with('success', 'Balasan berhasil disimpan.');
     })->name('testimoni.balas');
-    Route::view('/blokir-tanggal',  'admin.blokir-tanggal.index')->name('blokir-tanggal.index');
 });
 
 // Admin akun (profil)
