@@ -10,9 +10,9 @@ class ZonaLokasi extends Model
 
     protected $table = 'zona_lokasi';
 
-    protected $fillable = ['nama_zona', 'keterangan', 'biaya'];
+    protected $fillable = ['nama_zona', 'keterangan', 'biaya', 'persentase'];
 
-    protected $casts = ['biaya' => 'decimal:2'];
+    protected $casts = ['biaya' => 'decimal:2', 'persentase' => 'decimal:2'];
 
     public function pemesanans()
     {
