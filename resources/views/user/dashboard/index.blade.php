@@ -96,7 +96,7 @@
             <i data-lucide="arrow-right"
                 class="h-4 w-4 text-[#C8960C]/60 ml-auto group-hover:text-[#C8960C] transition"></i>
         </a>
-        <a href="{{ route('public.katalog.index') }}"
+        <a href="{{ route('public.katalog.index', ['category' => 'Sewa Barang']) }}"
             class="group flex items-center gap-4 rounded-2xl border border-[#E2D4C0] bg-white shadow-[0_2px_8px_rgba(74,15,26,0.06)] p-5 hover:border-[#C8960C]/60 hover:shadow-md transition">
             <div
                 class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#4A0F1A] text-[#FAF3E0] group-hover:bg-[#7B1C2E] transition">
