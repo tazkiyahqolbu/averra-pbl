@@ -1,12 +1,20 @@
-<x-mail::message>
-# Introduction
+@component('mail::message')
+# Pesanan Anda Telah Dikonfirmasi
 
-The body of your message.
+Halo **{{ $pemesanan->nama_pemesan }}**,
 
-<x-mail::button :url="''">
-Button Text
-</x-mail::button>
+Pesanan Anda dengan kode **#{{ $pemesanan->kode_pemesanan }}** telah dikonfirmasi oleh admin. Silakan lihat invoice Anda dan lakukan pembayaran.
 
-Thanks,<br>
+| Keterangan | Detail |
+|---|---|
+| Kode Pesanan | {{ $pemesanan->kode_pemesanan }} |
+| Tanggal Pakai | {{ $pemesanan->tanggal_pakai->format('d M Y') }} |
+| Total Harga | Rp {{ number_format($pemesanan->total_harga, 0, ',', '.') }} |
+
+@component('mail::button', ['url' => route('pemesanan.invoice', $pemesanan->id)])
+Lihat Invoice
+@endcomponent
+
+Terima kasih,<br>
 {{ config('app.name') }}
-</x-mail::message>
+@endcomponent
