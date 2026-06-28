@@ -5,16 +5,25 @@
 
     {{-- Tombol Aksi --}}
     <div class="flex justify-between items-center print:hidden">
-        <a href="{{ route('user.pemesanan.show', $pesanan->id) }}"
+        <a href="{{ route('user.pemesanan.index') }}"
            class="inline-flex items-center gap-1.5 text-sm font-medium text-[#4A2E28]/70 hover:text-[#4A0F1A] transition">
             <i data-lucide="arrow-left" class="h-4 w-4"></i>
-            Kembali ke Detail Pesanan
+            Kembali ke Daftar Pesanan
         </a>
-        <button onclick="window.print()"
-                class="inline-flex items-center gap-2 rounded-full bg-gradient-to-br from-[#6B1625] to-[#3A0A12] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_4px_14px_rgba(74,15,26,0.3)] hover:shadow-[0_6px_18px_rgba(74,15,26,0.42)] hover:from-[#7B1C2E] transition-all duration-200">
-            <i data-lucide="printer" class="h-4 w-4"></i>
-            Cetak / Simpan PDF
-        </button>
+        <div class="flex items-center gap-2">
+            @if($pesanan->isMenungguPembayaran())
+                <a href="{{ route('user.pembayaran.pilih', $pesanan->id) }}"
+                   class="inline-flex items-center gap-2 rounded-full bg-gradient-to-br from-[#6B1625] to-[#3A0A12] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_4px_14px_rgba(74,15,26,0.3)] hover:shadow-[0_6px_18px_rgba(74,15,26,0.42)] hover:from-[#7B1C2E] transition-all duration-200">
+                    <i data-lucide="credit-card" class="h-4 w-4"></i>
+                    Bayar Sekarang
+                </a>
+            @endif
+            <a href="{{ route('user.pemesanan.invoice.pdf', $pesanan->id) }}"
+               class="inline-flex items-center gap-2 rounded-full border border-[#4A0F1A]/20 bg-white px-5 py-2.5 text-sm font-semibold text-[#4A0F1A] shadow-sm hover:border-[#4A0F1A] hover:bg-[#4A0F1A] hover:text-white transition-all duration-200">
+                <i data-lucide="download" class="h-4 w-4"></i>
+                Download PDF
+            </a>
+        </div>
     </div>
 
     {{-- Lembar Invoice --}}

@@ -66,6 +66,7 @@ Route::middleware('auth')->name('user.')->group(function () {
     Route::get('/pemesanan/{id}', [PemesananController::class, 'show'])->name('pemesanan.show');
     Route::put('/pemesanan/{id}', [PemesananController::class, 'update'])->name('pemesanan.update');
     Route::get('/pemesanan/{id}/invoice', [PemesananController::class, 'invoice'])->name('pemesanan.invoice');
+    Route::get('/pemesanan/{id}/invoice/pdf',[PemesananController::class, 'cetakInvoice'])->name('pemesanan.invoice.pdf');
 
     // Pembayaran
     Route::get('/pembayaran/{id}/pilih',     [PembayaranController::class, 'pilih'])->name('pembayaran.pilih');
@@ -144,9 +145,6 @@ Route::middleware(['auth', 'role:admin'])
 
         Route::delete('/barang/{id}', [BarangController::class,'destroy'])
             ->name('barang.destroy');
-
-        Route::get('/pembayaran',      [AdminPembayaranController::class, 'index'])->name('pembayaran.index');
-        Route::get('/pembayaran/{id}', [AdminPembayaranController::class, 'show'])->name('pembayaran.show');
 
         Route::get('/kategori-barang', [KategoriBarangController::class, 'index'])->name('kategori-barang.index');
         Route::get('/kategori-barang/create', [KategoriBarangController::class, 'create'])->name('kategori-barang.create');
