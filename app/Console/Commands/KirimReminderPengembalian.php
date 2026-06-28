@@ -50,7 +50,7 @@ class KirimReminderPengembalian extends Command
 
             foreach ($pemesanan->detailPemesanans as $detail) {
                 try {
-                    Mail::to($email)->send(new ReminderPengembalian($pemesanan, $detail));
+                    Mail::to($email)->queue(new ReminderPengembalian($pemesanan, $detail));
                     $this->info("✓ Terkirim ke {$email} — {$pemesanan->kode_pemesanan}");
                     $terkirim++;
                 } catch (\Throwable $e) {
@@ -84,7 +84,7 @@ class KirimReminderPengembalian extends Command
 
         $this->info("Mengirim email tes ke: {$targetEmail} ...");
         try {
-            Mail::to($targetEmail)->send(new ReminderPengembalian($fakePemesanan, $fakeDetail));
+            Mail::to($targetEmail)->queue(new ReminderPengembalian($fakePemesanan, $fakeDetail));
             $this->info('✓ Email tes berhasil dikirim! Cek inbox.');
         } catch (\Throwable $e) {
             $this->error('✗ Gagal kirim: ' . $e->getMessage());
