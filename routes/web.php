@@ -34,9 +34,11 @@ Route::view('/galeri-kami',  'public.galeri.index')->name('public.galeri.index')
 Route::view('/tentang', 'public.tentang.index')->name('public.tentang.index');
 
 // Testimoni
-Route::middleware('auth')->post('/testimoni/{pemesanan_id}', function ($pemesanan_id) {
-    return redirect()->back()->with('info', 'Fitur testimoni segera hadir.');
-})->name('testimoni.store');
+Route::middleware('auth')->group(function () {
+    Route::get('/testimoni/{pemesanan_id}/create',[TestimoniController::class, 'create'])->name('testimoni.create');
+    Route::post('/testimoni/{pemesanan_id}',[TestimoniController::class, 'store'])->name('testimoni.store');
+});
+
 
 // Autentikasi
 Route::get('/login',     [AuthController::class, 'showLogin'])->name('login');
