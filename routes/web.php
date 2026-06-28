@@ -22,7 +22,17 @@ use App\Http\Controllers\ForgotPasswordController;
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn() => view('public.Beranda'))->name('public.beranda');
+Route::get('/', function () {
+    $pakets = \App\Models\Paket::where('aktif', true)
+        ->withCount('detailPemesanans')
+        ->orderByDesc('detail_pemesanans_count')
+        ->orderByDesc('created_at')
+        ->take(3)
+        ->get();
+    return view('public.Beranda', compact('pakets'));
+})->name('public.beranda');
+
+
 
 // Midtrans webhook - tanpa auth middleware
 Route::post('/pembayaran/callback', [App\Http\Controllers\User\PembayaranController::class, 'callback'])->name('pembayaran.callback');

@@ -193,31 +193,26 @@ $gallery = [
         </div>
 
         <div class="mt-14 mx-auto max-w-6xl px-6 grid gap-8 md:grid-cols-3">
-            @php
-                $featured = [
-                    ['name' => 'Paket Baralek Gadang', 'desc' => 'MC, Alat musik tradisional live, Penari perempuan, Silat, Pembawa carano, 3 Tari tradisional', 'price' => 'Rp 4.500.000', 'img' => asset('image/Akad & resepsi.jpeg')],
-                    ['name' => 'Paket Wedding Minang',  'desc' => 'MC, Alat musik tradisional live, Penari perempuan, Silat, Pembawa carano, 2 Tari tradisional', 'price' => 'Rp 4.000.000', 'img' => asset('image/Resepsi.jpeg')],
-                    ['name' => 'Paket Hemat',           'desc' => 'MC, Pemain bansi', 'price' => 'Rp 1.000.000', 'img' => asset('image/Busana tari.jpeg')],
-                ];
-            @endphp
-            @foreach($featured as $f)
-                <div class="overflow-hidden rounded-2xl border border-[#E2D4C0] bg-[#FAF3E0] transition-all duration-300 hover:scale-[1.03] hover:border-[#C8A84B]/50 hover:shadow-xl scroll-fade scroll-delay-{{ $loop->index + 1 }}">
-                    <div class="aspect-[4/3] overflow-hidden">
-                        {{-- foto tidak ikut zoom, hanya card yang membesar --}}
-                        <img src="{{ $f['img'] }}" alt="{{ $f['name'] }}"
-                             class="h-full w-full object-cover">
-                    </div>
-                    <div class="p-6">
-                        <h3 class="font-serif text-xl font-medium text-[#4A0F1A]">{{ $f['name'] }}</h3>
-                        <p class="mt-2 text-sm leading-relaxed text-[#4A2E28]">{{ $f['desc'] }}</p>
-                        <p class="mt-3 font-serif text-lg font-semibold text-[#C8A84B]">Mulai {{ $f['price'] }}</p>
-                        <a href="{{ url('/katalog') }}"
-                           class="mt-4 inline-block rounded-full bg-gradient-to-r from-[#D6B35C] to-[#B8983A] px-6 py-2 font-serif text-sm font-semibold text-[#4A0F1A] shadow-sm transition hover:scale-105">
-                            Lihat Detail
-                        </a>
-                    </div>
-                </div>
-            @endforeach
+            @foreach($pakets as $p)
+    <div class="overflow-hidden rounded-2xl border border-[#E2D4C0] bg-[#FAF3E0] transition-all duration-300 hover:scale-[1.03] hover:border-[#C8A84B]/50 hover:shadow-xl scroll-fade scroll-delay-{{ $loop->index + 1 }}">
+        <div class="aspect-[4/3] overflow-hidden">
+            <img src="{{ $p->thumbnail_path ? Storage::url($p->thumbnail_path) : asset('image/background.png') }}"
+                 alt="{{ $p->nama_paket }}" class="h-full w-full object-cover">
+        </div>
+        <div class="p-6">
+            <h3 class="font-serif text-xl font-medium text-[#4A0F1A]">{{ $p->nama_paket }}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-[#4A2E28]">{{ Str::limit($p->deskripsi, 100) }}</p>
+            <p class="mt-3 font-serif text-lg font-semibold text-[#C8A84B]">
+                Mulai Rp {{ number_format($p->harga, 0, ',', '.') }}
+            </p>
+            <a href="{{ route('katalog.show', 'paket-' . $p->id) }}"
+               class="mt-4 inline-block rounded-full bg-gradient-to-r from-[#D6B35C] to-[#B8983A] px-6 py-2 font-serif text-sm font-semibold text-[#4A0F1A] shadow-sm transition hover:scale-105">
+                Lihat Detail
+            </a>
+        </div>
+    </div>
+@endforeach
+
         </div>
     </section>
 
