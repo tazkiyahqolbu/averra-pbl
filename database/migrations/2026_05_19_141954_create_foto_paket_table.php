@@ -19,6 +19,8 @@ return new class extends Migration
             $table->unsignedInteger('urutan')->default(1);
             $table->timestamps();
 
+
+
             $table->index(['paket_id', 'urutan']);
         });
     }

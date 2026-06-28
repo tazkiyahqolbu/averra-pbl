@@ -13,12 +13,13 @@ class Paket extends Model
 
     protected $fillable = [
         'kategori_paket_id', 'nama_paket', 'deskripsi',
-        'harga', 'keterangan_acara', 'catatan', 'thumbnail_path', 'aktif',
+        'harga', 'keterangan_acara', 'catatan', 'thumbnail_path', 'aktif', 'unggulan',
     ];
 
     protected $casts = [
-        'harga' => 'decimal:2',
-        'aktif' => 'boolean',
+        'harga'    => 'decimal:2',
+        'aktif'    => 'boolean',
+        'unggulan' => 'boolean',
     ];
 
     public function kategori()
