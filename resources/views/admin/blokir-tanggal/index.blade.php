@@ -3,12 +3,6 @@
 @section('title', 'Blokir Tanggal')
 
 @section('content')
-@php
-    $blockedDates = [
-        ['tanggal' => '17 Agustus 2026', 'berlaku' => 'Semua Layanan', 'alasan' => 'Hari Libur'],
-        ['tanggal' => '20 Juni 2026', 'berlaku' => 'Kamera Canon EOS', 'alasan' => 'Perawatan'],
-    ];
-@endphp
 
 <div class="admin-section">
     <div class="admin-page-header md:flex-row md:items-center md:justify-between">
@@ -45,11 +39,23 @@
                 <tbody class="divide-y divide-[#E2D4C0]">
                     @foreach ($blockedDates as $date)
                         <tr>
-                            <td class="admin-table-td font-semibold">{{ $date['tanggal'] }}</td>
-                            <td class="admin-table-td">{{ $date['berlaku'] }}</td>
-                            <td class="admin-table-td">{{ $date['alasan'] }}</td>
+                            <td class="admin-table-td font-semibold">{{ $date->tanggal->format('d F Y') }}</td>
+                            <td class="admin-table-td">Semua Layanan</td>
+                            <td class="admin-table-td">{{ $date->keterangan }}</td>
                             <td class="admin-table-td">
-                                <button class="admin-btn-danger py-2">Hapus</button>
+                                <form action="{{ route('admin.blokir-tanggal.destroy', $date->id) }}"
+                            method="POST">
+
+                            @csrf
+                            @method('DELETE')
+
+                            <button
+                                class="admin-btn-danger"
+                                onclick="return confirm('Hapus tanggal ini?')">
+                                Hapus
+                            </button>
+
+                        </form>
                             </td>
                         </tr>
                     @endforeach
@@ -83,7 +89,43 @@
 
         <div class="mt-5 flex justify-end gap-3">
             <button class="admin-btn-secondary">Batal</button>
-            <button class="admin-btn-primary">Simpan</button>
+            <form action="{{ route('admin.blokir-tanggal.store') }}" method="POST">
+
+            @csrf
+
+            <div class="grid gap-4 md:grid-cols-3">
+
+                <div>
+                    <label class="admin-label">Tanggal *</label>
+
+                    <input
+                        type="date"
+                        name="tanggal"
+                        class="admin-input"
+                        required>
+                </div>
+
+                <div>
+                    <label class="admin-label">Keterangan</label>
+
+                    <input
+                        type="text"
+                        name="keterangan"
+                        class="admin-input"
+                        placeholder="Hari Libur / Maintenance">
+                </div>
+
+            </div>
+
+            <div class="mt-5 flex justify-end">
+
+                <button class="admin-btn-primary">
+                    Simpan
+                </button>
+
+            </div>
+
+        </form>
         </div>
     </div>
 </div>
