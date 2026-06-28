@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use App\Mail\PembayaranBerhasilMail;
+use Illuminate\Support\Facades\Mail;
 
 class PembayaranController extends Controller
 {
@@ -161,12 +163,15 @@ class PembayaranController extends Controller
             ]);
 
             $pesanan = $pembayaran->pemesanan;
+            $pesanan->load('user');
 
             if ($pembayaran->tahap === 'pelunasan') {
                 $pesanan->update(['status' => 'selesai']);
             } else {
                 $pesanan->update(['status' => 'berlangsung']);
             }
+
+            Mail::to($pesanan->user->email)->queue(new PembayaranBerhasilMail($pesanan, $pembayaran->tahap));
         } elseif (in_array($transactionStatus, ['cancel', 'deny', 'expire'])) {
             $pembayaran->update(['status' => 'ditolak']);
         }
