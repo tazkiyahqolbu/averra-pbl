@@ -20,7 +20,13 @@ class ForgotPasswordController extends Controller
     // Step 2: Kirim OTP ke email
     public function sendOtp(Request $request)
     {
-        $request->validate(['email' => 'required|email|exists:users,email']);
+        $request->validate(
+            ['email' => 'required|email|exists:users,email'],
+            [
+                'email.exists' => 'Email tidak terdaftar.',
+            ]
+        );
+
 
         $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 
