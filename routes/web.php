@@ -49,8 +49,8 @@ Route::view('/tentang', 'public.tentang.index')->name('public.tentang.index');
 
 // Testimoni
 Route::middleware('auth')->group(function () {
-    Route::get('/testimoni/{pemesanan_id}/create',[UserTestimoniController::class, 'create'])->name('testimoni.create');
-    Route::post('/testimoni/{pemesanan_id}',[UserTestimoniController::class, 'store'])->name('testimoni.store');
+    Route::get('/testimoni/{pemesanan_id}/create', [UserTestimoniController::class, 'create'])->name('testimoni.create');
+    Route::post('/testimoni/{pemesanan_id}', [UserTestimoniController::class, 'store'])->name('testimoni.store');
     Route::get('/testimoni/{pemesanan_id}/create', [TestimoniController::class, 'create'])->name('testimoni.create');
     Route::post('/testimoni/{pemesanan_id}', [TestimoniController::class, 'store'])->name('testimoni.store');
 });
@@ -107,6 +107,9 @@ Route::middleware(['auth', 'role:admin'])
     ->group(function () {
 
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+        // Pelanggan
+        Route::get('/pelanggan', [\App\Http\Controllers\Admin\PelangganController::class, 'index'])->name('pelanggan.index');
+
 
         // Jasa
         Route::get('/jasa',             [JasaController::class, 'index'])->name('jasa.index');
@@ -214,11 +217,11 @@ Route::middleware(['auth', 'role:admin'])
         Route::post('/blokir-tanggal', [BlokirTanggalController::class, 'store'])
             ->name('blokir-tanggal.store');
 
-            Route::get('/testimoni', [AdminTestimoniController::class, 'index'])
-                ->name('testimoni.index');
+        Route::get('/testimoni', [AdminTestimoniController::class, 'index'])
+            ->name('testimoni.index');
 
-            Route::patch('/testimoni/{id}/balas', [AdminTestimoniController::class, 'balas'])
-                ->name('testimoni.balas');
+        Route::patch('/testimoni/{id}/balas', [AdminTestimoniController::class, 'balas'])
+            ->name('testimoni.balas');
 
         Route::delete('/blokir-tanggal/{id}', [BlokirTanggalController::class, 'destroy'])
             ->name('blokir-tanggal.destroy');
