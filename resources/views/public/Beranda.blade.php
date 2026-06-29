@@ -8,10 +8,10 @@ $services = [
     ['icon' => 'brush',    'title' => 'Makeup & Busana',   'desc' => 'Tata rias pengantin tradisional dan modern oleh perias profesional.'],
 ];
 $costumes = [
-    ['img' => asset('image/Resepsi.jpeg'),    'name' => 'Resepsi',     'cat' => 'Wedding'],
-    ['img' => asset('image/MC.jpeg'),          'name' => 'MC',          'cat' => 'Stage & MC'],
-    ['img' => asset('image/Busana tari.jpeg'), 'name' => 'Busana Tari', 'cat' => 'Dance Attire'],
-    ['img' => asset('image/Baju adat.jpeg'),   'name' => 'Busana Adat', 'cat' => 'Traditional Attire'],
+    ['img' => asset('foto/Resepsi.jpeg'),    'name' => 'Resepsi',     'cat' => 'Wedding'],
+    ['img' => asset('foto/MC.jpeg'),          'name' => 'MC',          'cat' => 'Stage & MC'],
+    ['img' => asset('foto/Busana tari.jpeg'), 'name' => 'Busana Tari', 'cat' => 'Dance Attire'],
+    ['img' => asset('foto/Baju adat.jpeg'),   'name' => 'Busana Adat', 'cat' => 'Traditional Attire'],
 ];
 @endphp
 
@@ -190,7 +190,7 @@ $costumes = [
             @foreach($pakets ?? [] as $p)
     <div class="overflow-hidden rounded-2xl border border-[#E2D4C0] bg-[#FAF3E0] transition-all duration-300 hover:scale-[1.03] hover:border-[#C8A84B]/50 hover:shadow-xl scroll-fade scroll-delay-{{ $loop->index + 1 }}">
         <div class="aspect-[4/3] overflow-hidden">
-            <img src="{{ $p->thumbnail_path ? Storage::url($p->thumbnail_path) : asset('image/background.png') }}"
+            <img src="{{ $p->thumbnail_path ? Storage::url($p->thumbnail_path) : asset('foto/background.png') }}"
                  alt="{{ $p->nama_paket }}" class="h-full w-full object-cover">
         </div>
         <div class="p-6">
@@ -219,7 +219,7 @@ $costumes = [
                 <div class="relative group scroll-fade scroll-delay-1">
                     <div class="absolute -inset-2 rounded-2xl bg-[#C8A84B]/10 blur opacity-70 transition duration-500 group-hover:opacity-100"></div>
                     <div class="relative overflow-hidden rounded-2xl border border-[#E2D4C0] shadow-lg aspect-[4/3] sm:aspect-video md:aspect-[3/4]">
-                        <img src="{{ asset('image/Busana tari.jpeg') }}" alt="Busana Tari Rantiang Tagok"
+                        <img src="{{ asset('foto/Busana tari.jpeg') }}" alt="Busana Tari Rantiang Tagok"
                              class="h-full w-full object-cover transition duration-500 group-hover:scale-105">
                     </div>
                 </div>
