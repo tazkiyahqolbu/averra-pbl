@@ -63,18 +63,33 @@
                         class="hidden absolute right-0 mt-3 w-56 rounded-xl shadow-2xl border border-[#C8960C]/20 py-2 z-[9999]"
                         style="background: linear-gradient(to bottom, #3D0010, #1e050d);">
 
-                        <a href="{{ route('user.dashboard.index') }}"
-                            class="block px-4 py-2.5 text-xs font-medium text-[#FAF3E0] hover:bg-white/5 hover:text-[#C8960C] transition">
-                            Dashboard
-                        </a>
-                        <a href="{{ route('user.pemesanan.index') }}"
-                            class="block px-4 py-2.5 text-xs font-medium text-[#FAF3E0] hover:bg-white/5 hover:text-[#C8960C] transition">
-                            Pemesanan
-                        </a>
-                        <a href="{{ route('user.profile.index') }}"
-                            class="block px-4 py-2.5 text-xs font-medium text-[#FAF3E0] hover:bg-white/5 hover:text-[#C8960C] transition">
-                            Profil
-                        </a>
+                        @if(Auth::user()->hasRole('admin'))
+                            <a href="{{ route('admin.dashboard') }}"
+                                class="block px-4 py-2.5 text-xs font-medium text-[#FAF3E0] hover:bg-white/5 hover:text-[#C8960C] transition">
+                                Dashboard
+                            </a>
+                            <a href="{{ route('admin.pemesanan.index') }}"
+                                class="block px-4 py-2.5 text-xs font-medium text-[#FAF3E0] hover:bg-white/5 hover:text-[#C8960C] transition">
+                                Pemesanan
+                            </a>
+                            <a href="{{ route('admin.akun.index') }}"
+                                class="block px-4 py-2.5 text-xs font-medium text-[#FAF3E0] hover:bg-white/5 hover:text-[#C8960C] transition">
+                                Profil
+                            </a>
+                        @else
+                            <a href="{{ route('user.dashboard.index') }}"
+                                class="block px-4 py-2.5 text-xs font-medium text-[#FAF3E0] hover:bg-white/5 hover:text-[#C8960C] transition">
+                                Dashboard
+                            </a>
+                            <a href="{{ route('user.pemesanan.index') }}"
+                                class="block px-4 py-2.5 text-xs font-medium text-[#FAF3E0] hover:bg-white/5 hover:text-[#C8960C] transition">
+                                Pemesanan
+                            </a>
+                            <a href="{{ route('user.profile.index') }}"
+                                class="block px-4 py-2.5 text-xs font-medium text-[#FAF3E0] hover:bg-white/5 hover:text-[#C8960C] transition">
+                                Profil
+                            </a>
+                        @endif
 
                         <div class="my-1 border-t border-[#C8960C]/15"></div>
 

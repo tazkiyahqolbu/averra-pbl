@@ -320,11 +320,19 @@
                             $labelPesan = in_array($item->category, ['Sewa Barang', 'Properti', 'Kostum']) ? 'Sewa Sekarang' : 'Pesan Paket Ini';
                         @endphp
                         @auth
-                            <a href="{{ $pesanRoute }}"
-                               class="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#D6B35C] to-[#B8983A] py-3.5 px-6 font-serif text-base font-semibold text-[#4A0F1A] shadow-md transition duration-300 hover:scale-[1.02] hover:shadow-lg">
-                                <i data-lucide="calendar-check" class="h-4 w-4"></i>
-                                {{ $labelPesan }}
-                            </a>
+                            @if(Auth::user()->hasRole('admin'))
+                                <button type="button" onclick="document.getElementById('modal-admin-only').classList.remove('hidden')"
+                                        class="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#D6B35C] to-[#B8983A] py-3.5 px-6 font-serif text-base font-semibold text-[#4A0F1A] shadow-md transition duration-300 hover:scale-[1.02] hover:shadow-lg">
+                                    <i data-lucide="calendar-check" class="h-4 w-4"></i>
+                                    {{ $labelPesan }}
+                                </button>
+                            @else
+                                <a href="{{ $pesanRoute }}"
+                                   class="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#D6B35C] to-[#B8983A] py-3.5 px-6 font-serif text-base font-semibold text-[#4A0F1A] shadow-md transition duration-300 hover:scale-[1.02] hover:shadow-lg">
+                                    <i data-lucide="calendar-check" class="h-4 w-4"></i>
+                                    {{ $labelPesan }}
+                                </a>
+                            @endif
                         @else
                             <button type="button" onclick="document.getElementById('modal-login-required').classList.remove('hidden')"
                                     class="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#D6B35C] to-[#B8983A] py-3.5 px-6 font-serif text-base font-semibold text-[#4A0F1A] shadow-md transition duration-300 hover:scale-[1.02] hover:shadow-lg">
@@ -506,6 +514,34 @@
         </div>
     </div>
     @endguest
+
+    {{-- Modal: Admin Tidak Bisa Pesan --}}
+    @auth
+    @if(Auth::user()->hasRole('admin'))
+    <div id="modal-admin-only" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
+        <div class="w-full max-w-sm rounded-3xl bg-white border border-[#E2D4C0] shadow-2xl p-8 text-center">
+            <div class="mb-4 flex justify-center">
+                <div class="flex h-14 w-14 items-center justify-center rounded-full bg-[#FAF3E0] border-2 border-[#C8A84B]/40">
+                    <i data-lucide="shield-alert" class="h-6 w-6 text-[#C8960C]"></i>
+                </div>
+            </div>
+            <h3 class="font-serif text-xl font-medium text-[#4A0F1A] mb-2">Akses Terbatas</h3>
+            <p class="text-sm text-[#4A2E28]/70 mb-6">Anda login sebagai <strong>Admin</strong>. Pemesanan hanya dapat dilakukan oleh akun pelanggan.</p>
+            <div class="space-y-3">
+                <a href="{{ route('admin.dashboard') }}"
+                   class="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#D6B35C] to-[#B8983A] py-3 px-6 font-serif font-semibold text-[#4A0F1A] shadow-sm transition hover:scale-[1.02]">
+                    <i data-lucide="layout-dashboard" class="h-4 w-4"></i>
+                    Kembali ke Panel Admin
+                </a>
+                <button onclick="document.getElementById('modal-admin-only').classList.add('hidden')"
+                        class="w-full text-sm text-[#4A2E28]/50 hover:text-[#4A0F1A] transition py-1">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+    @endif
+    @endauth
 
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>

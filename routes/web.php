@@ -72,7 +72,7 @@ Route::get('/reset-password', [ForgotPasswordController::class, 'showResetPasswo
 Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('password.update');
 
 // ── Rute User ─────────────────────────────────────────────────────────────────
-Route::middleware('auth')->name('user.')->group(function () {
+Route::middleware(['auth', 'redirect_if_admin'])->name('user.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
     // Pemesanan

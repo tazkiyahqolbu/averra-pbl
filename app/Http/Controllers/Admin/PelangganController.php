@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Http\Controller\Admin;
+namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\controller;
+use App\Http\Controllers\Controller;
 use App\Models\User;
 
-class PelangganController Extends Controller {
-
+class PelangganController extends Controller
+{
     public function index()
     {
         $pelanggan = User::role('user')
-            ->withCount('pemesanan')
+            ->withCount('pemesanans')
             ->latest()
             ->paginate(20);
 
