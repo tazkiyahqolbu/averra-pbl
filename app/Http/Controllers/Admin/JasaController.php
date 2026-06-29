@@ -162,6 +162,18 @@ class JasaController extends Controller
             }
         }
 
+        if ($request->hasFile('foto_jasa')) {
+            foreach ($request->file('foto_jasa') as $index => $foto) {
+                $fotoPath = $foto->store('jasa/foto', 'public');
+                FotoJasa::create([
+                    'jasa_id' => $jasa->id,
+                    'foto_path' => $fotoPath,
+                    'keterangan' => null,
+                    'urutan' => $jasa->fotos()->count() + $index + 1,
+                ]);
+            }
+        }
+
         return redirect()
             ->route('admin.jasa.index')
             ->with('success', 'Data jasa berhasil diperbarui');

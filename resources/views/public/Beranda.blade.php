@@ -13,12 +13,6 @@ $costumes = [
     ['img' => asset('image/Busana tari.jpeg'), 'name' => 'Busana Tari', 'cat' => 'Dance Attire'],
     ['img' => asset('image/Baju adat.jpeg'),   'name' => 'Busana Adat', 'cat' => 'Traditional Attire'],
 ];
-$gallery = [
-    ['img' => asset('image/Akad & Resepsi.jpeg'), 'label' => 'Akad & Resepsi'],
-    ['img' => asset('image/Tari Piring.jpeg'),     'label' => 'Tari Piring'],
-    ['img' => asset('image/Tari Pasambahan.jpeg'), 'label' => 'Tari Pasambahan'],
-    ['img' => asset('image/Stage & MC.jpeg'),      'label' => 'Stage & MC'],
-];
 @endphp
 
 <!DOCTYPE html>
@@ -279,18 +273,27 @@ $gallery = [
                 <div class="mx-auto mt-2 h-[1px] w-32 bg-gradient-to-r from-transparent via-[#C8A84B] to-transparent"></div>
             </div>
             <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                @foreach ($gallery as $gal)
+                @forelse ($galeriUnggulan as $gal)
                     <div class="group relative rounded-2xl border border-[#E2D4C0] bg-[#FAF3E0] p-3 shadow-sm transition-all duration-300 hover:scale-[1.03] hover:border-[#C8A84B]/50 hover:shadow-lg scroll-fade scroll-delay-{{ $loop->index + 1 }}">
                         <div class="aspect-square overflow-hidden rounded-xl">
-                            {{-- foto tidak zoom, hanya card yang membesar --}}
-                            <img src="{{ $gal['img'] }}" alt="{{ $gal['label'] }}"
-                                 class="h-full w-full object-cover">
+                            @if($gal->jenis_media === 'video')
+                                <video class="h-full w-full object-cover" muted preload="metadata">
+                                    <source src="{{ $gal->media_url }}">
+                                </video>
+                            @else
+                                <img src="{{ $gal->media_url }}" alt="{{ $gal->judul }}"
+                                     class="h-full w-full object-cover">
+                            @endif
                         </div>
                         <div class="pb-2 pt-4 text-center">
-                            <span class="font-serif text-xl font-medium tracking-wide text-[#4A0F1A]">{{ $gal['label'] }}</span>
+                            <span class="font-serif text-xl font-medium tracking-wide text-[#4A0F1A]">{{ $gal->judul }}</span>
                         </div>
                     </div>
-                @endforeach
+                @empty
+                    <div class="col-span-4 py-10 text-center text-sm text-[#4A0F1A]/40">
+                        Belum ada galeri unggulan yang ditambahkan.
+                    </div>
+                @endforelse
             </div>
         </div>
     </section>

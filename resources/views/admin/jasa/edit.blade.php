@@ -26,11 +26,11 @@
             <div>
                 <label class="admin-label">Nama Jasa *</label>
                 <input type="text" name="nama_jasa" class="admin-input"
-                       value="{{ old('nama_jasa', $jasa->nama_jasa) }}">
+                       value="{{ old('nama_jasa', $jasa->nama_jasa) }}" required>
             </div>
             <div>
                 <label class="admin-label">Kategori *</label>
-                <select name="kategori_jasa_id" class="admin-select">
+                <select name="kategori_jasa_id" class="admin-select" required>
                     <option value="">Pilih kategori</option>
                     @foreach($kategoris as $kat)
                         <option value="{{ $kat->id }}"
@@ -43,12 +43,12 @@
             <div>
                 <label class="admin-label">Harga *</label>
                 <input type="number" name="harga" class="admin-input" min="0"
-                       value="{{ old('harga', $jasa->harga) }}">
+                       value="{{ old('harga', $jasa->harga) }}" required>
             </div>
             <div>
                 <label class="admin-label">Maks. Booking/Hari *</label>
                 <input type="number" name="maks_booking_harian" class="admin-input" min="1"
-                       value="{{ old('maks_booking_harian', $jasa->maks_booking_harian) }}">
+                       value="{{ old('maks_booking_harian', $jasa->maks_booking_harian) }}" required>
             </div>
         </div>
 
@@ -88,8 +88,21 @@
                                  alt="foto" class="h-16 w-16 rounded-xl object-cover border border-[#E2D4C0]">
                         @endforeach
                     </div>
+                    <p class="mb-1 text-xs text-[#4A2E28]/60">Foto baru akan ditambahkan ke yang sudah ada</p>
                 @endif
-                <input type="file" name="foto_jasa[]" class="admin-file" multiple accept="image/*">
+                <div id="foto-jasa-list" class="space-y-2">
+                    <div class="foto-item flex items-center gap-2">
+                        <input type="file" name="foto_jasa[]" class="admin-file flex-1" accept="image/*"
+                               onchange="previewSingle(this)">
+                    </div>
+                </div>
+                <button type="button" onclick="tambahFoto('foto-jasa-list', 'foto_jasa[]')"
+                        class="mt-2 flex items-center gap-1.5 text-sm text-[#C8960C] hover:text-[#B8983A] font-medium transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    </svg>
+                    Tambah Foto
+                </button>
             </div>
         </div>
 
@@ -99,4 +112,31 @@
         </div>
     </form>
 </div>
+
+<script>
+function previewSingle(input) {
+    let preview = input.parentElement.querySelector('.preview-img');
+    if (!preview) {
+        preview = document.createElement('img');
+        preview.className = 'preview-img h-16 w-16 rounded-lg object-cover border border-[#E2D4C0] shrink-0';
+        input.parentElement.appendChild(preview);
+    }
+    if (input.files[0]) {
+        preview.src = URL.createObjectURL(input.files[0]);
+    }
+}
+
+function tambahFoto(listId, inputName) {
+    const list = document.getElementById(listId);
+    const div = document.createElement('div');
+    div.className = 'foto-item flex items-center gap-2';
+    div.innerHTML = `
+        <input type="file" name="${inputName}" class="admin-file flex-1" accept="image/*" onchange="previewSingle(this)">
+        <button type="button" onclick="this.parentElement.remove()"
+                class="text-red-400 hover:text-red-600 text-xs shrink-0">Hapus</button>
+    `;
+    list.appendChild(div);
+}
+</script>
+
 @endsection

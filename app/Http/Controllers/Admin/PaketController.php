@@ -7,6 +7,7 @@ use App\Models\Paket;
 use App\Models\KategoriPaket;
 use App\Models\PaketDetail;
 use App\Models\FotoPaket;
+use App\Models\Jasa;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
@@ -33,9 +34,10 @@ class PaketController extends Controller
      */
     public function create()
     {
-         $kategoris = KategoriPaket::all();
+        $kategoris = KategoriPaket::all();
+        $jasaList  = Jasa::where('aktif', true)->get(['id', 'nama_jasa']);
 
-    return view('admin.paket.create', compact('kategoris'));
+        return view('admin.paket.create', compact('kategoris', 'jasaList'));
     }
 
     /**
@@ -75,12 +77,13 @@ class PaketController extends Controller
             if (!empty($item)) {
 
                 PaketDetail::create([
-                    'paket_id' => $paket->id,
-                    'nama_item' => $item,
-                    'jumlah' => $request->jumlah[$index] ?? 1,
-                    'tipe' => $request->tipe[$index] ?? 'wajib',
+                    'paket_id'       => $paket->id,
+                    'jasa_id'        => !empty($request->jasa_id[$index]) ? $request->jasa_id[$index] : null,
+                    'nama_item'      => $item,
+                    'jumlah'         => $request->jumlah[$index] ?? 1,
+                    'tipe'           => $request->tipe[$index] ?? 'wajib',
                     'harga_tambahan' => $request->harga_tambahan[$index] ?? 0,
-                    'keterangan' => $request->keterangan[$index] ?? null,
+                    'keterangan'     => $request->keterangan[$index] ?? null,
                 ]);
             }
         }
@@ -125,10 +128,11 @@ class PaketController extends Controller
         ])->findOrFail($id);
 
         $kategoris = KategoriPaket::all();
+        $jasaList  = Jasa::where('aktif', true)->get(['id', 'nama_jasa']);
 
         return view(
             'admin.paket.edit',
-            compact('paket', 'kategoris')
+            compact('paket', 'kategoris', 'jasaList')
         );
     }
 
@@ -137,6 +141,12 @@ class PaketController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'kategori_paket_id' => 'required',
+            'nama_paket'        => 'required',
+            'harga'             => 'required|numeric',
+        ]);
+
         $paket = Paket::findOrFail($id);
 
         $thumbnailPath = $paket->thumbnail_path;
@@ -191,6 +201,18 @@ class PaketController extends Controller
 
             }
 
+        }
+
+        if ($request->hasFile('foto_paket')) {
+            foreach ($request->file('foto_paket') as $index => $foto) {
+                $fotoPath = $foto->store('paket/foto', 'public');
+                FotoPaket::create([
+                    'paket_id' => $paket->id,
+                    'foto_path' => $fotoPath,
+                    'keterangan' => null,
+                    'urutan' => $paket->fotos()->count() + $index + 1,
+                ]);
+            }
         }
 
         return redirect()
