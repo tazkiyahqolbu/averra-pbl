@@ -24,7 +24,17 @@ use App\Http\Controllers\ForgotPasswordController;
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn() => view('public.Beranda'))->name('public.beranda');
+Route::get('/', function () {
+    $pakets = \App\Models\Paket::where('aktif', true)
+        ->withCount('detailPemesanans')
+        ->orderByDesc('detail_pemesanans_count')
+        ->orderByDesc('created_at')
+        ->take(3)
+        ->get();
+    return view('public.Beranda', compact('pakets'));
+})->name('public.beranda');
+
+
 
 // Midtrans webhook - tanpa auth middleware
 Route::post('/pembayaran/callback', [App\Http\Controllers\User\PembayaranController::class, 'callback'])->name('pembayaran.callback');
@@ -36,9 +46,11 @@ Route::view('/galeri-kami',  'public.galeri.index')->name('public.galeri.index')
 Route::view('/tentang', 'public.tentang.index')->name('public.tentang.index');
 
 // Testimoni
-Route::middleware('auth')->post('/testimoni/{pemesanan_id}', function ($pemesanan_id) {
-    return redirect()->back()->with('info', 'Fitur testimoni segera hadir.');
-})->name('testimoni.store');
+Route::middleware('auth')->group(function () {
+    Route::get('/testimoni/{pemesanan_id}/create',[TestimoniController::class, 'create'])->name('testimoni.create');
+    Route::post('/testimoni/{pemesanan_id}',[TestimoniController::class, 'store'])->name('testimoni.store');
+});
+
 
 // Autentikasi
 Route::get('/login',     [AuthController::class, 'showLogin'])->name('login');
