@@ -67,9 +67,16 @@
     {{-- Admin info --}}
     <div class="shrink-0 border-b border-white/10 px-5 py-4">
         <div class="flex items-center gap-3">
-            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#C8960C]/40 bg-[#C8960C]/15 text-sm font-bold text-[#C8960C]">
-                {{ strtoupper(substr(Auth::user()->nama ?? Auth::user()->name ?? 'A', 0, 1)) }}
+            @if(Auth::user()->foto_profil)
+    <img
+        src="{{ asset('storage/' . Auth::user()->foto_profil) }}"
+        alt="Foto Profil"
+        class="h-9 w-9 rounded-full object-cover border border-[#D4AF37]">
+        @else
+            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-[#6B1126] text-white font-bold">
+                {{ strtoupper(substr(Auth::user()->nama, 0, 1)) }}
             </div>
+        @endif
             <div class="overflow-hidden">
                 <p class="text-[9px] uppercase tracking-widest text-[#C8960C]/60">Admin</p>
                 <p class="text-sm font-semibold text-[#FAF3E0] truncate">
