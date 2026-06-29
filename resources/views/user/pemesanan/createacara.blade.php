@@ -131,7 +131,7 @@
                             <label class="mb-2 block text-[10px] font-semibold uppercase tracking-[0.25em] text-[#4A0F1A]">
                                 Tanggal Pelaksanaan <span class="text-red-400">*</span>
                             </label>
-                            <input type="date" name="tanggal_pelaksanaan" required
+                            <input type="date" name="tanggal_pelaksanaan" id="tanggal_pelaksanaan" @change="cekTanggal($event)" required
                                    min="{{ date('Y-m-d') }}"
                                    class="w-full rounded-xl border border-[#E2D4C0] bg-white px-4 py-3 text-sm text-[#4A0F1A] focus:border-[#C8960C] focus:outline-none transition">
                         </div>
@@ -215,7 +215,10 @@
                                     class="w-full rounded-xl border border-[#E2D4C0] bg-white px-4 py-3 text-sm text-[#4A0F1A] focus:border-[#C8960C] focus:outline-none transition">
                                 <option value="">Pilih zona lokasi…</option>
                                 <template x-for="z in zonaLokasis" x-bind:key="z.id">
-                                    <option x-bind:value="z.id" x-text="z.nama_zona + ' (Rp ' + formatRupiah(z.tarif) + ')'"></option>
+                                    <option
+                                    x-bind:value="z.id"
+                                    x-text="z.nama_zona + ' (' + z.persentase + '%)'">
+                                </option>
                                 </template>
                             </select>
                             <textarea name="alamat_lengkap" rows="3"
@@ -297,6 +300,7 @@
         document.addEventListener('alpine:init', () => {
             Alpine.data('orderForm', () => ({
                 step: 1,
+                blockedDates: [],
                 eventLocation: 'di_tempat_kami',
                 paymentMethod: 'dp',
                 katalogList:       rawKatalogs || [],
@@ -306,7 +310,12 @@
                 katalogCategory:   rawSelectedItem ? rawSelectedItem.category : '',
                 selectedZonaId:    '',
 
-                initForm() { if (this.selectedKatalogId) this.updateKatalog(); },
+                async initForm() {
+                    if (this.selectedKatalogId)
+                        this.updateKatalog();
+                    const response = await fetch("{{ route('user.unavailable-dates') }}");
+                    this.blockedDates = await response.json();
+                },
 
                 updateKatalog() {
                     const k = this.katalogList.find(x => x.id == this.selectedKatalogId);
@@ -314,14 +323,54 @@
                 },
 
                 get ongkosKirim() {
-                    return (this.eventLocation === 'di_luar' && this.selectedZonaId)
-                        ? parseFloat(this.zonaLokasis.find(z => z.id == this.selectedZonaId)?.tarif || 0)
-                        : 0;
-                },
+                if (this.eventLocation !== 'di_luar')
+                    return 0;
+
+                const zona = this.zonaLokasis.find(
+                    z => z.id == this.selectedZonaId
+                );
+
+                if (!zona)
+                    return 0;
+
+                return this.katalogPrice * (zona.persentase / 100);
+            },
                 get grandTotal() { return this.katalogPrice + this.ongkosKirim; },
 
                 formatRupiah(n) { return new Intl.NumberFormat('id-ID').format(n || 0); },
-                nextStep() { this.step++; window.scrollTo({ top: 0, behavior: 'smooth' }); },
+
+                cekTanggal(event) {
+                const tanggal = event.target.value;
+                if (this.blockedDates.includes(tanggal)) {
+                    alert("Tanggal ini tidak tersedia.");
+                    event.target.value = "";
+                }
+            },
+
+                nextStep() {
+
+                // STEP 1
+                if (this.step === 1) {
+
+                    const tanggal = document.getElementById('tanggal_pelaksanaan').value;
+
+                    if (!tanggal) {
+                        alert("Silakan pilih tanggal pelaksanaan.");
+                        return;
+                    }
+
+                    if (this.blockedDates.includes(tanggal)) {
+                        alert("Tanggal tersebut sudah diblokir. Silakan pilih tanggal lain.");
+                        return;
+                    }
+                }
+
+                this.step++;
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                });
+            },
                 prevStep() { this.step--; window.scrollTo({ top: 0, behavior: 'smooth' }); },
             }));
         });
