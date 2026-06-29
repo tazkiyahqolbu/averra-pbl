@@ -21,12 +21,12 @@
             <div class="grid gap-5 md:grid-cols-2">
                 <div>
                     <label for="nama_paket" class="admin-label">Nama Paket <span class="text-red-600">*</span></label>
-                    <input id="nama_paket" name="nama_paket" type="text" class="admin-input focus:admin-input-focus" placeholder="Contoh: Paket Pernikahan Adat Minang">
+                    <input id="nama_paket" name="nama_paket" type="text" class="admin-input focus:admin-input-focus" placeholder="Contoh: Paket Pernikahan Adat Minang" required>
                 </div>
 
                 <div>
                     <label for="kategori_paket_id" class="admin-label">Kategori Paket <span class="text-red-600">*</span></label>
-                    <select id="kategori_paket_id" name="kategori_paket_id" class="admin-select focus:admin-input-focus">
+                    <select id="kategori_paket_id" name="kategori_paket_id" class="admin-select focus:admin-input-focus" required>
                         <option value="">Pilih kategori</option>
                         @foreach($kategoris as $kategori)
                             <option value="{{ $kategori->id }}">
@@ -38,7 +38,7 @@
 
                 <div>
                     <label for="harga" class="admin-label">Harga <span class="text-red-600">*</span></label>
-                    <input id="harga" name="harga" type="number" min="0" class="admin-input focus:admin-input-focus" placeholder="Contoh: 8500000">
+                    <input id="harga" name="harga" type="number" min="0" class="admin-input focus:admin-input-focus" placeholder="Contoh: 8500000" required>
                 </div>
 
                 <div>
@@ -56,18 +56,6 @@
                     <textarea id="catatan" name="catatan" class="admin-textarea focus:admin-input-focus" placeholder="Catatan tambahan paket jika ada..."></textarea>
                 </div>
 
-                <div>
-                    <label for="thumbnail_path" class="admin-label">Thumbnail</label>
-                    <input id="thumbnail_path" name="thumbnail_path" type="file" accept="image/*" class="admin-file">
-                </div>
-
-                <div>
-                    <label class="admin-label">Status</label>
-                    <div class="flex flex-wrap gap-3">
-                        <label class="rounded-2xl border border-[#E2D4C0] bg-[#ffffff] px-4 py-3 text-sm"><input type="radio" name="aktif" value="1" checked> Aktif</label>
-                        <label class="rounded-2xl border border-[#E2D4C0] bg-[#ffffff] px-4 py-3 text-sm"><input type="radio" name="aktif" value="0"> Nonaktif</label>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -87,11 +75,43 @@
             </div>
         </div>
 
-        <div class="admin-card p-6">
+        <div class="admin-card p-6 space-y-5">
             <div>
-                <label class="admin-label">Foto Paket</label>
-                <p class="admin-muted mb-2 text-xs">Bisa upload lebih dari satu foto.</p>
-                <input name="foto_paket[]" type="file" class="admin-file" multiple accept="image/*">
+                <h2 class="admin-title text-xl">Foto</h2>
+                <p class="admin-muted mt-1 text-sm">Upload foto utama dan foto tambahan untuk ditampilkan di katalog.</p>
+            </div>
+
+            <div class="grid gap-4 md:grid-cols-2">
+                <div>
+                    <label class="admin-label">Foto Utama</label>
+                    <input type="file" name="thumbnail_path" accept="image/*" class="admin-file"
+                           onchange="previewSingle(this, 'preview-utama')">
+                    <div id="preview-utama" class="mt-2"></div>
+                </div>
+                <div>
+                    <label class="admin-label">Foto Tambahan</label>
+                    <div id="foto-paket-list" class="space-y-2">
+                        <div class="foto-item flex items-center gap-2">
+                            <input type="file" name="foto_paket[]" class="admin-file flex-1" accept="image/*"
+                                   onchange="previewSingleFoto(this)">
+                        </div>
+                    </div>
+                    <button type="button" onclick="tambahFotoPaket()"
+                            class="mt-2 flex items-center gap-1.5 text-sm text-[#C8960C] hover:text-[#B8983A] font-medium transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Tambah Foto
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-card p-6">
+            <label class="admin-label">Status</label>
+            <div class="flex flex-wrap gap-3 mt-2">
+                <label class="rounded-2xl border border-[#E2D4C0] bg-[#ffffff] px-4 py-3 text-sm"><input type="radio" name="aktif" value="1" checked> Aktif</label>
+                <label class="rounded-2xl border border-[#E2D4C0] bg-[#ffffff] px-4 py-3 text-sm"><input type="radio" name="aktif" value="0"> Nonaktif</label>
             </div>
         </div>
 
@@ -103,6 +123,39 @@
 </div>
 
 <script>
+function previewSingle(input, previewId) {
+    const container = document.getElementById(previewId);
+    container.innerHTML = '';
+    if (input.files[0]) {
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(input.files[0]);
+        img.className = 'h-24 w-24 object-cover rounded-lg border border-[#E2D4C0]';
+        container.appendChild(img);
+    }
+}
+
+function previewSingleFoto(input) {
+    let preview = input.parentElement.querySelector('.preview-img');
+    if (!preview) {
+        preview = document.createElement('img');
+        preview.className = 'preview-img h-16 w-16 rounded-lg object-cover border border-[#E2D4C0] shrink-0';
+        input.parentElement.appendChild(preview);
+    }
+    if (input.files[0]) preview.src = URL.createObjectURL(input.files[0]);
+}
+
+function tambahFotoPaket() {
+    const list = document.getElementById('foto-paket-list');
+    const div = document.createElement('div');
+    div.className = 'foto-item flex items-center gap-2';
+    div.innerHTML = `
+        <input type="file" name="foto_paket[]" class="admin-file flex-1" accept="image/*" onchange="previewSingleFoto(this)">
+        <button type="button" onclick="this.parentElement.remove()"
+                class="text-red-400 hover:text-red-600 text-xs shrink-0">Hapus</button>
+    `;
+    list.appendChild(div);
+}
+
 let itemCount = 0;
 const jasaList = @json($jasaList ?? []);
 

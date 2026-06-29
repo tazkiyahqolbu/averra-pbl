@@ -19,12 +19,13 @@
         @method('PUT')
         <div class="grid gap-5 md:grid-cols-2">
             <div>
-                <label class="admin-label">Judul Galeri</label>
+                <label class="admin-label">Judul Galeri <span class="text-red-600">*</span></label>
                 <input
                 type="text"
                 name="judul"
                 value="{{ old('judul',$galeri->judul) }}"
-                class="admin-input">
+                class="admin-input"
+                required>
             </div>
 
             <div>
@@ -37,20 +38,13 @@
             </div>
 
             <div>
-                <label class="admin-label">Jenis Media</label>
-                <select name="jenis_media" class="admin-select">
-            <option
-            value="foto"
-            {{ $galeri->jenis_media=='foto' ? 'selected':'' }}>
-            Foto
-            </option>
-
-            <option
-            value="video"
-            {{ $galeri->jenis_media=='video' ? 'selected':'' }}>
-            Video
-            </option>
-            </select>
+                <label class="admin-label">Jenis Media <span class="text-red-600">*</span></label>
+                <select name="jenis_media" id="jenis_media" class="admin-select"
+                        required onchange="updateAccept(this.value)">
+                    <option value="" disabled>-- Pilih jenis media --</option>
+                    <option value="foto" {{ $galeri->jenis_media=='foto' ? 'selected':'' }}>Foto</option>
+                    <option value="video" {{ $galeri->jenis_media=='video' ? 'selected':'' }}>Video</option>
+                </select>
             </div>
 
             <div>
@@ -86,7 +80,14 @@
 
                 @endif
                 </div>
-                <input type="file" name="media_path" class="admin-file" accept="image/*,video/*">
+                <input type="file" id="media_input" name="media_path" class="admin-file"
+                       accept="{{ $galeri->jenis_media === 'video' ? '.mp4,.mov' : '.jpg,.jpeg,.png' }}"
+                       onchange="previewMedia(this)">
+                <div id="media-preview" class="mt-3 hidden">
+                    <p class="mb-1 text-xs text-[#4A2E28]/60">Preview file baru:</p>
+                    <img id="preview-img" class="h-48 rounded-xl object-cover border border-[#E2D4C0] hidden">
+                    <video id="preview-vid" class="h-48 rounded-xl border border-[#E2D4C0] hidden" controls></video>
+                </div>
             </div>
         </div>
 
@@ -105,4 +106,36 @@
         </div>
     </form>
 </section>
+
+<script>
+function updateAccept(jenis) {
+    const input = document.getElementById('media_input');
+    input.accept = jenis === 'video' ? '.mp4,.mov' : '.jpg,.jpeg,.png';
+    input.value = '';
+    document.getElementById('media-preview').classList.add('hidden');
+    document.getElementById('preview-img').classList.add('hidden');
+    document.getElementById('preview-vid').classList.add('hidden');
+}
+
+function previewMedia(input) {
+    if (!input.files[0]) return;
+    const jenis = document.getElementById('jenis_media').value;
+    const url = URL.createObjectURL(input.files[0]);
+    const preview = document.getElementById('media-preview');
+    const img = document.getElementById('preview-img');
+    const vid = document.getElementById('preview-vid');
+
+    preview.classList.remove('hidden');
+    if (jenis === 'video') {
+        img.classList.add('hidden');
+        vid.src = url;
+        vid.classList.remove('hidden');
+    } else {
+        vid.classList.add('hidden');
+        img.src = url;
+        img.classList.remove('hidden');
+    }
+}
+</script>
+
 @endsection

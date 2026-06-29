@@ -29,7 +29,7 @@
                 <span
                     class="absolute -bottom-1 left-0 h-[1px] w-0 bg-[#C8960C] transition-all duration-300 group-hover:w-full"></span>
             </a>
-            <a href="{{ url('/galeri') }}"
+            <a href="{{ route('public.galeri.index') }}"
                 class="relative text-sm font-medium tracking-wide text-[#E8D7A3] transition duration-200 hover:text-[#FAF3E0] group">
                 Galeri
                 <span

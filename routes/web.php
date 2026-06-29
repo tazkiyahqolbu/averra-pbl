@@ -33,7 +33,13 @@ Route::get('/', function () {
         ->orderByDesc('created_at')
         ->take(3)
         ->get();
-    return view('public.Beranda', compact('pakets'));
+
+    $galeriUnggulan = \App\Models\Galeri::where('unggulan', true)
+        ->latest()
+        ->take(8)
+        ->get();
+
+    return view('public.Beranda', compact('pakets', 'galeriUnggulan'));
 })->name('public.beranda');
 
 
@@ -44,15 +50,16 @@ Route::post('/pembayaran/callback', [App\Http\Controllers\User\PembayaranControl
 // Halaman publik
 Route::get('/katalog',       [KatalogController::class, 'index'])->name('public.katalog.index');
 Route::get('/katalog/{slug}', [KatalogController::class, 'show'])->name('katalog.show');
-Route::view('/galeri-kami',  'public.galeri.index')->name('public.galeri.index');
+Route::get('/galeri-kami', function () {
+    $galeris = \App\Models\Galeri::latest()->get();
+    return view('public.galeri.index', compact('galeris'));
+})->name('public.galeri.index');
 Route::view('/tentang', 'public.tentang.index')->name('public.tentang.index');
 
 // Testimoni
 Route::middleware('auth')->group(function () {
     Route::get('/testimoni/{pemesanan_id}/create', [UserTestimoniController::class, 'create'])->name('testimoni.create');
     Route::post('/testimoni/{pemesanan_id}', [UserTestimoniController::class, 'store'])->name('testimoni.store');
-    Route::get('/testimoni/{pemesanan_id}/create', [TestimoniController::class, 'create'])->name('testimoni.create');
-    Route::post('/testimoni/{pemesanan_id}', [TestimoniController::class, 'store'])->name('testimoni.store');
 });
 
 
