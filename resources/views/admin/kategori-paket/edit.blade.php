@@ -12,56 +12,23 @@
     </div>
 
     <div class="admin-card p-6">
-        <form action="#"
-              method="POST"
-              enctype="multipart/form-data"
-              class="space-y-4">
+        <form action="{{ route('admin.kategori-paket.update', $kategoriPaket->id) }}" method="POST" class="space-y-4">
             @csrf
             @method('PUT')
 
             <div>
                 <label class="admin-label">Nama Kategori *</label>
-                <input name="nama"
-                       type="text"
-                       class="admin-input"
-                       value="{{ old('nama', $kategoriPaket->nama) }}">
+                <input name="nama" type="text" class="admin-input" value="{{ old('nama', $kategoriPaket->nama) }}" required>
             </div>
 
             <div>
                 <label class="admin-label">Deskripsi</label>
-                <textarea name="deskripsi"
-                          rows="3"
-                          class="admin-textarea">{{ old('deskripsi', $kategoriPaket->deskripsi) }}</textarea>
+                <textarea name="deskripsi" rows="3" class="admin-textarea">{{ old('deskripsi', $kategoriPaket->deskripsi) }}</textarea>
             </div>
-
-            <div>
-                <label class="admin-label">Ikon / Foto Kategori Baru</label>
-                <input name="ikon_path"
-                       type="file"
-                       class="admin-file"
-                       accept="image/*">
-            </div>
-
-            @if ($kategoriPaket->ikon_path)
-                <div>
-                    <label class="admin-label">Ikon Saat Ini</label>
-                    <img src="{{ asset('storage/' . $kategoriPaket->ikon_path) }}"
-                         class="admin-thumb-lg object-cover">
-                    <p class="mt-1 text-xs text-[#4A2E28]">
-                        Kosongkan jika tidak ingin mengganti.
-                    </p>
-                </div>
-            @endif
 
             <div class="flex justify-end gap-3 pt-2">
-                <a href="#"
-                   class="admin-btn-secondary">
-                    Kembali
-                </a>
-
-                <button type="submit" class="admin-btn-primary">
-                    Update
-                </button>
+                <a href="{{ route('admin.kategori-paket.index') }}" class="admin-btn-secondary">Kembali</a>
+                <button type="submit" class="admin-btn-primary">Update</button>
             </div>
         </form>
     </div>
