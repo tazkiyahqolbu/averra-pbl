@@ -13,6 +13,13 @@
         ['label' => 'Pembayaran',  'route' => 'admin.pembayaran.index','icon' => 'credit-card',       'badge_key' => 'pembayaran'],
         ['label' => 'Pengembalian','route' => 'admin.pengembalian.index','icon' => 'package',         'badge_key' => 'pengembalian'],
     ];
+
+    $transaksi = [
+    ['label' => 'Pemesanan',   'route' => 'admin.pemesanan.index', 'icon' => 'clipboard-list',   'badge_key' => 'pemesanan'],
+    ['label' => 'Pembayaran',  'route' => 'admin.pembayaran.index','icon' => 'credit-card',       'badge_key' => 'pembayaran'],
+    ['label' => 'Pengembalian','route' => 'admin.pengembalian.index','icon' => 'package',         'badge_key' => 'pengembalian'],
+    ['label' => 'Pelanggan',   'route' => 'admin.pelanggan.index', 'icon' => 'users',             'badge_key' => 'pelanggan'],
+];
     $katalog = [
         ['label' => 'Jasa',             'route' => 'admin.jasa.index',           'icon' => 'sparkles'],
         ['label' => 'Paket',            'route' => 'admin.paket.index',          'icon' => 'gift'],
@@ -136,6 +143,14 @@
         @endforeach
 
     </nav>
+        {{-- Preview Website --}}
+    <div class="shrink-0 border-t border-white/10 px-3 pt-1 pb-1">
+        <a href="{{ route('public.beranda') }}" target="_blank"
+           class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-white/45 hover:text-[#C8960C] hover:bg-white/6 transition duration-200">
+            <i data-lucide="eye" class="h-4 w-4 shrink-0"></i>
+            Lihat Website
+        </a>
+    </div>
 
     {{-- Logout --}}
     <div class="shrink-0 border-t border-white/10 px-3 pb-5 pt-3">
