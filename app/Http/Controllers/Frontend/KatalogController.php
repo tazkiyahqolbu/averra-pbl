@@ -132,7 +132,8 @@ class KatalogController extends Controller
                 'stok'      => null,
             ];
         } elseif ($type === 'paket' && $typeId) {
-            $model = Paket::with('paketDetails.jasa')->findOrFail($typeId);
+            $model = Paket::with(['paketDetails.jasa', 'fotos' => fn($q) => $q->orderBy('urutan')])->findOrFail($typeId);
+            $fotos = $model->fotos;
 
             $testimonis = Testimoni::where('dipublikasikan', true)
                 ->whereHas('pemesanan', fn($q) => $q->whereHas(
@@ -162,7 +163,9 @@ class KatalogController extends Controller
                 'details'   => $model->paketDetails,
             ];
         } elseif ($type === 'barang' && $typeId) {
-            $model = Barang::findOrFail($typeId);
+            $model = Barang::with(['fotos' => fn($q) => $q->orderBy('urutan')])->findOrFail($typeId);
+            $fotos = $model->fotos;
+
 
             $testimonis = Testimoni::where('dipublikasikan', true)
                 ->whereHas('pemesanan', fn($q) => $q->whereHas(

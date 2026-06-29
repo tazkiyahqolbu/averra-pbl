@@ -86,7 +86,7 @@ class BarangController extends Controller
 
     public function edit($id)
     {
-        $barang = Barang::findOrFail($id);
+        $barang = Barang::with(['fotos' => fn($q) => $q->orderBy('urutan')])->findOrFail($id);
 
         $kategoriBarangs = KategoriBarang::all();
 
@@ -98,6 +98,16 @@ class BarangController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'kategori_barang_id' => 'required|exists:kategori_barang,id',
+            'nama_barang'        => 'required',
+            'harga'              => 'required|numeric',
+            'nilai_barang'       => 'required|numeric',
+            'stok'               => 'required|integer',
+            'thumbnail_path'     => 'nullable|image',
+            'foto_tambahan.*'    => 'nullable|image',
+        ]);
+
         $barang = Barang::findOrFail($id);
 
         $thumbnail = $barang->thumbnail_path;
@@ -130,6 +140,18 @@ class BarangController extends Controller
             'aktif' => $request->aktif,
 
         ]);
+
+        if ($request->hasFile('foto_tambahan')) {
+            foreach ($request->file('foto_tambahan') as $index => $foto) {
+                $path = $foto->store('barang', 'public');
+                FotoBarang::create([
+                    'barang_id'  => $barang->id,
+                    'foto_path'  => $path,
+                    'keterangan' => $barang->nama_barang,
+                    'urutan'     => $barang->fotos()->count() + $index + 1,
+                ]);
+            }
+        }
 
         return redirect()
             ->route('admin.barang.index')

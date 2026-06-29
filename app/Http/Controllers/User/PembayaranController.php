@@ -25,7 +25,7 @@ class PembayaranController extends Controller
             ->with('pembayarans')
             ->findOrFail($id);
 
-        if ($pesanan->status !== 'dikonfirmasi') {
+        if (!in_array($pesanan->status, ['dikonfirmasi', 'berlangsung'])) {
             return redirect()->route('user.pemesanan.show', $id)
                 ->with('error', 'Pesanan belum dikonfirmasi oleh admin.');
         }
