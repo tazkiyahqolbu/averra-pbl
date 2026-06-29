@@ -1,6 +1,3 @@
-Isi view resources/views/admin/pelanggan/index.blade.php:
-
-
 @extends('admin.layouts.app')
 
 @section('title', 'Data Pelanggan')
