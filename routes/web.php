@@ -33,7 +33,13 @@ Route::get('/', function () {
         ->orderByDesc('created_at')
         ->take(3)
         ->get();
-    return view('public.Beranda', compact('pakets'));
+
+    $galeriUnggulan = \App\Models\Galeri::where('unggulan', true)
+        ->latest()
+        ->take(8)
+        ->get();
+
+    return view('public.Beranda', compact('pakets', 'galeriUnggulan'));
 })->name('public.beranda');
 
 
@@ -44,15 +50,16 @@ Route::post('/pembayaran/callback', [App\Http\Controllers\User\PembayaranControl
 // Halaman publik
 Route::get('/katalog',       [KatalogController::class, 'index'])->name('public.katalog.index');
 Route::get('/katalog/{slug}', [KatalogController::class, 'show'])->name('katalog.show');
-Route::view('/galeri-kami',  'public.galeri.index')->name('public.galeri.index');
+Route::get('/galeri-kami', function () {
+    $galeris = \App\Models\Galeri::latest()->get();
+    return view('public.galeri.index', compact('galeris'));
+})->name('public.galeri.index');
 Route::view('/tentang', 'public.tentang.index')->name('public.tentang.index');
 
 // Testimoni
 Route::middleware('auth')->group(function () {
-    Route::get('/testimoni/{pemesanan_id}/create',[UserTestimoniController::class, 'create'])->name('testimoni.create');
-    Route::post('/testimoni/{pemesanan_id}',[UserTestimoniController::class, 'store'])->name('testimoni.store');
-    Route::get('/testimoni/{pemesanan_id}/create', [TestimoniController::class, 'create'])->name('testimoni.create');
-    Route::post('/testimoni/{pemesanan_id}', [TestimoniController::class, 'store'])->name('testimoni.store');
+    Route::get('/testimoni/{pemesanan_id}/create', [UserTestimoniController::class, 'create'])->name('testimoni.create');
+    Route::post('/testimoni/{pemesanan_id}', [UserTestimoniController::class, 'store'])->name('testimoni.store');
 });
 
 
@@ -72,7 +79,7 @@ Route::get('/reset-password', [ForgotPasswordController::class, 'showResetPasswo
 Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('password.update');
 
 // ── Rute User ─────────────────────────────────────────────────────────────────
-Route::middleware('auth')->name('user.')->group(function () {
+Route::middleware(['auth', 'redirect_if_admin'])->name('user.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
     // Pemesanan
@@ -107,6 +114,9 @@ Route::middleware(['auth', 'role:admin'])
     ->group(function () {
 
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+        // Pelanggan
+        Route::get('/pelanggan', [\App\Http\Controllers\Admin\PelangganController::class, 'index'])->name('pelanggan.index');
+
 
         // Jasa
         Route::get('/jasa',             [JasaController::class, 'index'])->name('jasa.index');
@@ -214,11 +224,11 @@ Route::middleware(['auth', 'role:admin'])
         Route::post('/blokir-tanggal', [BlokirTanggalController::class, 'store'])
             ->name('blokir-tanggal.store');
 
-            Route::get('/testimoni', [AdminTestimoniController::class, 'index'])
-                ->name('testimoni.index');
+        Route::get('/testimoni', [AdminTestimoniController::class, 'index'])
+            ->name('testimoni.index');
 
-            Route::patch('/testimoni/{id}/balas', [AdminTestimoniController::class, 'balas'])
-                ->name('testimoni.balas');
+        Route::patch('/testimoni/{id}/balas', [AdminTestimoniController::class, 'balas'])
+            ->name('testimoni.balas');
 
         Route::delete('/blokir-tanggal/{id}', [BlokirTanggalController::class, 'destroy'])
             ->name('blokir-tanggal.destroy');

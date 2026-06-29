@@ -48,20 +48,28 @@
     </section>
 
     @php
-        $gallery = [
-            ['img' => asset('image/Akad & resepsi.jpeg'),   'label' => 'Akad & Resepsi',    'cat' => 'Wedding'],
-            ['img' => asset('image/Tari piring.jpeg'),     'label' => 'Tari Piring',       'cat' => 'Pertunjukan'],
-            ['img' => asset('image/Tari Pasambahan.jpeg'), 'label' => 'Tari Pasambahan',   'cat' => 'Pertunjukan'],
-            ['img' => asset('image/Stage & MC.jpeg'),      'label' => 'Stage & MC',        'cat' => 'Entertainment'],
-            ['img' => asset('image/Resepsi.jpeg'),         'label' => 'Resepsi Pernikahan','cat' => 'Wedding'],
-            ['img' => asset('image/Mc.jpeg'),              'label' => 'Master of Ceremony','cat' => 'Entertainment'],
-            ['img' => asset('image/Busana tari.jpeg'),     'label' => 'Busana Tari',       'cat' => 'Kostum'],
-            ['img' => asset('image/Baju adat.jpeg'),       'label' => 'Busana Adat',       'cat' => 'Kostum'],
-            ['img' => asset('image/Tari Kreasi.jpeg'),     'label' => 'Tari Kreasi',       'cat' => 'Pertunjukan'], 
-        ];
+        $galeriJson = $galeris->map(fn($g) => [
+            'media' => $g->media_url,
+            'type'  => $g->jenis_media,
+            'label' => $g->judul,
+            'cat'   => $g->kategori ?? '',
+        ]);
     @endphp
 
-    <section class="py-24 px-6 sm:px-12 lg:px-24 bg-alt" x-data="{ lightboxOpen: false, activeImg: '', activeLabel: '', activeCat: '' }">
+    <section class="py-24 px-6 sm:px-12 lg:px-24 bg-alt"
+        x-data="{
+            items: {{ $galeriJson->toJson() }},
+            open: false,
+            idx: 0,
+            get active() { return this.items[this.idx] ?? {}; },
+            show(i) { this.idx = i; this.open = true; },
+            prev() { this.idx = (this.idx - 1 + this.items.length) % this.items.length; },
+            next() { this.idx = (this.idx + 1) % this.items.length; }
+        }"
+        @keydown.escape.window="open = false"
+        @keydown.arrow-left.window="if(open) prev()"
+        @keydown.arrow-right.window="if(open) next()">
+
         <div class="max-w-7xl mx-auto">
             <div class="mb-16 text-center">
                 <h2 class="text-4xl md:text-5xl font-light text-primary font-serif mb-4">Koleksi Momen</h2>
@@ -69,41 +77,79 @@
                 <p class="text-sm text-primary/70 max-w-2xl mx-auto font-light">Eksplorasi jejak langkah dan momen tak terlupakan yang telah kami rangkai dengan penuh dedikasi.</p>
             </div>
 
+            @if($galeris->isEmpty())
+                <p class="text-center text-primary/50 text-sm py-16">Belum ada dokumentasi yang ditambahkan.</p>
+            @else
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                @foreach($gallery as $i => $gal)
-                    <div class="relative rounded-2xl overflow-hidden group cursor-pointer animate-fade-in-up shadow-lg h-[400px] border border-primary/10" 
+                @foreach($galeris as $i => $item)
+                    <div class="relative rounded-2xl overflow-hidden group cursor-pointer animate-fade-in-up shadow-lg h-[400px] border border-primary/10"
                          style="animation-delay: {{ ($i * 0.1) }}s"
-                         @click="lightboxOpen = true; activeImg = '{{ $gal['img'] }}'; activeLabel = '{{ $gal['label'] }}'; activeCat = '{{ $gal['cat'] }}'">
-                        
-                        <img src="{{ $gal['img'] }}" alt="{{ $gal['label'] }}" 
-                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
-                        
+                         @click="show({{ $i }})">
+
+                        @if($item->jenis_media === 'video')
+                            <video class="w-full h-full object-cover" muted preload="metadata">
+                                <source src="{{ $item->media_url }}">
+                            </video>
+                            <div class="absolute inset-0 flex items-center justify-center bg-primary/30">
+                                <i data-lucide="play-circle" class="w-16 h-16 text-white/80"></i>
+                            </div>
+                        @else
+                            <img src="{{ $item->media_url }}" alt="{{ $item->judul }}"
+                                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
+                        @endif
+
                         <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8">
+                            @if($item->kategori)
                             <span class="inline-block px-3 py-1 mb-2 text-[10px] tracking-[0.2em] text-primary bg-accent uppercase font-bold rounded-full w-max">
-                                {{ $gal['cat'] }}
+                                {{ $item->kategori }}
                             </span>
-                            <h3 class="text-2xl font-serif text-white">{{ $gal['label'] }}</h3>
+                            @endif
+                            <h3 class="text-2xl font-serif text-white">{{ $item->judul }}</h3>
                         </div>
                     </div>
                 @endforeach
             </div>
+            @endif
         </div>
 
         {{-- Lightbox --}}
-        <div x-show="lightboxOpen" 
-             class="fixed inset-0 z-50 flex items-center justify-center bg-primary/95 p-4 sm:p-12 backdrop-blur-sm"
-             @keydown.escape.window="lightboxOpen = false" x-cloak>
-            
-            <button @click="lightboxOpen = false" class="absolute top-6 right-6 text-white hover:text-accent transition-colors p-2 z-50">
+        <div x-show="open"
+             class="fixed inset-0 z-50 flex items-center justify-center bg-primary/95 backdrop-blur-sm"
+             x-cloak>
+
+            {{-- Tutup --}}
+            <button @click="open = false" class="absolute top-6 right-6 text-white hover:text-accent transition-colors p-2 z-50">
                 <i data-lucide="x" class="w-8 h-8"></i>
             </button>
 
-            <div class="relative w-full max-w-5xl flex flex-col items-center" @click.away="lightboxOpen = false">
-                <img :src="activeImg" class="max-h-[70vh] rounded-xl border-4 border-white/10 shadow-2xl">
+            {{-- Panah kiri --}}
+            <button @click.stop="prev()"
+                    class="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 hover:bg-white/25 text-white transition">
+                <i data-lucide="chevron-left" class="w-7 h-7"></i>
+            </button>
+
+            {{-- Panah kanan --}}
+            <button @click.stop="next()"
+                    class="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 hover:bg-white/25 text-white transition">
+                <i data-lucide="chevron-right" class="w-7 h-7"></i>
+            </button>
+
+            {{-- Konten --}}
+            <div class="relative w-full max-w-5xl flex flex-col items-center px-20" @click.self="open = false">
+                <template x-if="active.type === 'video'">
+                    <video :src="active.media" :key="idx" class="max-h-[70vh] rounded-xl border-4 border-white/10 shadow-2xl" controls autoplay></video>
+                </template>
+                <template x-if="active.type !== 'video'">
+                    <img :src="active.media" class="max-h-[70vh] rounded-xl border-4 border-white/10 shadow-2xl object-contain">
+                </template>
+
                 <div class="mt-6 text-center">
-                    <span class="text-xs tracking-[0.2em] text-accent uppercase font-semibold" x-text="activeCat"></span>
-                    <h3 class="text-3xl font-serif text-white mt-1" x-text="activeLabel"></h3>
+                    <span class="text-xs tracking-[0.2em] text-accent uppercase font-semibold" x-text="active.cat"></span>
+                    <h3 class="text-3xl font-serif text-white mt-1" x-text="active.label"></h3>
                 </div>
+
+                {{-- Indikator posisi --}}
+                <p class="mt-3 text-xs text-white/40" x-text="(idx + 1) + ' / ' + items.length"></p>
             </div>
         </div>
     </section>

@@ -23,12 +23,12 @@
             <div class="grid gap-5 md:grid-cols-2">
                 <div>
                     <label for="nama_paket" class="admin-label">Nama Paket <span class="text-red-600">*</span></label>
-                    <input id="nama_paket" name="nama_paket" type="text" value="{{ old('nama_paket', $paket->nama_paket) }}" class="admin-input focus:admin-input-focus">
+                    <input id="nama_paket" name="nama_paket" type="text" value="{{ old('nama_paket', $paket->nama_paket) }}" class="admin-input focus:admin-input-focus" required>
                 </div>
 
                 <div>
                     <label for="kategori_paket_id" class="admin-label">Kategori Paket <span class="text-red-600">*</span></label>
-                    <select id="kategori_paket_id" name="kategori_paket_id" class="admin-select focus:admin-input-focus">
+                    <select id="kategori_paket_id" name="kategori_paket_id" class="admin-select focus:admin-input-focus" required>
                         <option value="">Pilih kategori</option>
                          @foreach($kategoris as $kategori)
                         <option
@@ -49,7 +49,7 @@
 
                 <div>
                     <label for="harga" class="admin-label">Harga <span class="text-red-600">*</span></label>
-                    <input id="harga" name="harga" type="number" min="0" value="{{ old('harga', $paket->harga) }}" class="admin-input focus:admin-input-focus">
+                    <input id="harga" name="harga" type="number" min="0" value="{{ old('harga', $paket->harga) }}" class="admin-input focus:admin-input-focus" required>
                 </div>
 
                 <div>
@@ -182,8 +182,20 @@
         <div class="admin-card p-6">
             <div>
                 <label class="admin-label">Tambah Foto Baru</label>
-                <p class="admin-muted mb-2 text-xs">Bisa upload lebih dari satu foto sekaligus.</p>
-                <input name="foto_paket[]" type="file" class="admin-file" multiple accept="image/*">
+                <p class="admin-muted mb-2 text-xs">Tambahkan satu per satu atau klik "+ Tambah Foto".</p>
+                <div id="foto-paket-list" class="space-y-2">
+                    <div class="foto-item flex items-center gap-2">
+                        <input type="file" name="foto_paket[]" class="admin-file flex-1" accept="image/*"
+                               onchange="previewSingleFoto(this)">
+                    </div>
+                </div>
+                <button type="button" onclick="tambahFotoPaket()"
+                        class="mt-2 flex items-center gap-1.5 text-sm text-[#C8960C] hover:text-[#B8983A] font-medium transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    </svg>
+                    Tambah Foto
+                </button>
             </div>
         </div>
 
@@ -195,6 +207,28 @@
 </div>
 
 <script>
+function previewSingleFoto(input) {
+    let preview = input.parentElement.querySelector('.preview-img');
+    if (!preview) {
+        preview = document.createElement('img');
+        preview.className = 'preview-img h-16 w-16 rounded-lg object-cover border border-[#E2D4C0] shrink-0';
+        input.parentElement.appendChild(preview);
+    }
+    if (input.files[0]) preview.src = URL.createObjectURL(input.files[0]);
+}
+
+function tambahFotoPaket() {
+    const list = document.getElementById('foto-paket-list');
+    const div = document.createElement('div');
+    div.className = 'foto-item flex items-center gap-2';
+    div.innerHTML = `
+        <input type="file" name="foto_paket[]" class="admin-file flex-1" accept="image/*" onchange="previewSingleFoto(this)">
+        <button type="button" onclick="this.parentElement.remove()"
+                class="text-red-400 hover:text-red-600 text-xs shrink-0">Hapus</button>
+    `;
+    list.appendChild(div);
+}
+
 let itemBaruCount = 0;
 const jasaList = @json($jasaList ?? []);
 
