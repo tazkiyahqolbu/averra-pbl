@@ -22,11 +22,8 @@ class OtpMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            htmlString: "
-            <h2>Reset Password Averra</h2>
-            <p>Kode OTP Anda: <strong style='font-size:24px;letter-spacing:6px'>{$this->otp}</strong></p>
-            <p>Berlaku selama 10 menit.</p>
-        "
+            view: 'mail.otp',
+            with: ['otp' => $this->otp],
         );
     }
 }
