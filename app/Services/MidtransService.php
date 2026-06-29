@@ -14,7 +14,8 @@ class MidtransService
         Config::$isProduction = config('services.midtrans.is_production');
         Config::$isSanitized  = true;
         Config::$is3ds        = true;
-        Config::$curlOptions  = [CURLOPT_SSL_VERIFYPEER => false, CURLOPT_HTTPHEADER => []]; // dev only
+        Config::$curlOptions  = [CURLOPT_SSL_VERIFYPEER => app()->environment('production'), CURLOPT_HTTPHEADER => []];
+
     }
 
     public function createSnapToken(array $params): string

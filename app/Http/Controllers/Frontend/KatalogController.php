@@ -16,6 +16,7 @@ class KatalogController extends Controller
     {
         $search   = $request->query('search', '');
         $category = $request->query('category', 'Semua');
+        $sort = $request->query('sort', 'terbaru');
 
         $jasaItems = Jasa::where('aktif', true)->get()->map(fn($j) => (object)[
             'id'       => 'jasa-' . $j->id,
@@ -73,11 +74,19 @@ class KatalogController extends Controller
             )->values();
         }
 
-        if ($category !== 'Semua') {
+        // Fix: tambah cek string kosong supaya category '' tidak ikut filter
+        if ($category && $category !== 'Semua') {
             $katalogs = $katalogs->filter(fn($i) => $i->category === $category)->values();
         }
 
-        return view('public.katalog.index', compact('katalogs'));
+        // Sort yang sebelumnya tidak ada sama sekali di controller
+        if ($sort === 'termurah') {
+            $katalogs = $katalogs->sortBy('price')->values();
+        } elseif ($sort === 'termahal') {
+            $katalogs = $katalogs->sortByDesc('price')->values();
+        }
+
+        return view('public.katalog.index', compact('katalogs', 'sort'));
     }
 
     public function show(string $slug)
@@ -95,7 +104,8 @@ class KatalogController extends Controller
             $fotos = $model->fotos;
 
             $testimonis = Testimoni::where('dipublikasikan', true)
-                ->whereHas('pemesanan', fn($q) => $q->whereHas('detailPemesanans',
+                ->whereHas('pemesanan', fn($q) => $q->whereHas(
+                    'detailPemesanans',
                     fn($q2) => $q2->where('jenis_item', 'jasa')->where('jasa_id', (int) $typeId)
                 ))
                 ->with('user')
@@ -125,7 +135,8 @@ class KatalogController extends Controller
             $model = Paket::with('paketDetails.jasa')->findOrFail($typeId);
 
             $testimonis = Testimoni::where('dipublikasikan', true)
-                ->whereHas('pemesanan', fn($q) => $q->whereHas('detailPemesanans',
+                ->whereHas('pemesanan', fn($q) => $q->whereHas(
+                    'detailPemesanans',
                     fn($q2) => $q2->where('jenis_item', 'paket')->where('paket_id', (int) $typeId)
                 ))
                 ->with('user')
@@ -154,7 +165,8 @@ class KatalogController extends Controller
             $model = Barang::findOrFail($typeId);
 
             $testimonis = Testimoni::where('dipublikasikan', true)
-                ->whereHas('pemesanan', fn($q) => $q->whereHas('detailPemesanans',
+                ->whereHas('pemesanan', fn($q) => $q->whereHas(
+                    'detailPemesanans',
                     fn($q2) => $q2->where('jenis_item', 'barang')->where('barang_id', (int) $typeId)
                 ))
                 ->with('user')
