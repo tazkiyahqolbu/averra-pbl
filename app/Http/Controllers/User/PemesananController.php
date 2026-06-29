@@ -8,6 +8,7 @@ use App\Models\Jasa;
 use App\Models\Paket;
 use App\Models\Pemesanan;
 use App\Models\ZonaLokasi;
+use App\Models\BlokirTanggal;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\StoreBookingRequest;
@@ -80,9 +81,9 @@ class PemesananController extends Controller
             ]));
 
         $zonaLokasis = ZonaLokasi::all()->map(fn($z) => [
-            'id'        => $z->id,
+            'id' => $z->id,
             'nama_zona' => $z->nama_zona,
-            'tarif'     => (float) $z->biaya,
+            'persentase' => (float) $z->persentase,
         ]);
 
         $item = $this->resolveItemFromQuery($request->query('item'), ['jasa', 'paket']);
@@ -102,12 +103,22 @@ class PemesananController extends Controller
         $zonaLokasis = ZonaLokasi::all()->map(fn($z) => [
             'id'        => $z->id,
             'nama_zona' => $z->nama_zona,
-            'tarif'     => (float) $z->biaya,
+            'persentase'     => (float) $z->persentase,
         ]);
 
         $item = $this->resolveItemFromQuery($request->query('item'), ['barang']);
 
         return view('user.pemesanan.createsewa', compact('katalogs', 'item', 'zonaLokasis'));
+    }
+
+    public function unavailableDates()
+    {
+        $dates = BlokirTanggal::pluck('tanggal')
+            ->map(function ($tanggal) {
+                return Carbon::parse($tanggal)->format('Y-m-d');
+            });
+
+        return response()->json($dates);
     }
 
     private function resolveItemFromQuery(?string $slug, array $allowedTypes): ?array
@@ -179,8 +190,13 @@ class PemesananController extends Controller
             }
 
             // Zona & ongkos
-            $zonaId       = $request->filled('zona_lokasi_id') ? $request->zona_lokasi_id : null;
-            $ongkosLokasi = $zonaId ? (float) (ZonaLokasi::find($zonaId)?->biaya ?? 0) : 0;
+            $zonaId = $request->filled('zona_lokasi_id')
+                ? $request->zona_lokasi_id
+                : null;
+
+            $zona = $zonaId
+                ? ZonaLokasi::find($zonaId)
+                : null;
 
             // Tanggal pakai
             $tanggalPakai = $request->tanggal_pelaksanaan ?? $request->tanggal_ambil;
@@ -195,6 +211,10 @@ class PemesananController extends Controller
             $subtotal = $harga * $jumlah * $durasi;
 
             // Hitung total di server — nilai dari form tidak dipercaya karena bisa dimanipulasi
+            $ongkosLokasi = 0;
+            if ($zona) {
+                $ongkosLokasi = $subtotal * ($zona->persentase / 100);
+            }
             $totalHarga = $subtotal + $ongkosLokasi;
 
             // Buat Pemesanan

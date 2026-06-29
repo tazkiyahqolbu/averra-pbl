@@ -246,7 +246,7 @@
                                     class="w-full rounded-xl border border-[#E2D4C0] bg-white px-4 py-3 text-sm text-[#4A0F1A] focus:border-[#C8960C] focus:outline-none transition">
                                 <option value="">Pilih zona pengiriman…</option>
                                 <template x-for="z in zonaLokasis" x-bind:key="z.id">
-                                    <option x-bind:value="z.id" x-text="z.nama_zona + ' (Rp ' + formatRupiah(z.tarif) + ')'"></option>
+                                    <option x-bind:value="z.id" x-text="z.nama_zona + ' (' + z.persentase + '%)'"> </option>
                                 </template>
                             </select>
                             <textarea name="alamat_lengkap" rows="3"
@@ -375,9 +375,18 @@
                 },
                 get subtotal() { return this.katalogPrice * this.durationDays * (this.jumlahUnit || 1); },
                 get ongkosKirim() {
-                    return (this.deliveryMethod === 'dikirim' && this.selectedZonaId)
-                        ? parseFloat(this.zonaLokasis.find(z => z.id == this.selectedZonaId)?.tarif || 0)
-                        : 0;
+
+                    if (this.deliveryMethod !== 'dikirim')
+                        return 0;
+
+                    const zona = this.zonaLokasis.find(
+                        z => z.id == this.selectedZonaId
+                    );
+
+                    if (!zona)
+                        return 0;
+
+                    return this.subtotal * (zona.persentase / 100);
                 },
                 get grandTotal() { return this.subtotal + this.ongkosKirim; },
 
