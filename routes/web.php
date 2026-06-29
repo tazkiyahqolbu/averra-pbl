@@ -14,6 +14,8 @@ use App\Http\Controllers\Admin\BlokirTanggalController;
 use App\Http\Controllers\Admin\PemesananController as AdminPemesananController;
 use App\Http\Controllers\Admin\PembayaranController as AdminPembayaranController;
 use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
+use App\Http\Controllers\Admin\TestimoniController as AdminTestimoniController;
+use App\Http\Controllers\User\TestimoniController as UserTestimoniController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Frontend\KatalogController;
 use App\Http\Controllers\User\DashboardController;
@@ -47,8 +49,8 @@ Route::view('/tentang', 'public.tentang.index')->name('public.tentang.index');
 
 // Testimoni
 Route::middleware('auth')->group(function () {
-    Route::get('/testimoni/{pemesanan_id}/create',[TestimoniController::class, 'create'])->name('testimoni.create');
-    Route::post('/testimoni/{pemesanan_id}',[TestimoniController::class, 'store'])->name('testimoni.store');
+    Route::get('/testimoni/{pemesanan_id}/create',[UserTestimoniController::class, 'create'])->name('testimoni.create');
+    Route::post('/testimoni/{pemesanan_id}',[UserTestimoniController::class, 'store'])->name('testimoni.store');
 });
 
 
@@ -221,31 +223,37 @@ Route::middleware(['auth', 'role:admin'])
             Route::delete('/blokir-tanggal/{id}', [BlokirTanggalController::class, 'destroy'])
                 ->name('blokir-tanggal.destroy');
 
+            Route::get('/testimoni', [AdminTestimoniController::class, 'index'])
+                ->name('testimoni.index');
+
+            Route::patch('/testimoni/{id}/balas', [AdminTestimoniController::class, 'balas'])
+                ->name('testimoni.balas');
+
     });
 
-// Admin view-only routes (preview frontend)
-Route::prefix('admin')->name('admin.')->group(function () {
-    Route::view('/laporan',         'admin.laporan.index')->name('laporan.index');
-    Route::get('/testimoni', function () {
-        $testimonis  = \App\Models\Testimoni::with([
-            'user',
-            'pemesanan.detailPemesanans.jasa',
-            'pemesanan.detailPemesanans.paket',
-            'pemesanan.detailPemesanans.barang',
-            'fotos',
-        ])->latest()->get();
-        $rataRating  = round($testimonis->avg('rating'), 1);
-        $totalUlasan = $testimonis->count();
-        return view('admin.testimoni.index', compact('testimonis', 'rataRating', 'totalUlasan'));
-    })->name('testimoni.index');
+// // Admin view-only routes (preview frontend)
+// Route::prefix('admin')->name('admin.')->group(function () {
+//     Route::view('/laporan',         'admin.laporan.index')->name('laporan.index');
+//     Route::get('/testimoni', function () {
+//         $testimonis  = \App\Models\Testimoni::with([
+//             'user',
+//             'pemesanan.detailPemesanans.jasa',
+//             'pemesanan.detailPemesanans.paket',
+//             'pemesanan.detailPemesanans.barang',
+//             'fotos',
+//         ])->latest()->get();
+//         $rataRating  = round($testimonis->avg('rating'), 1);
+//         $totalUlasan = $testimonis->count();
+//         return view('admin.testimoni.index', compact('testimonis', 'rataRating', 'totalUlasan'));
+//     })->name('testimoni.index');
 
-    Route::patch('/testimoni/{id}/balas', function ($id) {
-        $t = \App\Models\Testimoni::findOrFail($id);
-        request()->validate(['dibalas' => 'required|string|max:1000']);
-        $t->update(['dibalas' => request('dibalas')]);
-        return redirect()->route('admin.testimoni.index')->with('success', 'Balasan berhasil disimpan.');
-    })->name('testimoni.balas');
-});
+//     Route::patch('/testimoni/{id}/balas', function ($id) {
+//         $t = \App\Models\Testimoni::findOrFail($id);
+//         request()->validate(['dibalas' => 'required|string|max:1000']);
+//         $t->update(['dibalas' => request('dibalas')]);
+//         return redirect()->route('admin.testimoni.index')->with('success', 'Balasan berhasil disimpan.');
+//     })->name('testimoni.balas');
+// });
 
 // Admin akun (profil)
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
