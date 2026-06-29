@@ -193,7 +193,7 @@ $gallery = [
         </div>
 
         <div class="mt-14 mx-auto max-w-6xl px-6 grid gap-8 md:grid-cols-3">
-            @foreach($pakets as $p)
+            @foreach($pakets ?? [] as $p)
     <div class="overflow-hidden rounded-2xl border border-[#E2D4C0] bg-[#FAF3E0] transition-all duration-300 hover:scale-[1.03] hover:border-[#C8A84B]/50 hover:shadow-xl scroll-fade scroll-delay-{{ $loop->index + 1 }}">
         <div class="aspect-[4/3] overflow-hidden">
             <img src="{{ $p->thumbnail_path ? Storage::url($p->thumbnail_path) : asset('image/background.png') }}"

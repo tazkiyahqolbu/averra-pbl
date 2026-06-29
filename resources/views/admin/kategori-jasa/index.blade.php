@@ -17,10 +17,10 @@
         </a>
     </div>
 
-    <div class="grid gap-5 xl:grid-cols-3">
+    <div>
 
         {{-- Tabel --}}
-        <div class="admin-card p-6 xl:col-span-2">
+        <div class="admin-card p-6">
             <div class="overflow-x-auto">
                 <table class="w-full">
                     <thead class="border-b border-[#E2D4C0] bg-[#FAF3E0]">
@@ -71,43 +71,6 @@
                 </table>
             </div>
         </div>
-
-        {{-- Panel Form --}}
-        <div id="formPanel" class="admin-card p-6">
-            <h2 id="formTitle" class="admin-title mb-4 text-xl">Tambah Kategori</h2>
-
-            <div class="space-y-4">
-                <div>
-                    <label class="admin-label">Nama Kategori *</label>
-                    <input id="inputNama" type="text" class="admin-input" placeholder="Contoh: Rias Pengantin">
-                </div>
-
-                <div>
-                    <label class="admin-label">Deskripsi</label>
-                    <textarea id="inputDeskripsi" rows="3" class="admin-textarea"
-                        placeholder="Deskripsi singkat kategori"></textarea>
-                </div>
-
-                <div>
-                    <label class="admin-label">Ikon / Foto Kategori</label>
-                    <input id="inputIkon" type="file" class="admin-file" accept="image/*">
-                </div>
-
-                <div id="ikonPreviewWrapper" class="hidden">
-                    <label class="admin-label">Ikon Saat Ini</label>
-                    <div id="ikonPreview"
-                        class="admin-thumb-lg flex items-center justify-center text-xs font-semibold text-[#4A2E28]">
-                        IMG
-                    </div>
-                </div>
-
-                <div class="flex justify-end gap-3 pt-2">
-                    <button type="button" onclick="resetForm()" class="admin-btn-secondary">Batal</button>
-                    <button type="button" class="admin-btn-primary">Simpan</button>
-                </div>
-            </div>
-        </div>
-
     </div>
 </div>
 

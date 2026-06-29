@@ -17,10 +17,10 @@
         </a>
     </div>
 
-    <div class="grid gap-5 xl:grid-cols-3">
+    <div>
 
         {{-- Tabel --}}
-        <div class="admin-card p-6 xl:col-span-2">
+        <div class="admin-card p-6">
             <div class="overflow-x-auto">
                 <table class="w-full">
                     <thead class="border-b border-[#E2D4C0] bg-[#FAF3E0]">
