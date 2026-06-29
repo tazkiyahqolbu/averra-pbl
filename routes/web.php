@@ -47,8 +47,8 @@ Route::view('/tentang', 'public.tentang.index')->name('public.tentang.index');
 
 // Testimoni
 Route::middleware('auth')->group(function () {
-    Route::get('/testimoni/{pemesanan_id}/create',[TestimoniController::class, 'create'])->name('testimoni.create');
-    Route::post('/testimoni/{pemesanan_id}',[TestimoniController::class, 'store'])->name('testimoni.store');
+    Route::get('/testimoni/{pemesanan_id}/create', [TestimoniController::class, 'create'])->name('testimoni.create');
+    Route::post('/testimoni/{pemesanan_id}', [TestimoniController::class, 'store'])->name('testimoni.store');
 });
 
 
@@ -80,7 +80,7 @@ Route::middleware('auth')->name('user.')->group(function () {
     Route::get('/pemesanan/{id}', [PemesananController::class, 'show'])->name('pemesanan.show');
     Route::put('/pemesanan/{id}', [PemesananController::class, 'update'])->name('pemesanan.update');
     Route::get('/pemesanan/{id}/invoice', [PemesananController::class, 'invoice'])->name('pemesanan.invoice');
-    Route::get('/pemesanan/{id}/invoice/pdf',[PemesananController::class, 'cetakInvoice'])->name('pemesanan.invoice.pdf');
+    Route::get('/pemesanan/{id}/invoice/pdf', [PemesananController::class, 'cetakInvoice'])->name('pemesanan.invoice.pdf');
 
     // Pembayaran
     Route::get('/pembayaran/{id}/pilih',     [PembayaranController::class, 'pilih'])->name('pembayaran.pilih');
@@ -93,7 +93,7 @@ Route::middleware('auth')->name('user.')->group(function () {
     Route::put('/profil/foto', [ProfileController::class, 'updatePhoto'])->name('profile.photo.update');
 
     Route::get('/unavailable-dates', [PemesananController::class, 'unavailableDates'])
-    ->name('unavailable-dates');
+        ->name('unavailable-dates');
 });
 
 // ── Rute Admin ────────────────────────────────────────────────────────────────
@@ -123,12 +123,6 @@ Route::middleware(['auth', 'role:admin'])
         Route::delete('/paket/{id}',      [PaketController::class, 'destroy'])->name('paket.destroy');
         Route::get('/paket/foto/{id}/hapus', [PaketController::class, 'destroyFoto'])->name('paket.foto.destroy');
 
-        // Kategori Paket
-        Route::get('/kategori-paket',      [KategoriPaketController::class, 'index'])->name('kategori-paket.index');
-        Route::post('/kategori-paket',     [KategoriPaketController::class, 'store'])->name('kategori-paket.store');
-        Route::put('/kategori-paket/{id}', [KategoriPaketController::class, 'update'])->name('kategori-paket.update');
-        Route::delete('/kategori-paket/{id}', [KategoriPaketController::class, 'destroy'])->name('kategori-paket.destroy');
-
         // Pemesanan
         Route::get('/pemesanan',                       [AdminPemesananController::class, 'index'])->name('pemesanan.index');
         Route::get('/pemesanan/{id}',                  [AdminPemesananController::class, 'show'])->name('pemesanan.show');
@@ -142,25 +136,25 @@ Route::middleware(['auth', 'role:admin'])
         Route::patch('/pembayaran/{id}/tolak',             [AdminPembayaranController::class, 'tolak'])->name('pembayaran.tolak');
 
         // Barang
-        Route::get('/barang', [BarangController::class,'index'])
+        Route::get('/barang', [BarangController::class, 'index'])
             ->name('barang.index');
 
-        Route::get('/barang/create', [BarangController::class,'create'])
+        Route::get('/barang/create', [BarangController::class, 'create'])
             ->name('barang.create');
 
-        Route::post('/barang', [BarangController::class,'store'])
+        Route::post('/barang', [BarangController::class, 'store'])
             ->name('barang.store');
 
-        Route::get('/barang/{id}', [BarangController::class,'show'])
+        Route::get('/barang/{id}', [BarangController::class, 'show'])
             ->name('barang.show');
 
-        Route::get('/barang/{id}/edit', [BarangController::class,'edit'])
+        Route::get('/barang/{id}/edit', [BarangController::class, 'edit'])
             ->name('barang.edit');
 
-        Route::put('/barang/{id}', [BarangController::class,'update'])
+        Route::put('/barang/{id}', [BarangController::class, 'update'])
             ->name('barang.update');
 
-        Route::delete('/barang/{id}', [BarangController::class,'destroy'])
+        Route::delete('/barang/{id}', [BarangController::class, 'destroy'])
             ->name('barang.destroy');
 
         Route::get('/kategori-barang', [KategoriBarangController::class, 'index'])->name('kategori-barang.index');
@@ -170,12 +164,12 @@ Route::middleware(['auth', 'role:admin'])
         Route::put('/kategori-barang/{id}', [KategoriBarangController::class, 'update'])->name('kategori-barang.update');
         Route::delete('/kategori-barang/{id}', [KategoriBarangController::class, 'destroy'])->name('kategori-barang.destroy');
 
-        Route::get('/kategori-jasa', [KategoriJasaController::class,'index'])->name('kategori-jasa.index');
-        Route::get('/kategori-jasa/create', [KategoriJasaController::class,'create'])->name('kategori-jasa.create');
-        Route::post('/kategori-jasa', [KategoriJasaController::class,'store'])->name('kategori-jasa.store');
-        Route::get('/kategori-jasa/{id}/edit', [KategoriJasaController::class,'edit'])->name('kategori-jasa.edit');
-        Route::put('/kategori-jasa/{id}', [KategoriJasaController::class,'update'])->name('kategori-jasa.update');
-        Route::delete('/kategori-jasa/{id}', [KategoriJasaController::class,'destroy'])->name('kategori-jasa.destroy');
+        Route::get('/kategori-jasa', [KategoriJasaController::class, 'index'])->name('kategori-jasa.index');
+        Route::get('/kategori-jasa/create', [KategoriJasaController::class, 'create'])->name('kategori-jasa.create');
+        Route::post('/kategori-jasa', [KategoriJasaController::class, 'store'])->name('kategori-jasa.store');
+        Route::get('/kategori-jasa/{id}/edit', [KategoriJasaController::class, 'edit'])->name('kategori-jasa.edit');
+        Route::put('/kategori-jasa/{id}', [KategoriJasaController::class, 'update'])->name('kategori-jasa.update');
+        Route::delete('/kategori-jasa/{id}', [KategoriJasaController::class, 'destroy'])->name('kategori-jasa.destroy');
 
         Route::prefix('pengembalian')
             ->name('pengembalian.')
@@ -185,42 +179,39 @@ Route::middleware(['auth', 'role:admin'])
                 Route::get('/', 'index')->name('index');
                 Route::get('/{id}', 'show')->name('show');
                 Route::put('/{id}', 'update')->name('update');
-
             });
 
         Route::prefix('galeri')
-        ->name('galeri.')
-        ->group(function () {
-            Route::get('/', [GaleriController::class, 'index'])->name('index');
-            Route::get('/create', [GaleriController::class, 'create'])->name('create');
-            Route::post('/', [GaleriController::class, 'store'])->name('store');
-            Route::get('/{id}/edit', [GaleriController::class, 'edit'])->name('edit');
-            Route::put('/{id}', [GaleriController::class, 'update'])->name('update');
-            Route::delete('/{id}', [GaleriController::class, 'destroy'])->name('destroy');
-        });
+            ->name('galeri.')
+            ->group(function () {
+                Route::get('/', [GaleriController::class, 'index'])->name('index');
+                Route::get('/create', [GaleriController::class, 'create'])->name('create');
+                Route::post('/', [GaleriController::class, 'store'])->name('store');
+                Route::get('/{id}/edit', [GaleriController::class, 'edit'])->name('edit');
+                Route::put('/{id}', [GaleriController::class, 'update'])->name('update');
+                Route::delete('/{id}', [GaleriController::class, 'destroy'])->name('destroy');
+            });
 
         Route::prefix('zona-lokasi')
-        ->name('zona-lokasi.')
-        ->group(function () {
+            ->name('zona-lokasi.')
+            ->group(function () {
 
-            Route::get('/', [ZonaLokasiController::class, 'index'])->name('index');
-            Route::get('/create', [ZonaLokasiController::class, 'create'])->name('create');
-            Route::post('/', [ZonaLokasiController::class, 'store'])->name('store');
-            Route::get('/{id}/edit', [ZonaLokasiController::class, 'edit'])->name('edit');
-            Route::put('/{id}', [ZonaLokasiController::class, 'update'])->name('update');
-            Route::delete('/{id}', [ZonaLokasiController::class, 'destroy'])->name('destroy');
+                Route::get('/', [ZonaLokasiController::class, 'index'])->name('index');
+                Route::get('/create', [ZonaLokasiController::class, 'create'])->name('create');
+                Route::post('/', [ZonaLokasiController::class, 'store'])->name('store');
+                Route::get('/{id}/edit', [ZonaLokasiController::class, 'edit'])->name('edit');
+                Route::put('/{id}', [ZonaLokasiController::class, 'update'])->name('update');
+                Route::delete('/{id}', [ZonaLokasiController::class, 'destroy'])->name('destroy');
+            });
 
-        });
+        Route::get('/blokir-tanggal', [BlokirTanggalController::class, 'index'])
+            ->name('blokir-tanggal.index');
 
-            Route::get('/blokir-tanggal', [BlokirTanggalController::class, 'index'])
-                ->name('blokir-tanggal.index');
+        Route::post('/blokir-tanggal', [BlokirTanggalController::class, 'store'])
+            ->name('blokir-tanggal.store');
 
-            Route::post('/blokir-tanggal', [BlokirTanggalController::class, 'store'])
-                ->name('blokir-tanggal.store');
-
-            Route::delete('/blokir-tanggal/{id}', [BlokirTanggalController::class, 'destroy'])
-                ->name('blokir-tanggal.destroy');
-
+        Route::delete('/blokir-tanggal/{id}', [BlokirTanggalController::class, 'destroy'])
+            ->name('blokir-tanggal.destroy');
     });
 
 // Admin view-only routes (preview frontend)
@@ -252,3 +243,39 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/akun',              [AdminProfileController::class, 'index'])->name('akun.index');
     Route::put('/akun/password',     [AdminProfileController::class, 'updatePassword'])->name('akun.password');
 });
+
+// Preview Frontend Kategori Paket
+Route::get('/admin/kategori-paket-preview', function () {
+    $kategoriPakets = collect([
+        (object) [
+            'id' => 1,
+            'nama' => 'Paket Pernikahan',
+            'deskripsi' => 'Paket lengkap untuk acara pernikahan',
+            'ikon_path' => null,
+        ],
+        (object) [
+            'id' => 2,
+            'nama' => 'Paket Wisuda',
+            'deskripsi' => 'Paket dokumentasi wisuda',
+            'ikon_path' => null,
+        ],
+    ]);
+
+    return view('admin.kategori-paket.index', compact('kategoriPakets'));
+})->name('admin.kategori-paket.index.preview');
+
+Route::view(
+    '/admin/kategori-paket/create-preview',
+    'admin.kategori-paket.create'
+)->name('admin.kategori-paket.create');
+
+Route::get('/admin/kategori-paket/edit-preview', function () {
+    $kategoriPaket = (object) [
+        'id' => 1,
+        'nama' => 'Paket Pernikahan',
+        'deskripsi' => 'Paket lengkap untuk acara pernikahan',
+        'ikon_path' => null,
+    ];
+
+    return view('admin.kategori-paket.edit', compact('kategoriPaket'));
+})->name('admin.kategori-paket.edit');
