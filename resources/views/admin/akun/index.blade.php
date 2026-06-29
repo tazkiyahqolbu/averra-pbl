@@ -20,17 +20,24 @@
     @endif
 
     <div class="admin-card p-6">
-        <form class="space-y-5" action="#" method="POST">
-            @csrf
-            @method('PUT')
+        <form class="space-y-5" action="{{ route('admin.akun.update') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
 
             <div class="flex items-center gap-4">
-                <div class="flex h-20 w-20 items-center justify-center rounded-full bg-[#4A0F1A] text-2xl font-bold text-white">
-                    {{ strtoupper(substr($admin->nama ?? $admin->name ?? 'A', 0, 1)) }}
-                </div>
+                @if($admin->foto_profil)
+                <img
+                    src="{{ asset('storage/'.$admin->foto_profil) }}"
+                    class="h-20 w-20 rounded-full object-cover border-2 border-[#4A0F1A]"
+                    alt="Foto Profil">
+                @else
+                    <div class="flex h-20 w-20 items-center justify-center rounded-full bg-[#4A0F1A] text-2xl font-bold text-white">
+                        {{ strtoupper(substr($admin->nama,0,1)) }}
+                    </div>
+                @endif
                 <div>
                     <label class="admin-label">Foto Profil</label>
-                    <input type="file" class="admin-file">
+                    <input type="file" name="foto_profil" class="admin-file">
                 </div>
             </div>
 
