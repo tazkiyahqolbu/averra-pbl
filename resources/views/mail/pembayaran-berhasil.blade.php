@@ -13,14 +13,14 @@ Pembayaran {{ $tahap === 'pelunasan' ? 'pelunasan' : 'DP' }} untuk pesanan Anda 
 | Total Harga | Rp {{ number_format($pesanan->total_harga, 0, ',', '.') }} |
 
 @if($tahap !== 'pelunasan')
-Silakan lakukan pelunasan pembayaran sebelum tanggal pakai.
+Pembayaran DP Anda telah diterima. Pelunasan dapat dilakukan setelah acara selesai atau sebelum pengembalian barang.
 
 @component('mail::button', ['url' => route('user.pemesanan.show', $pesanan->id)])
 Lihat Detail Pesanan
 @endcomponent
 
 @else
-Terima kasih telah menggunakan layanan kami. Sampai jumpa di acara Anda!
+Terima kasih telah melunasi pembayaran. Semoga acara Anda berjalan lancar!
 @endif
 
 Terima kasih,<br>
