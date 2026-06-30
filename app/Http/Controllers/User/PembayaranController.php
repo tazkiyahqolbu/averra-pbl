@@ -84,12 +84,13 @@ class PembayaranController extends Controller
             $tahap       = 'pelunasan';
             $persenDp    = null;
         } else {
-            // Kunci pembayaran awal: hanya DP
-            $tahap       = 'dp';
-            $persenDp    = 50;
-            $jumlahBayar = round($pesanan->total_harga * 0.5);
+            $pilihan     = $request->input('pilihan', 'dp');
+            $tahap       = $pilihan === 'lunas' ? 'langsung' : 'dp';
+            $persenDp    = $tahap === 'langsung' ? 100 : 50;
+            $jumlahBayar = $tahap === 'langsung'
+                ? $pesanan->total_harga
+                : round($pesanan->total_harga * 0.5);
         }
-
 
         $kodeTransaksi = 'TRX-' . strtoupper(Str::random(8));
 
