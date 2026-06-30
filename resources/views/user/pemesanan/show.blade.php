@@ -378,9 +378,13 @@
                 <div class="rounded-xl border border-[#E2D4C0] bg-[#FAF3E0] p-4 relative">
                     <i data-lucide="quote" class="absolute top-4 right-4 w-6 h-6 text-[#C8960C] opacity-20"></i>
                     <p class="text-sm text-[#4A2E28] italic relative z-10">"{{ $pesanan->testimoni->isi_testimoni }}"</p>
-                    @if(optional($pesanan->testimoni)->media_path)
-                        <div class="mt-3">
-                            <p class="text-xs text-[#4A2E28]/60 mb-1 flex items-center gap-1"><i data-lucide="paperclip" class="w-3 h-3"></i> Lampiran Media</p>
+                    @if($pesanan->testimoni->fotos->isNotEmpty())
+                        <div class="mt-3 flex gap-2 flex-wrap">
+                            @foreach($pesanan->testimoni->fotos as $foto)
+                                <img src="{{ Storage::url($foto->foto_path) }}"
+                                     alt="foto testimoni"
+                                     class="h-20 w-20 rounded-xl object-cover border border-[#E2D4C0]">
+                            @endforeach
                         </div>
                     @endif
                     <p class="text-[10px] text-[#4A2E28]/50 mt-3 font-semibold">{{ $pesanan->testimoni->created_at->format('d F Y, H:i') }}</p>
@@ -486,6 +490,67 @@
                         </form>
                     @endif
                 </div>
+            @endif
+        </div>
+    @endif
+
+
+    {{-- ─── AJUKAN PEMBATALAN ───────────────────────────────────────────────── --}}
+    @php
+        $bisaBatal = in_array($pesanan->status, ['dikonfirmasi', 'menunggu_dp', 'berlangsung', 'menunggu_diambil', 'sedang_disewa']);
+        $sudahAjukan = $pesanan->pembatalan && $pesanan->pembatalan->status === 'menunggu';
+    @endphp
+    @if($bisaBatal)
+        <div class="rounded-2xl border border-red-200 bg-white p-5">
+            <h3 class="text-sm font-semibold text-red-700 mb-1">Batalkan Pesanan</h3>
+            @if($sudahAjukan)
+                <p class="text-sm text-[#4A2E28]/70">Permintaan pembatalan sudah diajukan dan sedang ditinjau oleh admin.</p>
+            @else
+                <p class="text-xs text-[#4A2E28]/60 mb-4">
+                    @if(in_array($pesanan->status, ['menunggu_dp', 'menunggu_diambil', 'sedang_disewa']))
+                        DP yang sudah dibayar <strong>tidak dikembalikan</strong> jika pembatalan disetujui.
+                    @else
+                        Pembatalan akan diproses oleh admin dalam 1–2 hari kerja.
+                    @endif
+                </p>
+                <form action="{{ route('pembatalan.ajukan', $pesanan->id) }}" method="POST" class="space-y-3"
+                      x-data="{ open: false }">
+                    @csrf
+                    <button type="button" @click="open = !open"
+                            class="text-sm font-medium text-red-600 hover:text-red-800 underline underline-offset-2 transition">
+                        <span x-text="open ? 'Tutup Form' : 'Ajukan Pembatalan'"></span>
+                    </button>
+                    <div x-show="open" x-transition class="space-y-3 pt-1">
+                        <div>
+                            <label class="block text-xs font-semibold text-[#4A2E28] mb-1">Alasan Pembatalan <span class="text-red-500">*</span></label>
+                            <textarea name="alasan" rows="3" minlength="20" required
+                                      placeholder="Ceritakan alasan pembatalan (min. 20 karakter)..."
+                                      class="w-full rounded-xl border border-[#E2D4C0] bg-[#FAF3E0] px-4 py-2.5 text-sm text-[#4A2E28] placeholder-[#4A2E28]/40 focus:border-red-300 focus:outline-none resize-none"></textarea>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-[#4A2E28] mb-1">Nama Bank <span class="text-red-500">*</span></label>
+                                <input type="text" name="nama_bank" required placeholder="BCA, BRI, dll"
+                                       class="w-full rounded-xl border border-[#E2D4C0] bg-[#FAF3E0] px-4 py-2.5 text-sm text-[#4A2E28] focus:border-red-300 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-[#4A2E28] mb-1">Nama Rekening <span class="text-red-500">*</span></label>
+                                <input type="text" name="nama_rekening" required placeholder="Nama pemilik rekening"
+                                       class="w-full rounded-xl border border-[#E2D4C0] bg-[#FAF3E0] px-4 py-2.5 text-sm text-[#4A2E28] focus:border-red-300 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-[#4A2E28] mb-1">Nomor Rekening <span class="text-red-500">*</span></label>
+                                <input type="text" name="nomor_rekening" required placeholder="1234567890"
+                                       class="w-full rounded-xl border border-[#E2D4C0] bg-[#FAF3E0] px-4 py-2.5 text-sm text-[#4A2E28] focus:border-red-300 focus:outline-none">
+                            </div>
+                        </div>
+                        <button type="submit"
+                                onclick="return confirm('Yakin ingin mengajukan pembatalan? Tindakan ini tidak bisa dibatalkan.')"
+                                class="w-full rounded-xl bg-red-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-red-700 transition">
+                            Kirim Permintaan Pembatalan
+                        </button>
+                    </div>
+                </form>
             @endif
         </div>
     @endif

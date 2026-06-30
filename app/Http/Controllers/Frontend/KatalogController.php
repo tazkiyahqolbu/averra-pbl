@@ -108,7 +108,7 @@ class KatalogController extends Controller
                     'detailPemesanans',
                     fn($q2) => $q2->where('jenis_item', 'jasa')->where('jasa_id', (int) $typeId)
                 ))
-                ->with('user')
+                ->with(['user', 'fotos'])
                 ->latest()
                 ->get();
 
@@ -140,7 +140,7 @@ class KatalogController extends Controller
                     'detailPemesanans',
                     fn($q2) => $q2->where('jenis_item', 'paket')->where('paket_id', (int) $typeId)
                 ))
-                ->with('user')
+                ->with(['user', 'fotos'])
                 ->latest()
                 ->get();
 
@@ -172,7 +172,7 @@ class KatalogController extends Controller
                     'detailPemesanans',
                     fn($q2) => $q2->where('jenis_item', 'barang')->where('barang_id', (int) $typeId)
                 ))
-                ->with('user')
+                ->with(['user', 'fotos'])
                 ->latest()
                 ->get();
 

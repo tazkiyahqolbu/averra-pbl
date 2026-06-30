@@ -425,8 +425,10 @@
                                     : $inisial . str_repeat('*', max(2, $panjang - 2)) . strtoupper(substr($namaUser, -1));
                                 $bgColors    = ['#4A0F1A', '#7B1C2E', '#3D0010', '#5C1420', '#2E0A12'];
                                 $avatarBg    = $bgColors[$idx % count($bgColors)];
+                                $hasFoto     = $t->fotos->isNotEmpty();
                             @endphp
-                            <div class="rounded-2xl border border-[#E2D4C0] bg-[#FFFDF7] p-5 scroll-fade scroll-delay-{{ ($idx % 4) + 1 }}">
+                            <div class="rounded-2xl border border-[#E2D4C0] bg-[#FFFDF7] p-5 scroll-fade scroll-delay-{{ ($idx % 4) + 1 }} {{ $hasFoto ? 'cursor-pointer hover:shadow-md hover:border-[#C8A84B] transition-all duration-200' : '' }}"
+                                 @if($hasFoto) onclick="bukaModalTestimoni({{ $t->id }})" @endif>
                                 <div class="flex items-start gap-3">
                                     {{-- Avatar --}}
                                     <div class="shrink-0 flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold text-[#FAF3E0]"
@@ -451,6 +453,24 @@
                                         </div>
                                         {{-- Isi testimoni --}}
                                         <p class="mt-2 text-sm leading-relaxed text-[#4A2E28]">{{ $t->isi_testimoni }}</p>
+                                        {{-- Foto testimoni (thumbnail) --}}
+                                        @if($hasFoto)
+                                            <div class="mt-3 flex gap-2 flex-wrap">
+                                                @foreach($t->fotos->take(3) as $foto)
+                                                    <img src="{{ Storage::url($foto->foto_path) }}"
+                                                         alt="foto testimoni"
+                                                         class="h-16 w-16 rounded-lg object-cover border border-[#E2D4C0]">
+                                                @endforeach
+                                                @if($t->fotos->count() > 3)
+                                                    <div class="h-16 w-16 rounded-lg bg-[#E2D4C0] flex items-center justify-center text-xs font-semibold text-[#4A0F1A]">
+                                                        +{{ $t->fotos->count() - 3 }}
+                                                    </div>
+                                                @endif
+                                            </div>
+                                            <p class="mt-2 text-[10px] text-[#C8A84B] font-medium flex items-center gap-1">
+                                                <i data-lucide="zoom-in" class="h-3 w-3"></i> Klik untuk perbesar
+                                            </p>
+                                        @endif
                                         {{-- Balasan admin --}}
                                         @if($t->dibalas)
                                             <div class="mt-3 rounded-xl border border-[#E2D4C0] bg-[#FAF3E0] px-4 py-3 text-xs text-[#4A2E28]">
@@ -464,8 +484,55 @@
                                     </div>
                                 </div>
                             </div>
+
+                            {{-- Modal foto untuk testimoni ini --}}
+                            @if($hasFoto)
+                                <div id="modal-testimoni-{{ $t->id }}"
+                                     class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 p-4"
+                                     onclick="tutupModalTestimoni({{ $t->id }})">
+                                    <div class="relative bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl" onclick="event.stopPropagation()">
+                                        <button onclick="tutupModalTestimoni({{ $t->id }})"
+                                                class="absolute top-3 right-3 text-[#4A2E28]/50 hover:text-[#4A0F1A]">
+                                            <i data-lucide="x" class="h-5 w-5"></i>
+                                        </button>
+                                        <div class="flex items-center gap-3 mb-4">
+                                            <div class="h-10 w-10 shrink-0 flex items-center justify-center rounded-full text-sm font-bold text-[#FAF3E0]"
+                                                 style="background-color: {{ $avatarBg }}">{{ $inisial }}</div>
+                                            <div>
+                                                <p class="text-sm font-semibold text-[#4A0F1A]">{{ $namaDisplay }}</p>
+                                                <div class="flex items-center gap-0.5 mt-0.5">
+                                                    @for ($s = 1; $s <= 5; $s++)
+                                                        <i data-lucide="star" class="h-3 w-3 text-[#C8A84B] {{ $s <= $t->rating ? 'fill-current' : 'opacity-20' }}"></i>
+                                                    @endfor
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="text-sm text-[#4A2E28] mb-4">{{ $t->isi_testimoni }}</p>
+                                        <div class="grid grid-cols-2 gap-2">
+                                            @foreach($t->fotos as $foto)
+                                                <img src="{{ Storage::url($foto->foto_path) }}"
+                                                     alt="foto testimoni"
+                                                     class="w-full rounded-xl object-cover border border-[#E2D4C0]">
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                         @endforeach
                     </div>
+
+                    <script>
+                        function bukaModalTestimoni(id) {
+                            const modal = document.getElementById('modal-testimoni-' + id);
+                            modal.classList.remove('hidden');
+                            modal.classList.add('flex');
+                        }
+                        function tutupModalTestimoni(id) {
+                            const modal = document.getElementById('modal-testimoni-' + id);
+                            modal.classList.add('hidden');
+                            modal.classList.remove('flex');
+                        }
+                    </script>
 
                 @else
                     {{-- Empty state ulasan --}}

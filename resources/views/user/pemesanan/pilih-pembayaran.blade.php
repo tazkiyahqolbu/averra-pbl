@@ -30,51 +30,46 @@
     @if($isPelunasan)
         {{-- Pelunasan --}}
         @php
-            $sudahBayar  = $pesanan->pembayarans->where('status', 'terverifikasi')->sum('jumlah_bayar');
-            $sisaBayar   = max(0, $pesanan->total_harga - $sudahBayar);
+            $sudahBayar          = $pesanan->pembayarans->where('status', 'terverifikasi')->sum('jumlah_bayar');
+            $sisaBayar           = max(0, $pesanan->total_harga - $sudahBayar);
+            $pelunasanBelumBoleh = $pesanan->tanggal_pakai && now()->startOfDay()->lt($pesanan->tanggal_pakai->startOfDay());
         @endphp
         <div class="rounded-2xl border border-blue-200 bg-blue-50 p-5">
             <p class="text-sm font-semibold text-blue-800 mb-1">Pelunasan Sisa Pembayaran</p>
             <p class="font-serif text-2xl font-bold text-blue-700">Rp {{ number_format($sisaBayar, 0, ',', '.') }}</p>
+            @if($pelunasanBelumBoleh)
+                <p class="text-xs text-blue-600 mt-2">Tersedia mulai {{ $pesanan->tanggal_pakai->format('d M Y') }} (hari pelaksanaan)</p>
+            @endif
+        </div>
+        @if($pelunasanBelumBoleh)
+            <button type="button" disabled
+                class="w-full flex items-center justify-center gap-2 rounded-xl bg-gray-200 px-6 py-3.5 text-sm font-semibold text-gray-400 cursor-not-allowed">
+                <i data-lucide="credit-card" class="w-4 h-4"></i>
+                Bayar Pelunasan via Midtrans
+            </button>
+        @else
+            <form action="{{ route('user.pembayaran.initiate', $pesanan->id) }}" method="POST">
+                @csrf
+                <button type="submit"
+                    class="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-[#6B1625] to-[#3A0A12] px-6 py-3.5 text-sm font-semibold text-[#FAF3E0] shadow-[0_4px_14px_rgba(74,15,26,0.3)] hover:shadow-[0_6px_18px_rgba(74,15,26,0.4)] hover:from-[#7B1C2E] transition-all duration-200">
+                    <i data-lucide="credit-card" class="w-4 h-4"></i>
+                    Bayar Pelunasan via Midtrans
+                </button>
+            </form>
+        @endif
+    @else
+        {{-- DP 50% --}}
+        <div class="rounded-2xl border-2 border-[#C8960C] bg-[#FAF3E0] p-5">
+            <p class="font-semibold text-[#4A0F1A]">Down Payment (DP) 50%</p>
+            <p class="text-sm text-[#4A2E28]/60 mt-0.5">Bayar setengah dari total sekarang</p>
+            <p class="font-serif font-bold text-[#C8960C] mt-1 text-xl">Rp {{ number_format($pesanan->total_harga * 0.5, 0, ',', '.') }}</p>
         </div>
         <form action="{{ route('user.pembayaran.initiate', $pesanan->id) }}" method="POST">
             @csrf
             <button type="submit"
                 class="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-[#6B1625] to-[#3A0A12] px-6 py-3.5 text-sm font-semibold text-[#FAF3E0] shadow-[0_4px_14px_rgba(74,15,26,0.3)] hover:shadow-[0_6px_18px_rgba(74,15,26,0.4)] hover:from-[#7B1C2E] transition-all duration-200">
                 <i data-lucide="credit-card" class="w-4 h-4"></i>
-                Bayar Pelunasan via Midtrans
-            </button>
-        </form>
-    @else
-        {{-- Pilih DP / Lunas --}}
-        <form action="{{ route('user.pembayaran.initiate', $pesanan->id) }}" method="POST" class="space-y-3">
-            @csrf
-            <label class="block rounded-2xl border-2 border-[#E2D4C0] p-5 cursor-pointer hover:border-[#C8960C] has-[:checked]:border-[#C8960C] has-[:checked]:bg-[#FAF3E0] transition-all">
-                <div class="flex items-start gap-3">
-                    <input type="radio" name="pilihan" value="dp" class="mt-1 accent-[#C8960C]" checked>
-                    <div>
-                        <p class="font-semibold text-[#4A0F1A]">Bayar DP 50%</p>
-                        <p class="text-sm text-[#4A2E28]/60 mt-0.5">Bayar setengah sekarang</p>
-                        <p class="font-serif font-bold text-[#C8960C] mt-1">Rp {{ number_format($pesanan->total_harga * 0.5, 0, ',', '.') }}</p>
-                    </div>
-                </div>
-            </label>
-
-            <label class="block rounded-2xl border-2 border-[#E2D4C0] p-5 cursor-pointer hover:border-[#C8960C] has-[:checked]:border-[#C8960C] has-[:checked]:bg-[#FAF3E0] transition-all">
-                <div class="flex items-start gap-3">
-                    <input type="radio" name="pilihan" value="lunas" class="mt-1 accent-[#C8960C]">
-                    <div>
-                        <p class="font-semibold text-[#4A0F1A]">Bayar Lunas</p>
-                        <p class="text-sm text-[#4A2E28]/60 mt-0.5">Bayar penuh sekarang, lebih hemat</p>
-                        <p class="font-serif font-bold text-[#C8960C] mt-1">Rp {{ number_format($pesanan->total_harga, 0, ',', '.') }}</p>
-                    </div>
-                </div>
-            </label>
-
-            <button type="submit"
-                class="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-[#6B1625] to-[#3A0A12] px-6 py-3.5 text-sm font-semibold text-[#FAF3E0] shadow-[0_4px_14px_rgba(74,15,26,0.3)] hover:shadow-[0_6px_18px_rgba(74,15,26,0.4)] hover:from-[#7B1C2E] transition-all duration-200 mt-2">
-                <i data-lucide="credit-card" class="w-4 h-4"></i>
-                Lanjut Bayar via Midtrans
+                Bayar DP via Midtrans
             </button>
         </form>
     @endif

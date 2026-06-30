@@ -13,7 +13,8 @@ class Pemesanan extends Model
     protected $fillable = [
         'kode_pemesanan', 'user_id', 'zona_id',
         'tanggal_pemesanan', 'tanggal_pakai', 'jenis',
-        'lokasi', 'ongkos_lokasi', 'no_hp', 'nama_pemesan',
+        'lokasi', 'metode_pengambilan', 'metode_pengembalian',
+        'ongkos_lokasi', 'no_hp', 'nama_pemesan',
         'catatan', 'alasan_penolakan', 'total_harga', 'status',
     ];
 
