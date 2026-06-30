@@ -4,25 +4,28 @@
 
 @section('content')
 @php
-    $summary = [
-        ['label' => 'Pendapatan Bulan Ini', 'value' => 'Rp 45.500.000'],
-        ['label' => 'Total Pemesanan', 'value' => '18'],
-        ['label' => 'Pemesanan Selesai', 'value' => '12'],
-        ['label' => 'Pemesanan Dibatalkan', 'value' => '2'],
-        ['label' => 'Rata-rata Nilai Order', 'value' => 'Rp 2.527.000'],
-    ];
-
-    $popularItems = [
-        ['name' => 'Paket Gold Wedding', 'count' => '8 kali dipesan'],
-        ['name' => 'Kamera Canon EOS', 'count' => '6 kali dipesan'],
-        ['name' => 'Fotografer Profesional', 'count' => '5 kali dipesan'],
-    ];
-
-    $transactions = [
-        ['kode' => 'AVR-001', 'customer' => 'Tazkiyah', 'item' => 'Paket Gold Wedding', 'total' => 'Rp 5.500.000', 'status' => 'Selesai', 'tanggal' => '10 Juni 2026'],
-        ['kode' => 'AVR-002', 'customer' => 'Siti', 'item' => 'Kamera Canon EOS', 'total' => 'Rp 300.000', 'status' => 'Berlangsung', 'tanggal' => '12 Juni 2026'],
-        ['kode' => 'AVR-003', 'customer' => 'Zikra', 'item' => 'Paket Silver', 'total' => 'Rp 3.500.000', 'status' => 'Dibatalkan', 'tanggal' => '13 Juni 2026'],
-    ];
+$summary = [
+    [
+        'label' => 'Pendapatan Bulan Ini',
+        'value' => 'Rp ' . number_format($pendapatanBulanIni,0,',','.')
+    ],
+    [
+        'label' => 'Total Pemesanan',
+        'value' => $totalPemesanan
+    ],
+    [
+        'label' => 'Pemesanan Selesai',
+        'value' => $pemesananSelesai
+    ],
+    [
+        'label' => 'Pemesanan Dibatalkan',
+        'value' => $pemesananDibatalkan
+    ],
+    [
+        'label' => 'Rata-rata Nilai Order',
+        'value' => 'Rp ' . number_format($rataOrder,0,',','.')
+    ],
+];
 @endphp
 
 <div class="admin-section">
@@ -34,7 +37,10 @@
             </p>
         </div>
 
-        <button class="admin-btn-primary">Export Excel</button>
+        <a href="{{ route('admin.laporan.export') }}"
+        class="admin-btn-primary">
+            Export Excel
+        </a>
     </div>
 
     <div class="admin-card p-5">
@@ -56,14 +62,49 @@
     </div>
 
     <div class="admin-card p-6">
-        <h2 class="admin-title mb-4 text-xl">Grafik Pendapatan</h2>
-        <div class="flex h-64 items-end gap-3 rounded-2xl border border-dashed border-[#E2D4C0] bg-[#FAF3E0] p-6">
-            @foreach ([35, 55, 42, 75, 60, 90, 80] as $height)
-                <div class="flex flex-1 items-end">
-                    <div class="w-full rounded-t-xl bg-[#4A0F1A]/80" style="height: {{ $height }}%;"></div>
+    <h2 class="admin-title mb-4 text-xl">
+        Grafik Pendapatan
+    </h2>
+
+    <div class="flex h-64 items-end gap-3 rounded-2xl border border-dashed border-[#E2D4C0] bg-[#FAF3E0] p-6">
+
+    @foreach($grafikPendapatan as $item)
+
+        @php
+            $height = ($item['total'] / $maxPendapatan) * 100;
+        @endphp
+
+        <div class="flex flex-1 flex-col items-center h-full">
+
+            {{-- Nominal --}}
+            @if($item['total'] > 0)
+                <span class="mb-2 text-[11px] font-semibold text-[#4A0F1A]">
+                    Rp {{ number_format($item['total']/1000000,1) }} jt
+                </span>
+            @else
+                <span class="mb-2 h-[18px]"></span>
+            @endif
+
+            {{-- Area batang --}}
+            <div class="flex-1 flex items-end justify-center w-full">
+
+                <div
+                    class="w-10 rounded-t-xl bg-[#4A0F1A] hover:bg-[#731827] transition-all duration-300 cursor-pointer"
+                    style="height: {{ $height }}%;">
                 </div>
-            @endforeach
+
+            </div>
+
+            {{-- Nama bulan --}}
+            <span class="mt-2 text-xs font-medium">
+                {{ $item['bulan'] }}
+            </span>
+
         </div>
+
+    @endforeach
+
+    </div>
     </div>
 
     <div class="admin-card p-6">
@@ -75,9 +116,17 @@
                         <span class="flex h-8 w-8 items-center justify-center rounded-full bg-[#4A0F1A] text-sm font-bold text-white">
                             {{ $index + 1 }}
                         </span>
-                        <span class="font-semibold text-[#4A2E28]">{{ $item['name'] }}</span>
+                        <div>
+                        <p class="font-semibold text-[#4A2E28]">
+                            {{ $item['name'] }}
+                        </p>
+
+                        <p class="text-xs text-gray-500">
+                            {{ $item['jenis'] }}
+                        </p>
                     </div>
-                    <span class="admin-muted text-sm">{{ $item['count'] }}</span>
+                    </div>
+                    <span class="admin-muted text-sm">{{ $item['count'] }} kali dipesan</span>
                 </div>
             @endforeach
         </div>
@@ -106,9 +155,23 @@
                             <td class="admin-table-td">{{ $trx['item'] }}</td>
                             <td class="admin-table-td">{{ $trx['total'] }}</td>
                             <td class="admin-table-td">
-                                <span class="{{ $trx['status'] === 'Selesai' ? 'badge-active' : ($trx['status'] === 'Dibatalkan' ? 'badge-inactive' : 'badge-warning') }}">
-                                    {{ $trx['status'] }}
-                                </span>
+                                @php
+
+                    $statusClass = match($trx['status']) {
+
+                        'selesai' => 'badge-active',
+
+                        'dibatalkan' => 'badge-inactive',
+
+                        default => 'badge-warning',
+
+                    };
+
+                    @endphp
+
+                    <span class="{{ $statusClass }}">
+                        {{ ucfirst($trx['status']) }}
+                    </span>
                             </td>
                             <td class="admin-table-td">{{ $trx['tanggal'] }}</td>
                         </tr>

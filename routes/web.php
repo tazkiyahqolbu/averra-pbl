@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\PengembalianBarangController;
 use App\Http\Controllers\Admin\GaleriController;
 use App\Http\Controllers\Admin\ZonaLokasiController;
 use App\Http\Controllers\Admin\BlokirTanggalController;
+use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\PemesananController as AdminPemesananController;
 use App\Http\Controllers\Admin\PembayaranController as AdminPembayaranController;
 use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
@@ -214,19 +215,25 @@ Route::middleware(['auth', 'role:admin'])
         Route::post('/blokir-tanggal', [BlokirTanggalController::class, 'store'])
             ->name('blokir-tanggal.store');
 
-            Route::get('/testimoni', [AdminTestimoniController::class, 'index'])
+        Route::get('/testimoni', [AdminTestimoniController::class, 'index'])
                 ->name('testimoni.index');
 
-            Route::patch('/testimoni/{id}/balas', [AdminTestimoniController::class, 'balas'])
+        Route::patch('/testimoni/{id}/balas', [AdminTestimoniController::class, 'balas'])
                 ->name('testimoni.balas');
 
         Route::delete('/blokir-tanggal/{id}', [BlokirTanggalController::class, 'destroy'])
             ->name('blokir-tanggal.destroy');
+
+        Route::get('/laporan', [LaporanController::class, 'index'])
+            ->name('laporan.index');
+
+        Route::get('/laporan/export-excel', [LaporanController::class, 'exportExcel'])
+            ->name('laporan.export');
     });
 
 // Admin view-only routes (preview frontend)
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::view('/laporan',         'admin.laporan.index')->name('laporan.index');
+    // Route::view('/laporan',         'admin.laporan.index')->name('laporan.index');
     Route::get('/testimoni', function () {
         $testimonis  = \App\Models\Testimoni::with([
             'user',
