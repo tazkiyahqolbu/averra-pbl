@@ -144,7 +144,7 @@
             <div class="rounded-2xl border border-[#E2D4C0] bg-[#FFFDF7] p-8 hover:shadow-xl">
                 <div class="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-[#C8A84B]/10 text-[#C8A84B]">
                     <i data-lucide="music" class="h-8 w-8"></i>
-                </div>
+                 </div>
 
                 <h4 class="font-serif text-2xl text-[#4A0F1A] font-medium mb-3">
                     Entertain
