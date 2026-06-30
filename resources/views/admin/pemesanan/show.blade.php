@@ -87,6 +87,12 @@
                         @if($tglAmbil && $tglKembali)
                             <p><span class="admin-muted text-sm">Durasi</span><br><strong>{{ \Carbon\Carbon::parse($tglAmbil)->diffInDays(\Carbon\Carbon::parse($tglKembali)) + 1 }} hari</strong></p>
                         @endif
+                        <p><span class="admin-muted text-sm">Metode Pengambilan</span><br>
+                            <strong>{{ $pemesanan->metode_pengambilan === 'dikirim' ? 'Dikirim ke Lokasi' : 'Ambil Sendiri ke Sanggar' }}</strong>
+                        </p>
+                        <p><span class="admin-muted text-sm">Metode Pengembalian</span><br>
+                            <strong>{{ $pemesanan->metode_pengembalian === 'dijemput' ? 'Dijemput Tim Kami' : 'Antar Sendiri ke Sanggar' }}</strong>
+                        </p>
                     @else
                         <p><span class="admin-muted text-sm">Tanggal Pakai</span><br><strong>{{ $pemesanan->tanggal_pakai ? \Carbon\Carbon::parse($pemesanan->tanggal_pakai)->format('d F Y') : '-' }}</strong></p>
                         <p><span class="admin-muted text-sm">Lokasi / Zona</span><br><strong>{{ $pemesanan->zonaLokasi?->nama_zona ?? '-' }}</strong></p>

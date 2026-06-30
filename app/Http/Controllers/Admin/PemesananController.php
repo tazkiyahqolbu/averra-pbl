@@ -163,6 +163,48 @@ class PemesananController extends Controller
             ->with('success', 'Acara ditandai selesai.');
     }
 
+    public function updateStatus(Request $request, $id): RedirectResponse
+    {
+        $pemesanan = Pemesanan::with(['user', 'detailPemesanans'])->findOrFail($id);
+
+        $allowedTransitions = [
+            'menunggu'              => 'menunggu_dp',
+            'menunggu_diambil'      => 'sedang_disewa',
+            'sedang_disewa'         => 'menunggu_pengembalian',
+            'menunggu_pengembalian' => 'menunggu_pelunasan',
+            'menunggu_pelunasan'    => 'selesai',
+        ];
+
+        $newStatus = $request->input('status');
+
+        if ($newStatus === 'dibatalkan') {
+            if (!in_array($pemesanan->status, ['menunggu', 'menunggu_dp', 'menunggu_diambil'])) {
+                return back()->with('error', 'Pesanan tidak bisa dibatalkan di status ini.');
+            }
+            $pemesanan->update(['status' => 'dibatalkan']);
+            return redirect()->route('admin.pemesanan.show', $id)
+                ->with('success', "Pesanan #{$pemesanan->kode_pemesanan} berhasil dibatalkan.");
+        }
+
+        $expectedNew = $allowedTransitions[$pemesanan->status] ?? null;
+        if ($expectedNew !== $newStatus) {
+            return back()->with('error', 'Transisi status tidak valid.');
+        }
+
+        $pemesanan->update(['status' => $newStatus]);
+
+        if ($newStatus === 'menunggu_dp') {
+            Mail::to($pemesanan->user->email)->queue(new InvoiceMail($pemesanan));
+        }
+
+        if ($newStatus === 'menunggu_pelunasan') {
+            Mail::to($pemesanan->user->email)->queue(new TagihanPelunasanMail($pemesanan));
+        }
+
+        return redirect()->route('admin.pemesanan.show', $id)
+            ->with('success', "Status pesanan #{$pemesanan->kode_pemesanan} berhasil diperbarui.");
+    }
+
     public function tolak(Request $request, $id): RedirectResponse
     {
         $request->validate([

@@ -53,12 +53,12 @@ class PemesananController extends Controller
                 'detailPemesanans.paket',
                 'detailPemesanans.pengembalianBarang',
                 'pembayarans',
-                'testimoni',
+                'testimoni.fotos',
                 'pembatalan',
             ])
             ->findOrFail($id);
 
-        if ($pesanan->isMenungguPembayaran()) {
+        if ($pesanan->isMenungguPembayaran() || $pesanan->isMenungguDp() || $pesanan->isMenungguPelunasan()) {
             return redirect()->route('user.pemesanan.invoice', $id);
         }
 
@@ -220,19 +220,21 @@ class PemesananController extends Controller
 
             // Buat Pemesanan
             $pemesanan = Pemesanan::create([
-                'kode_pemesanan'    => 'PMB-' . strtoupper(Str::random(8)),
-                'user_id'           => Auth::id(),
-                'zona_id'           => $zonaId,
-                'tanggal_pemesanan' => now()->toDateString(),
-                'tanggal_pakai'     => $tanggalPakai,
-                'jenis'             => $jenis,
-                'lokasi'            => $request->alamat_lengkap,
-                'ongkos_lokasi'     => $ongkosLokasi,
-                'no_hp'             => $request->no_hp,
-                'nama_pemesan'      => $request->nama_pemesan,
-                'catatan'           => $request->keterangan_acara,
-                'total_harga'       => $totalHarga,
-                'status'            => 'menunggu',
+                'kode_pemesanan'     => 'PMB-' . strtoupper(Str::random(8)),
+                'user_id'            => Auth::id(),
+                'zona_id'            => $zonaId,
+                'tanggal_pemesanan'  => now()->toDateString(),
+                'tanggal_pakai'      => $tanggalPakai,
+                'jenis'              => $jenis,
+                'lokasi'             => $request->alamat_lengkap,
+                'metode_pengambilan' => $jenis === 'sewa_barang' ? $request->metode_pengambilan : null,
+                'metode_pengembalian'=> $jenis === 'sewa_barang' ? $request->metode_pengembalian : null,
+                'ongkos_lokasi'      => $ongkosLokasi,
+                'no_hp'              => $request->no_hp,
+                'nama_pemesan'       => $request->nama_pemesan,
+                'catatan'            => $request->keterangan_acara,
+                'total_harga'        => $totalHarga,
+                'status'             => 'menunggu',
             ]);
 
             // Buat DetailPemesanan
@@ -282,6 +284,7 @@ class PemesananController extends Controller
             'detailPemesanans.paket',
             'zonaLokasi',
             'pembayarans',
+            'testimoni',
         ])->where('user_id', Auth::id())->findOrFail($id);
 
         return view('user.invoice.show', compact('pesanan'));
@@ -298,6 +301,7 @@ class PemesananController extends Controller
         ])->where('user_id', Auth::id())->findOrFail($id);
 
         $pdf = Pdf::loadView('user.invoice.pdf', compact('pesanan'));
-        return $pdf->download('invoice-' .$pesanan->kode_pemesanan . '.pdf');
+        return $pdf->download('invoice-' . $pesanan->kode_pemesanan . '.pdf');
     }
+
 }

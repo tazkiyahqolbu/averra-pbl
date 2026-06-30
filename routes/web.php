@@ -7,7 +7,6 @@ use App\Http\Controllers\Admin\KategoriPaketController;
 use App\Http\Controllers\Admin\BarangController;
 use App\Http\Controllers\Admin\KategoriBarangController;
 use App\Http\Controllers\Admin\KategoriJasaController;
-use App\Http\Controllers\Admin\PengembalianBarangController;
 use App\Http\Controllers\Admin\GaleriController;
 use App\Http\Controllers\Admin\ZonaLokasiController;
 use App\Http\Controllers\Admin\BlokirTanggalController;
@@ -150,6 +149,7 @@ Route::middleware(['auth', 'role:admin'])
         Route::patch('/pemesanan/{id}/diambil',        [AdminPemesananController::class, 'tandaiDiambil'])->name('pemesanan.diambil');
         Route::post('/pemesanan/{id}/dikembalikan',    [AdminPemesananController::class, 'tandaiDikembalikan'])->name('pemesanan.dikembalikan');
         Route::patch('/pemesanan/{id}/acara-selesai',  [AdminPemesananController::class, 'tandaiAcaraSelesai'])->name('pemesanan.acara-selesai');
+        Route::patch('/pemesanan/{id}/update-status',  [AdminPemesananController::class, 'updateStatus'])->name('pemesanan.update-status');
 
         // Pembatalan
         Route::get('/pembatalan',                          [AdminPembatalanController::class, 'index'])->name('pembatalan.index');
@@ -207,15 +207,11 @@ Route::middleware(['auth', 'role:admin'])
         Route::put('/kategori-paket/{id}', [KategoriPaketController::class, 'update'])->name('kategori-paket.update');
         Route::delete('/kategori-paket/{id}', [KategoriPaketController::class, 'destroy'])->name('kategori-paket.destroy');
 
-        Route::prefix('pengembalian')
-            ->name('pengembalian.')
-            ->controller(PengembalianBarangController::class)
-            ->group(function () {
-
-                Route::get('/', 'index')->name('index');
-                Route::get('/{id}', 'show')->name('show');
-                Route::put('/{id}', 'update')->name('update');
-            });
+        Route::prefix('pengembalian')->name('pengembalian.')->group(function () {
+            Route::get('/', fn() => view('admin.pengembalian.index'))->name('index');
+            Route::get('/{id}', fn($_id) => view('admin.pengembalian.show'))->name('show');
+            Route::put('/{id}', fn() => back()->with('error', 'Fitur ini belum diimplementasikan.'))->name('update');
+        });
 
         Route::prefix('galeri')
             ->name('galeri.')

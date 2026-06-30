@@ -49,7 +49,7 @@
                         <p class="text-sm text-[#4A2E28]">Jadwal Kembali: {{ $return['jadwal'] }}</p>
                     </div>
 
-                    <a href="{{ route('admin.pengembalian.show') }}" class="admin-btn-primary">
+                    <a href="{{ route('admin.pengembalian.show', $return['kode']) }}" class="admin-btn-primary">
                         Periksa Barang
                     </a>
                 </div>
