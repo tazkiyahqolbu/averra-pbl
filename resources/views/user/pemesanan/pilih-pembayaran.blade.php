@@ -49,27 +49,23 @@
         {{-- Pilih DP / Lunas --}}
         <form action="{{ route('user.pembayaran.initiate', $pesanan->id) }}" method="POST" class="space-y-3">
             @csrf
-            <label class="block rounded-2xl border-2 border-[#E2D4C0] p-5 cursor-pointer hover:border-[#C8960C] has-[:checked]:border-[#C8960C] has-[:checked]:bg-[#FAF3E0] transition-all">
+            <input type="hidden" name="pilihan" value="dp">
+
+            <div class="rounded-2xl border-2 border-[#C8960C] p-5 bg-[#FAF3E0]">
                 <div class="flex items-start gap-3">
-                    <input type="radio" name="pilihan" value="dp" class="mt-1 accent-[#C8960C]" checked>
+                    <div class="mt-1">
+                        <i data-lucide="check-circle" class="h-4 w-4 text-[#C8960C]"></i>
+                    </div>
                     <div>
                         <p class="font-semibold text-[#4A0F1A]">Bayar DP 50%</p>
                         <p class="text-sm text-[#4A2E28]/60 mt-0.5">Bayar setengah sekarang</p>
                         <p class="font-serif font-bold text-[#C8960C] mt-1">Rp {{ number_format($pesanan->total_harga * 0.5, 0, ',', '.') }}</p>
                     </div>
                 </div>
-            </label>
+            </div>
 
-            <label class="block rounded-2xl border-2 border-[#E2D4C0] p-5 cursor-pointer hover:border-[#C8960C] has-[:checked]:border-[#C8960C] has-[:checked]:bg-[#FAF3E0] transition-all">
-                <div class="flex items-start gap-3">
-                    <input type="radio" name="pilihan" value="lunas" class="mt-1 accent-[#C8960C]">
-                    <div>
-                        <p class="font-semibold text-[#4A0F1A]">Bayar Lunas</p>
-                        <p class="text-sm text-[#4A2E28]/60 mt-0.5">Bayar penuh sekarang, lebih hemat</p>
-                        <p class="font-serif font-bold text-[#C8960C] mt-1">Rp {{ number_format($pesanan->total_harga, 0, ',', '.') }}</p>
-                    </div>
-                </div>
-            </label>
+
+
 
             <button type="submit"
                 class="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-[#6B1625] to-[#3A0A12] px-6 py-3.5 text-sm font-semibold text-[#FAF3E0] shadow-[0_4px_14px_rgba(74,15,26,0.3)] hover:shadow-[0_6px_18px_rgba(74,15,26,0.4)] hover:from-[#7B1C2E] transition-all duration-200 mt-2">

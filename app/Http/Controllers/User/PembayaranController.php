@@ -84,10 +84,15 @@ class PembayaranController extends Controller
             $tahap       = 'pelunasan';
             $persenDp    = null;
         } else {
+<<<<<<< HEAD
+=======
+            // Kunci pembayaran awal: hanya DP
+>>>>>>> 1f20014 (Fix flow: DP only then tagihan pelunasan)
             $tahap       = 'dp';
             $persenDp    = 50;
             $jumlahBayar = round($pesanan->total_harga * 0.5);
         }
+
 
         $kodeTransaksi = 'TRX-' . strtoupper(Str::random(8));
 
