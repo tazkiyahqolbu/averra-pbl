@@ -131,7 +131,7 @@ $search     = request('search', '');
                     <p class="mt-1 text-sm text-[#4A2E28]">Coba ubah kata kunci atau pilih kategori lain.</p>
                 </div>
             @else
-                <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                <div class="grid gap-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     @foreach ($items as $item)
                         <article class="group flex flex-col overflow-hidden rounded-2xl border border-[#E2D4C0] bg-[#FFFDF7] shadow-sm transition-all duration-300 hover:scale-[1.025] hover:border-[#C8A84B]/50 hover:shadow-xl scroll-fade scroll-delay-{{ min($loop->index % 4 + 1, 4) }}">
 

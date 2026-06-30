@@ -91,18 +91,18 @@
                 <thead class="border-b border-[#E2D4C0] bg-[#FAF3E0]">
                     <tr>
                         <th class="admin-table-th">No. Pesanan</th>
-                        <th class="admin-table-th">Customer</th>
+                        <th class="hidden sm:table-cell admin-table-th">Customer</th>
                         <th class="admin-table-th">Item</th>
                         <th class="admin-table-th">Total</th>
                         <th class="admin-table-th">Status</th>
-                        <th class="admin-table-th">Tanggal</th>
+                        <th class="hidden md:table-cell admin-table-th">Tanggal</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-[#E2D4C0]">
                     @foreach ($transactions as $trx)
                         <tr>
                             <td class="admin-table-td font-semibold">{{ $trx['kode'] }}</td>
-                            <td class="admin-table-td">{{ $trx['customer'] }}</td>
+                            <td class="hidden sm:table-cell admin-table-td">{{ $trx['customer'] }}</td>
                             <td class="admin-table-td">{{ $trx['item'] }}</td>
                             <td class="admin-table-td">{{ $trx['total'] }}</td>
                             <td class="admin-table-td">
@@ -110,7 +110,7 @@
                                     {{ $trx['status'] }}
                                 </span>
                             </td>
-                            <td class="admin-table-td">{{ $trx['tanggal'] }}</td>
+                            <td class="hidden md:table-cell admin-table-td">{{ $trx['tanggal'] }}</td>
                         </tr>
                     @endforeach
                 </tbody>

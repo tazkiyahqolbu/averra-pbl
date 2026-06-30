@@ -81,7 +81,7 @@ $costumes = [
                 </a>
             </div>
         </div>
-        <p class="absolute bottom-8 left-1/2 -translate-x-1/2 text-[10px] tracking-[0.45em] text-[#7B1C2E]/70 whitespace-nowrap font-medium uppercase">
+        <p class="absolute bottom-8 left-0 right-0 text-center text-[10px] tracking-[0.2em] sm:tracking-[0.45em] text-[#7B1C2E]/70 font-medium uppercase px-4 overflow-hidden">
             Adat Basandi Syarak · Syarak Basandi Kitabullah
         </p>
     </section>
@@ -150,8 +150,9 @@ $costumes = [
             ];
         @endphp
 
-        <div class="mt-16 mx-auto max-w-5xl px-10 overflow-x-auto">
-            <div class="flex items-start min-w-[600px] pt-2">
+        {{-- Mobile: grid 3x2, Desktop: horizontal timeline --}}
+        <div class="mt-16 mx-auto max-w-5xl px-6">
+            <div class="hidden lg:flex items-start pt-2">
                 @foreach($steps as $i => $s)
                     <div class="flex flex-1 flex-col items-center scroll-fade scroll-delay-{{ $i + 1 }}">
                         <div class="flex w-full items-center">
@@ -173,6 +174,19 @@ $costumes = [
                     </div>
                 @endforeach
             </div>
+
+            {{-- Mobile grid 3x2 --}}
+            <div class="grid grid-cols-3 gap-4 lg:hidden">
+                @foreach($steps as $s)
+                    <div class="flex flex-col items-center text-center p-3 rounded-xl bg-[#FAF3E0] border border-[#E2D4C0]">
+                        <div class="relative flex h-12 w-12 items-center justify-center rounded-full bg-[#4A0F1A] shadow-md">
+                            <i data-lucide="{{ $s['icon'] }}" class="h-5 w-5 text-[#C8A84B]"></i>
+                            <span class="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#C8A84B] text-[9px] font-bold text-[#4A0F1A]">{{ $s['num'] }}</span>
+                        </div>
+                        <h3 class="mt-2 font-serif text-[11px] font-semibold text-[#4A0F1A] leading-tight">{{ $s['title'] }}</h3>
+                    </div>
+                @endforeach
+            </div>
         </div>
     </section>
 
@@ -186,7 +200,7 @@ $costumes = [
             <div class="mx-auto mt-3 h-[1px] w-32 bg-gradient-to-r from-transparent via-[#C8A84B] to-transparent"></div>
         </div>
 
-        <div class="mt-14 mx-auto max-w-6xl px-6 grid gap-8 md:grid-cols-3">
+        <div class="mt-14 mx-auto max-w-6xl px-6 grid gap-4 sm:gap-8 grid-cols-2 md:grid-cols-3">
             @foreach($pakets ?? [] as $p)
     <div class="overflow-hidden rounded-2xl border border-[#E2D4C0] bg-[#FAF3E0] transition-all duration-300 hover:scale-[1.03] hover:border-[#C8A84B]/50 hover:shadow-xl scroll-fade scroll-delay-{{ $loop->index + 1 }}">
         <div class="aspect-[4/3] overflow-hidden">

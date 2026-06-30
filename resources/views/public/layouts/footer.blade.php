@@ -1,9 +1,9 @@
-<footer id="kontak" class="bg-maroon-deep pt-14 pb-6 text-cream">
+<footer id="kontak" class="bg-maroon-deep pt-8 pb-6 text-cream md:pt-14">
     <div class="mx-auto max-w-7xl px-6">
-        <div class="grid gap-8 md:grid-cols-3">
+        <div class="grid gap-0 md:gap-8 md:grid-cols-3 divide-y divide-[#C8A84B]/15 md:divide-y-0">
 
             <!-- BRAND -->
-            <div>
+            <div class="pt-0 pb-6 md:py-0">
                 <div class="text-2xl tracking-[0.25em] text-gold font-serif">
                     SILART
                 </div>
@@ -19,7 +19,7 @@
             </div>
 
             <!-- KONTAK -->
-            <div>
+            <div class="py-6 md:py-0">
                 <h4 class="text-xs tracking-[0.3em] text-gold font-bold uppercase">
                     — KONTAK —
                 </h4>
@@ -62,7 +62,7 @@
             </div>
 
             <!-- WHATSAPP -->
-            <div>
+            <div class="pt-6 pb-0 md:py-0">
                 <h4 class="text-xs tracking-[0.3em] text-gold font-bold uppercase">
                     — TERHUBUNG —
                 </h4>

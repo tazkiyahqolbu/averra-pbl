@@ -7,12 +7,22 @@
     ];
 @endphp
 
-<div class="w-56 flex-shrink-0"></div>
-<aside class="w-56 flex flex-col h-screen fixed top-0 left-0 overflow-y-auto z-40"
+{{-- Spacer desktop --}}
+<div class="hidden lg:block w-56 flex-shrink-0"></div>
+
+{{-- Mobile Overlay --}}
+<div x-show="sidebarOpen" x-cloak
+     x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+     x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+     @click="sidebarOpen = false"
+     class="fixed inset-0 z-30 bg-black/50 lg:hidden"></div>
+
+<aside class="w-56 flex flex-col h-screen fixed top-0 left-0 overflow-y-auto z-40 transition-transform duration-300 lg:translate-x-0"
+    :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
     style="background: linear-gradient(to bottom, #5C1520 0%, #4A0F1A 50%, #3A0A12 100%);">
 
     {{-- Logo --}}
-    <div class="px-5 py-6 border-b border-white/10">
+    <div class="px-5 py-6 border-b border-white/10 flex items-center justify-between">
         <a href="{{ url('/') }}" class="flex items-center gap-2.5 group">
             <div
                 class="flex h-9 w-9 items-center justify-center rounded-full border border-[#C8960C]/50 bg-white/5 group-hover:bg-white/10 transition duration-200">
@@ -20,6 +30,9 @@
             </div>
             <span class="font-serif text-base font-bold tracking-[0.2em] text-[#FAF3E0]">SILART</span>
         </a>
+        <button @click="sidebarOpen = false" class="lg:hidden flex h-8 w-8 items-center justify-center rounded-lg text-white/50 hover:bg-white/10 hover:text-white transition">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
     </div>
 
     {{-- User info --}}
@@ -50,6 +63,7 @@
         @foreach ($navItems as $n)
             @php $active = request()->routeIs($n['route']); @endphp
             <a href="{{ route($n['route']) }}"
+                @click="sidebarOpen = false"
                 class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition duration-200
                       {{ $active
                           ? 'bg-[#C8960C]/20 text-[#C8960C] border border-[#C8960C]/25'
