@@ -53,7 +53,7 @@
                 <div class="absolute -inset-2 rounded-2xl bg-[#C8A84B]/10 blur opacity-70 transition duration-500 group-hover:opacity-100"></div>
                 <div class="relative aspect-[3/4] overflow-hidden rounded-2xl border border-[#E2D4C0] shadow-lg">
                     <img            
-                        src="{{ asset('image/Busana tari.jpeg') }}" 
+                        src="{{ asset('foto/Busana tari.jpeg') }}" 
                         alt="Tim Sanggar" 
                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     >

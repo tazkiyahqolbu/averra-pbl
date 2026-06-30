@@ -142,6 +142,8 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('/pemesanan/{id}',                  [AdminPemesananController::class, 'show'])->name('pemesanan.show');
         Route::patch('/pemesanan/{id}/konfirmasi',     [AdminPemesananController::class, 'konfirmasi'])->name('pemesanan.konfirmasi');
         Route::patch('/pemesanan/{id}/tolak',          [AdminPemesananController::class, 'tolak'])->name('pemesanan.tolak');
+        Route::patch('/pemesanan/{id}/diambil',        [AdminPemesananController::class, 'tandaiDiambil'])->name('pemesanan.diambil');
+        Route::post('/pemesanan/{id}/dikembalikan',    [AdminPemesananController::class, 'tandaiDikembalikan'])->name('pemesanan.dikembalikan');
 
         // Pembayaran
         Route::get('/pembayaran',                          [AdminPembayaranController::class, 'index'])->name('pembayaran.index');
@@ -234,21 +236,22 @@ Route::middleware(['auth', 'role:admin'])
             ->name('blokir-tanggal.destroy');
     });
 
-// // Admin view-only routes (preview frontend)
-// Route::prefix('admin')->name('admin.')->group(function () {
-//     Route::view('/laporan',         'admin.laporan.index')->name('laporan.index');
-//     Route::get('/testimoni', function () {
-//         $testimonis  = \App\Models\Testimoni::with([
-//             'user',
-//             'pemesanan.detailPemesanans.jasa',
-//             'pemesanan.detailPemesanans.paket',
-//             'pemesanan.detailPemesanans.barang',
-//             'fotos',
-//         ])->latest()->get();
-//         $rataRating  = round($testimonis->avg('rating'), 1);
-//         $totalUlasan = $testimonis->count();
-//         return view('admin.testimoni.index', compact('testimonis', 'rataRating', 'totalUlasan'));
-//     })->name('testimoni.index');
+// Admin view-only routes (preview frontend)
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::view('/laporan',         'admin.laporan.index')->name('laporan.index');
+    Route::get('/testimoni', function () {
+        $testimonis  = \App\Models\Testimoni::with([
+            'user',
+            'pemesanan.detailPemesanans.jasa',
+            'pemesanan.detailPemesanans.paket',
+            'pemesanan.detailPemesanans.barang',
+            'fotos',
+        ])->latest()->get();
+        $rataRating  = round($testimonis->avg('rating'), 1);
+        $totalUlasan = $testimonis->count();
+        return view('admin.testimoni.index', compact('testimonis', 'rataRating', 'totalUlasan'));
+    })->name('testimoni.index');
+});
 
 //     Route::patch('/testimoni/{id}/balas', function ($id) {
 //         $t = \App\Models\Testimoni::findOrFail($id);
@@ -261,6 +264,7 @@ Route::middleware(['auth', 'role:admin'])
 // Admin akun (profil)
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/akun',              [AdminProfileController::class, 'index'])->name('akun.index');
+    Route::put('/akun', [AdminProfileController::class, 'update'])->name('akun.update');
     Route::put('/akun/password',     [AdminProfileController::class, 'updatePassword'])->name('akun.password');
 });
 

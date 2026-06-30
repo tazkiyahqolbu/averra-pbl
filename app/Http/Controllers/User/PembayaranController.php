@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\PengembalianBarang;
 use App\Models\Pemesanan;
 use App\Services\MidtransService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 use App\Mail\PembayaranBerhasilMail;
@@ -25,7 +25,9 @@ class PembayaranController extends Controller
             ->with('pembayarans')
             ->findOrFail($id);
 
-        if (!in_array($pesanan->status, ['dikonfirmasi', 'berlangsung'])) {
+        $allowedStatuses = ['dikonfirmasi', 'berlangsung', 'menunggu_dp', 'menunggu_pelunasan'];
+
+        if (!in_array($pesanan->status, $allowedStatuses)) {
             return redirect()->route('user.pemesanan.show', $id)
                 ->with('error', 'Pesanan belum dikonfirmasi oleh admin.');
         }
@@ -34,7 +36,7 @@ class PembayaranController extends Controller
             ->where('status', 'terverifikasi')
             ->sum('jumlah_bayar');
 
-        if ($sudahBayar >= $pesanan->total_harga) {
+        if ($sudahBayar >= $pesanan->total_harga && $pesanan->status !== 'menunggu_pelunasan') {
             return redirect()->route('user.pemesanan.show', $id)
                 ->with('error', 'Pesanan ini sudah lunas.');
         }
@@ -50,10 +52,12 @@ class PembayaranController extends Controller
     public function initiate(Request $request, int $id): View|RedirectResponse
     {
         $pesanan = Pemesanan::where('user_id', Auth::id())
-            ->with(['pembayarans', 'user'])
+            ->with(['pembayarans', 'user', 'detailPemesanans'])
             ->findOrFail($id);
 
-        if ($pesanan->status !== 'dikonfirmasi') {
+        $allowedStatuses = ['dikonfirmasi', 'berlangsung', 'menunggu_dp', 'menunggu_pelunasan'];
+
+        if (!in_array($pesanan->status, $allowedStatuses)) {
             return back()->with('error', 'Pesanan belum dikonfirmasi.');
         }
 
@@ -62,11 +66,23 @@ class PembayaranController extends Controller
             ->where('status', 'terverifikasi')
             ->isNotEmpty();
 
-        if ($isPelunasan) {
-            $sudahBayar   = $pesanan->pembayarans->where('status', 'terverifikasi')->sum('jumlah_bayar');
-            $jumlahBayar  = max(0, $pesanan->total_harga - $sudahBayar);
-            $tahap        = 'pelunasan';
-            $persenDp     = null;
+        if ($isPelunasan || $pesanan->isMenungguPelunasan()) {
+            $sudahBayar  = $pesanan->pembayarans->where('status', 'terverifikasi')->sum('jumlah_bayar');
+            $sisaSewa    = max(0, (float) $pesanan->total_harga - (float) $sudahBayar);
+
+            // Tambah denda jika sewa barang
+            $totalDenda = 0;
+            if ($pesanan->jenis === 'sewa_barang') {
+                $pengembalian = PengembalianBarang::whereHas(
+                    'detailPemesanan',
+                    fn($q) => $q->where('pemesanan_id', $pesanan->id)
+                )->first();
+                $totalDenda = $pengembalian ? (float) $pengembalian->total_denda : 0;
+            }
+
+            $jumlahBayar = $sisaSewa + $totalDenda;
+            $tahap       = 'pelunasan';
+            $persenDp    = null;
         } else {
             // Kunci pembayaran awal: hanya DP
             $tahap       = 'dp';
@@ -87,7 +103,7 @@ class PembayaranController extends Controller
             'dibayar_pada'      => null,
         ]);
 
-        $user     = $pesanan->user;
+        $user      = $pesanan->user;
         $namaParts = explode(' ', $user->name, 2);
 
         $params = [
@@ -166,7 +182,11 @@ class PembayaranController extends Controller
 
             if ($pembayaran->tahap === 'pelunasan') {
                 $pesanan->update(['status' => 'selesai']);
+            } elseif ($pesanan->jenis === 'sewa_barang') {
+                // DP sewa barang → tunggu diambil oleh user
+                $pesanan->update(['status' => 'menunggu_diambil']);
             } else {
+                // DP / lunas acara → langsung berlangsung
                 $pesanan->update(['status' => 'berlangsung']);
             }
 

@@ -25,10 +25,17 @@ class Pemesanan extends Model
     ];
 
     // ── Status methods ─────────────────────────────────────────────────────────
-    public function isMenungguKonfirmasi(): bool { return $this->status === 'menunggu'; }
-    public function isMenungguPembayaran(): bool { return $this->status === 'dikonfirmasi'; }
-    public function isBerlangsung(): bool        { return $this->status === 'berlangsung'; }
-    public function isSelesai(): bool            { return $this->status === 'selesai'; }
+    public function isMenungguKonfirmasi(): bool    { return $this->status === 'menunggu'; }
+    public function isMenungguPembayaran(): bool    { return $this->status === 'dikonfirmasi'; }
+    public function isBerlangsung(): bool           { return $this->status === 'berlangsung'; }
+    public function isSelesai(): bool               { return $this->status === 'selesai'; }
+
+    // ── Status sewa barang ─────────────────────────────────────────────────────
+    public function isMenungguDp(): bool            { return $this->status === 'menunggu_dp'; }
+    public function isMenungguDiambil(): bool       { return $this->status === 'menunggu_diambil'; }
+    public function isSedangDisewa(): bool          { return $this->status === 'sedang_disewa'; }
+    public function isMenungguPengembalian(): bool  { return $this->status === 'menunggu_pengembalian'; }
+    public function isMenungguPelunasan(): bool     { return $this->status === 'menunggu_pelunasan'; }
 
     // ── Accessors ──────────────────────────────────────────────────────────────
     public function getKategoriOrderAttribute(): string
