@@ -142,6 +142,8 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('/pemesanan/{id}',                  [AdminPemesananController::class, 'show'])->name('pemesanan.show');
         Route::patch('/pemesanan/{id}/konfirmasi',     [AdminPemesananController::class, 'konfirmasi'])->name('pemesanan.konfirmasi');
         Route::patch('/pemesanan/{id}/tolak',          [AdminPemesananController::class, 'tolak'])->name('pemesanan.tolak');
+        Route::patch('/pemesanan/{id}/diambil',        [AdminPemesananController::class, 'tandaiDiambil'])->name('pemesanan.diambil');
+        Route::post('/pemesanan/{id}/dikembalikan',    [AdminPemesananController::class, 'tandaiDikembalikan'])->name('pemesanan.dikembalikan');
 
         // Pembayaran
         Route::get('/pembayaran',                          [AdminPembayaranController::class, 'index'])->name('pembayaran.index');
