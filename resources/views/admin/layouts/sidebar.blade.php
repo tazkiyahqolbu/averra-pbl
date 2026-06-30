@@ -48,11 +48,19 @@
     ];
 @endphp
 
-<aside class="fixed left-0 top-0 z-40 hidden h-screen w-64 lg:flex flex-col"
+{{-- Mobile Overlay --}}
+<div x-show="sidebarOpen" x-cloak
+     x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+     x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+     @click="sidebarOpen = false"
+     class="fixed inset-0 z-30 bg-black/50 lg:hidden"></div>
+
+<aside class="fixed left-0 top-0 z-40 flex flex-col h-screen w-64 transition-transform duration-300 lg:translate-x-0"
+       :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
        style="background: linear-gradient(to bottom, #5C1520 0%, #4A0F1A 50%, #3A0A12 100%);">
 
     {{-- Logo --}}
-    <div class="shrink-0 border-b border-white/10 px-5 py-5">
+    <div class="shrink-0 border-b border-white/10 px-5 py-5 flex items-center justify-between">
         <a href="{{ $routeUrl('admin.dashboard') }}" class="flex items-center gap-2.5 group">
             <div class="flex h-9 w-9 items-center justify-center rounded-full border border-[#C8960C]/50 bg-white/5 group-hover:bg-white/10 transition">
                 <span class="font-serif text-base font-bold italic text-[#C8960C]">S</span>
@@ -62,6 +70,9 @@
                 <p class="text-[9px] font-semibold uppercase tracking-[0.25em] text-[#C8960C]/70 leading-none mt-0.5">Admin Panel</p>
             </div>
         </a>
+        <button @click="sidebarOpen = false" class="lg:hidden flex h-8 w-8 items-center justify-center rounded-lg text-white/50 hover:bg-white/10 hover:text-white transition">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
     </div>
 
     {{-- Admin info --}}
@@ -168,6 +179,7 @@
                 Keluar
             </button>
 
+            <template x-teleport="body">
             <div x-show="confirmLogout" x-cloak
                  x-transition:enter="transition ease-out duration-150"
                  x-transition:enter-start="opacity-0"
@@ -175,7 +187,7 @@
                  x-transition:leave="transition ease-in duration-100"
                  x-transition:leave-start="opacity-100"
                  x-transition:leave-end="opacity-0"
-                 class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
+                 class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 px-4"
                  x-on:click.self="confirmLogout = false">
                 <div class="w-full max-w-xs rounded-2xl bg-white border border-[#E2D4C0] shadow-2xl p-6">
                     <div class="flex flex-col items-center text-center">
@@ -200,6 +212,7 @@
                     </div>
                 </div>
             </div>
+            </template>
         </div>
     </div>
 

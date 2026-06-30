@@ -33,11 +33,11 @@
                 <thead class="border-b border-[#E2D4C0] bg-[#FAF3E0]">
                     <tr>
                         <th class="admin-table-th w-12">#</th>
-                        <th class="admin-table-th">Thumbnail</th>
+                        <th class="hidden sm:table-cell admin-table-th">Thumbnail</th>
                         <th class="admin-table-th">Nama Barang</th>
-                        <th class="admin-table-th">Kategori</th>
+                        <th class="hidden md:table-cell admin-table-th">Kategori</th>
                         <th class="admin-table-th">Harga Sewa</th>
-                        <th class="admin-table-th">Stok</th>
+                        <th class="hidden sm:table-cell admin-table-th">Stok</th>
                         <th class="admin-table-th">Status</th>
                         <th class="admin-table-th text-right">Aksi</th>
                     </tr>
@@ -47,7 +47,7 @@
                         <tr class="hover:bg-[#FAF3E0]/50">
                             <td class="admin-table-td font-semibold text-[#4A2E28]">{{ $index + 1 }}</td>
 
-                            <td class="admin-table-td">
+                            <td class="hidden sm:table-cell admin-table-td">
                                 @if($item->thumbnail_path)
                                     <img src="{{ asset('storage/'.$item->thumbnail_path) }}" class="admin-thumb object-cover">
                                 @else
@@ -61,13 +61,13 @@
                                 <p class="font-semibold text-[#4A0F1A]">{{ $item->nama_barang }}</p>
                             </td>
 
-                            <td class="admin-table-td text-[#4A2E28]">{{ $item->kategori->nama ?? '-' }}</td>
+                            <td class="hidden md:table-cell admin-table-td text-[#4A2E28]">{{ $item->kategori->nama ?? '-' }}</td>
 
                             <td class="admin-table-td font-semibold text-[#4A0F1A]">
                                 Rp {{ number_format($item->harga, 0, ',', '.') }}
                             </td>
 
-                            <td class="admin-table-td text-[#4A2E28]">{{ $item->stok }} unit</td>
+                            <td class="hidden sm:table-cell admin-table-td text-[#4A2E28]">{{ $item->stok }} unit</td>
 
                             <td class="admin-table-td">
                                 <span class="{{ $item->aktif ? 'badge-active' : 'badge-inactive' }}">

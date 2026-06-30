@@ -12,14 +12,15 @@
     </div>
 
     <div class="admin-card overflow-hidden">
+        <div class="overflow-x-auto">
         <table class="w-full text-sm">
             <thead>
                 <tr class="border-b border-[#E2D4C0] text-left text-xs font-semibold uppercase tracking-widest text-[#4A2E28]/50">
                     <th class="px-5 py-3">Pelanggan</th>
                     <th class="px-5 py-3">Email</th>
-                    <th class="px-5 py-3">No. HP</th>
-                    <th class="px-5 py-3 text-center">Total Pesanan</th>
-                    <th class="px-5 py-3">Bergabung</th>
+                    <th class="hidden sm:table-cell px-5 py-3">No. HP</th>
+                    <th class="px-5 py-3 text-center">Pesanan</th>
+                    <th class="hidden md:table-cell px-5 py-3">Bergabung</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-[#E2D4C0]/60">
@@ -33,14 +34,14 @@
                                 <span class="font-medium text-[#4A0F1A]">{{ $user->nama ?? $user->name }}</span>
                             </div>
                         </td>
-                        <td class="px-5 py-3 text-[#4A2E28]">{{ $user->email }}</td>
-                        <td class="px-5 py-3 text-[#4A2E28]">{{ $user->no_hp ?? '-' }}</td>
+                        <td class="px-5 py-3 text-[#4A2E28] text-xs sm:text-sm">{{ $user->email }}</td>
+                        <td class="hidden sm:table-cell px-5 py-3 text-[#4A2E28]">{{ $user->no_hp ?? '-' }}</td>
                         <td class="px-5 py-3 text-center">
                             <span class="rounded-full bg-[#4A0F1A]/10 px-3 py-1 text-xs font-semibold text-[#4A0F1A]">
                                 {{ $user->pemesanans_count }}
                             </span>
                         </td>
-                        <td class="px-5 py-3 text-[#4A2E28]">{{ $user->created_at->format('d M Y') }}</td>
+                        <td class="hidden md:table-cell px-5 py-3 text-[#4A2E28]">{{ $user->created_at->format('d M Y') }}</td>
                     </tr>
                 @empty
                     <tr>
@@ -51,6 +52,7 @@
                 @endforelse
             </tbody>
         </table>
+        </div>
     </div>
 
     <div>

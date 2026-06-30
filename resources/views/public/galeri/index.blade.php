@@ -80,9 +80,9 @@
             @if($galeris->isEmpty())
                 <p class="text-center text-primary/50 text-sm py-16">Belum ada dokumentasi yang ditambahkan.</p>
             @else
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
                 @foreach($galeris as $i => $item)
-                    <div class="relative rounded-2xl overflow-hidden group cursor-pointer animate-fade-in-up shadow-lg h-[400px] border border-primary/10"
+                    <div class="relative rounded-2xl overflow-hidden group cursor-pointer animate-fade-in-up shadow-lg h-56 sm:h-72 lg:h-[400px] border border-primary/10"
                          style="animation-delay: {{ ($i * 0.1) }}s"
                          @click="show({{ $i }})">
 
@@ -135,7 +135,7 @@
             </button>
 
             {{-- Konten --}}
-            <div class="relative w-full max-w-5xl flex flex-col items-center px-20" @click.self="open = false">
+            <div class="relative w-full max-w-5xl flex flex-col items-center px-4 sm:px-16" @click.self="open = false">
                 <template x-if="active.type === 'video'">
                     <video :src="active.media" :key="idx" class="max-h-[70vh] rounded-xl border-4 border-white/10 shadow-2xl" controls autoplay></video>
                 </template>
