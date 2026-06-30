@@ -23,7 +23,7 @@ class KirimReminderPengembalian extends Command
 
         $besok = Carbon::tomorrow()->toDateString();
 
-        $pemesanans = Pemesanan::where('status', 'berlangsung')
+        $pemesanans = Pemesanan::whereIn('status', ['sedang_disewa', 'menunggu_pengembalian'])
             ->where('jenis', 'sewa_barang')
             ->whereHas('detailPemesanans', fn($q) => $q->whereDate('tanggal_kembali', $besok))
             ->with([
