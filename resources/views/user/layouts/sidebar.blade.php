@@ -93,11 +93,12 @@
                 Keluar
             </button>
 
+            <template x-teleport="body">
             <div x-show="confirmLogout" x-cloak x-transition:enter="transition ease-out duration-150"
                 x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
                 x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100"
                 x-transition:leave-end="opacity-0"
-                class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
+                class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 px-4"
                 x-on:click.self="confirmLogout = false">
                 <div class="w-full max-w-xs rounded-2xl bg-white border border-[#E2D4C0] shadow-2xl p-6">
                     <div class="flex flex-col items-center text-center">
@@ -123,6 +124,7 @@
                     </div>
                 </div>
             </div>
+            </template>
         </div>
     </div>
 
