@@ -54,6 +54,7 @@ class PemesananController extends Controller
                 'detailPemesanans.pengembalianBarang',
                 'pembayarans',
                 'testimoni',
+                'pembatalan',
             ])
             ->findOrFail($id);
 

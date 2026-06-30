@@ -49,6 +49,7 @@ class PemesananController extends Controller
             'detailPemesanans.paket',
             'zonaLokasi',
             'pembayarans',
+            'pembatalan',
         ])->findOrFail($id);
 
         return view('admin.pemesanan.show', compact('pemesanan'));
@@ -136,6 +137,30 @@ class PemesananController extends Controller
 
         return redirect()->route('admin.pemesanan.show', $id)
             ->with('success', "Pengembalian dicatat. Email tagihan pelunasan dikirim ke {$pemesanan->user->email}.");
+    }
+
+    public function tandaiAcaraSelesai($id): RedirectResponse
+    {
+        $pemesanan = Pemesanan::with(['user', 'pembayarans'])->findOrFail($id);
+
+        if ($pemesanan->jenis !== 'acara' || $pemesanan->status !== 'berlangsung') {
+            return back()->with('error', 'Aksi ini hanya untuk pesanan acara yang sedang berlangsung.');
+        }
+
+        $sudahBayar = (float) $pemesanan->pembayarans()
+            ->where('status', 'terverifikasi')
+            ->sum('jumlah_bayar');
+
+        if ($sudahBayar < (float) $pemesanan->total_harga) {
+            $pemesanan->update(['status' => 'menunggu_pelunasan']);
+            Mail::to($pemesanan->user->email)->queue(new TagihanPelunasanMail($pemesanan));
+            return redirect()->route('admin.pemesanan.show', $id)
+                ->with('success', 'Acara ditandai selesai. Email tagihan pelunasan dikirim ke customer.');
+        }
+
+        $pemesanan->update(['status' => 'selesai']);
+        return redirect()->route('admin.pemesanan.show', $id)
+            ->with('success', 'Acara ditandai selesai.');
     }
 
     public function tolak(Request $request, $id): RedirectResponse
