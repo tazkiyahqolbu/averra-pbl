@@ -3,366 +3,237 @@
 @section('title', 'Detail Pemesanan')
 
 @section('content')
-    @php
-        $statusMap = [
-            'menunggu' => ['label' => 'Menunggu Konfirmasi', 'class' => 'badge-warning'],
-            'dikonfirmasi' => ['label' => 'Menunggu Pembayaran', 'class' => 'badge-warning'],
-            'menunggu_dp' => ['label' => 'Menunggu DP', 'class' => 'badge-warning'],
-            'berlangsung' => ['label' => 'Berlangsung', 'class' => 'badge-active'],
-            'menunggu_diambil' => ['label' => 'Menunggu Pengambilan', 'class' => 'badge-active'],
-            'sedang_disewa' => ['label' => 'Sedang Disewa', 'class' => 'badge-active'],
-            'menunggu_pengembalian' => ['label' => 'Menunggu Kembali', 'class' => 'badge-warning'],
-            'menunggu_pelunasan' => ['label' => 'Menunggu Pelunasan', 'class' => 'badge-warning'],
-            'selesai' => ['label' => 'Selesai', 'class' => 'badge-neutral'],
-            'dibatalkan' => ['label' => 'Dibatalkan', 'class' => 'badge-inactive'],
-        ];
-        $badge = $statusMap[$pemesanan->status] ?? ['label' => ucfirst($pemesanan->status), 'class' => 'badge-neutral'];
-        $jenisLabel = $pemesanan->jenis === 'sewa_barang' ? 'Sewa Barang' : 'Acara';
+@php
+    $statusMap = [
+        'menunggu'              => ['label' => 'Menunggu Konfirmasi',   'class' => 'badge-warning'],
+        'dikonfirmasi'          => ['label' => 'Menunggu Pembayaran',   'class' => 'badge-warning'],
+        'berlangsung'           => ['label' => 'Berlangsung',            'class' => 'badge-active'],
+        'selesai'               => ['label' => 'Selesai',               'class' => 'badge-neutral'],
+        'dibatalkan'            => ['label' => 'Dibatalkan',            'class' => 'badge-inactive'],
+        'menunggu_dp'           => ['label' => 'Menunggu DP',           'class' => 'badge-warning'],
+        'menunggu_diambil'      => ['label' => 'Menunggu Diambil',      'class' => 'badge-warning'],
+        'sedang_disewa'         => ['label' => 'Sedang Disewa',         'class' => 'badge-active'],
+        'menunggu_pengembalian' => ['label' => 'Menunggu Pengembalian', 'class' => 'badge-active'],
+        'menunggu_pelunasan'    => ['label' => 'Menunggu Pelunasan',    'class' => 'badge-warning'],
+    ];
+    $badge      = $statusMap[$pemesanan->status] ?? ['label' => ucfirst($pemesanan->status), 'class' => 'badge-neutral'];
+    $jenisLabel = $pemesanan->jenis === 'sewa_barang' ? 'Sewa Barang' : 'Acara';
+    $isSewa     = $pemesanan->jenis === 'sewa_barang';
 
-        $maskEmail = function (?string $email): string {
-            if (!$email || !str_contains($email, '@')) {
-                return '-';
-            }
-            [$local, $domain] = explode('@', $email, 2);
-            $maskedLocal = substr($local, 0, 2) . str_repeat('*', max(2, strlen($local) - 2));
-            $dotPos = strrpos($domain, '.');
-            $domainName = substr($domain, 0, $dotPos);
-            $tld = substr($domain, $dotPos);
-            $maskedDomain = substr($domainName, 0, 1) . str_repeat('*', max(2, strlen($domainName) - 1));
-            return $maskedLocal . '@' . $maskedDomain . $tld;
-        };
+    $maskEmail = function(?string $email): string {
+        if (!$email || !str_contains($email, '@')) return '-';
+        [$local, $domain] = explode('@', $email, 2);
+        $maskedLocal  = substr($local, 0, 2) . str_repeat('*', max(2, strlen($local) - 2));
+        $dotPos       = strrpos($domain, '.');
+        $domainName   = substr($domain, 0, $dotPos);
+        $tld          = substr($domain, $dotPos);
+        $maskedDomain = substr($domainName, 0, 1) . str_repeat('*', max(2, strlen($domainName) - 1));
+        return $maskedLocal . '@' . $maskedDomain . $tld;
+    };
 
-        $maskPhone = function (?string $phone): string {
-            if (!$phone) {
-                return '-';
-            }
-            $len = strlen($phone);
-            return substr($phone, 0, 3) . str_repeat('*', max(2, $len - 5)) . substr($phone, -2);
-        };
-    @endphp
+    $maskPhone = function(?string $phone): string {
+        if (!$phone) return '-';
+        $len = strlen($phone);
+        return substr($phone, 0, 3) . str_repeat('*', max(2, $len - 5)) . substr($phone, -2);
+    };
+@endphp
 
-    <div class="admin-section">
-        <div class="admin-page-header md:flex-row md:items-center md:justify-between">
-            <div>
-                <h1 class="admin-title text-3xl">#{{ $pemesanan->kode_pemesanan }}</h1>
-                <p class="admin-subtitle mt-1 text-sm">Detail pemesanan pelanggan dan aksi admin.</p>
-            </div>
-            <span class="{{ $badge['class'] }}">{{ $badge['label'] }}</span>
+<div class="admin-section">
+    <div class="admin-page-header md:flex-row md:items-center md:justify-between">
+        <div>
+            <h1 class="admin-title text-3xl">#{{ $pemesanan->kode_pemesanan }}</h1>
+            <p class="admin-subtitle mt-1 text-sm">Detail pemesanan pelanggan dan aksi admin.</p>
         </div>
+        <span class="{{ $badge['class'] }}">{{ $badge['label'] }}</span>
+    </div>
 
-        @if (session('success'))
-            <div class="rounded-2xl bg-green-50 border border-green-200 px-5 py-3 text-sm font-semibold text-green-800">
-                {{ session('success') }}
-            </div>
-        @endif
+    @if(session('success'))
+        <div class="rounded-2xl bg-green-50 border border-green-200 px-5 py-3 text-sm font-semibold text-green-800">
+            {{ session('success') }}
+        </div>
+    @endif
+    @if(session('error'))
+        <div class="rounded-2xl bg-red-50 border border-red-200 px-5 py-3 text-sm font-semibold text-red-800">
+            {{ session('error') }}
+        </div>
+    @endif
 
-        <div class="grid gap-5 xl:grid-cols-3">
-            <div class="space-y-5 xl:col-span-2">
+    <div class="grid gap-5 xl:grid-cols-3">
+        <div class="space-y-5 xl:col-span-2">
 
-                {{-- Data Pemesan --}}
-                <div class="admin-card p-5">
-                    <h2 class="admin-title mb-4 text-xl">Data Pemesan</h2>
-                    <div class="grid gap-3 md:grid-cols-3">
-                        <p><span class="admin-muted text-sm">Nama
-                                Pemesan</span><br><strong>{{ $pemesanan->nama_pemesan ?? ($pemesanan->user?->nama ?? '-') }}</strong>
-                        </p>
-                        <p><span
-                                class="admin-muted text-sm">Email</span><br><strong>{{ $maskEmail($pemesanan->user?->email) }}</strong>
-                        </p>
-                        <p><span class="admin-muted text-sm">No.
-                                HP</span><br><strong>{{ $pemesanan->no_hp ?? ($pemesanan->user?->no_hp ?? '-') }}</strong>
-                        </p>
-                    </div>
-                </div>
-
-                {{-- Detail Pesanan --}}
-                <div class="admin-card p-5">
-                    <h2 class="admin-title mb-4 text-xl">Detail Pesanan</h2>
-                    <div class="grid gap-3 md:grid-cols-2 mb-4">
-                        <p><span class="admin-muted text-sm">Jenis</span><br><strong>{{ $jenisLabel }}</strong></p>
-                        <p><span class="admin-muted text-sm">Tanggal
-                                Pakai</span><br><strong>{{ $pemesanan->tanggal_pakai?->format('d F Y') ?? '-' }}</strong>
-                        </p>
-                        <p><span class="admin-muted text-sm">Lokasi /
-                                Zona</span><br><strong>{{ $pemesanan->zonaLokasi?->nama_zona ?? '-' }}</strong></p>
-                        <p><span class="admin-muted text-sm">Keterangan
-                                Lokasi</span><br><strong>{{ $pemesanan->lokasi ?? '-' }}</strong></p>
-                    </div>
-
-                    <table class="w-full text-sm border-collapse">
-                        <thead>
-                            <tr class="bg-[#FAF3E0] text-left">
-                                <th class="p-2 rounded-tl-lg">Item</th>
-                                <th class="p-2 text-center">Jml</th>
-                                <th class="p-2 text-right rounded-tr-lg">Subtotal</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($pemesanan->detailPemesanans as $detail)
-                                @php
-                                    $nama =
-                                        $detail->barang?->nama_barang ??
-                                        ($detail->jasa?->nama_jasa ?? ($detail->paket?->nama_paket ?? '-'));
-                                @endphp
-                                <tr class="border-b border-[#E2D4C0]">
-                                    <td class="p-2 text-[#4A2E28]">{{ $nama }}</td>
-                                    <td class="p-2 text-center text-[#4A2E28]">{{ $detail->jumlah }}</td>
-                                    <td class="p-2 text-right font-semibold text-[#4A0F1A]">Rp
-                                        {{ number_format($detail->subtotal, 0, ',', '.') }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-
-                    @if ($pemesanan->catatan)
-                        <div class="mt-4">
-                            <p class="admin-muted text-sm">Catatan</p>
-                            <p class="rounded-2xl bg-[#FAF3E0] p-4 text-sm text-[#4A2E28]">{{ $pemesanan->catatan }}</p>
-                        </div>
-                    @endif
-                </div>
-
-                {{-- Rincian Harga --}}
-                <div class="admin-card p-5">
-                    <h2 class="admin-title mb-4 text-xl">Rincian Harga</h2>
-                    <div class="space-y-3 text-sm">
-                        @if ($pemesanan->ongkos_lokasi > 0)
-                            <div class="flex justify-between">
-                                <span>Ongkos Lokasi ({{ $pemesanan->zonaLokasi?->nama_zona }})</span>
-                                <strong>Rp {{ number_format($pemesanan->ongkos_lokasi, 0, ',', '.') }}</strong>
-                            </div>
-                        @endif
-                        <hr class="admin-divider">
-                        <div class="flex justify-between text-lg">
-                            <strong>Total</strong>
-                            <strong>Rp {{ number_format($pemesanan->total_harga, 0, ',', '.') }}</strong>
-                        </div>
-                        @php $tahap = $pemesanan->pembayarans->first()?->tahap; @endphp
-                        <p class="admin-muted text-sm">
-                            Metode Bayar:
-                            {{ $tahap === 'langsung' ? 'Lunas' : 'DP 50% (Rp ' . number_format($pemesanan->total_harga * 0.5, 0, ',', '.') . ') + Pelunasan' }}
-                        </p>
-                    </div>
+            {{-- Data Pemesan --}}
+            <div class="admin-card p-5">
+                <h2 class="admin-title mb-4 text-xl">Data Pemesan</h2>
+                <div class="grid gap-3 md:grid-cols-3">
+                    <p><span class="admin-muted text-sm">Nama Pemesan</span><br><strong>{{ $pemesanan->nama_pemesan ?? $pemesanan->user?->nama ?? '-' }}</strong></p>
+                    <p><span class="admin-muted text-sm">Email</span><br><strong>{{ $maskEmail($pemesanan->user?->email) }}</strong></p>
+                    <p><span class="admin-muted text-sm">No. HP</span><br><strong>{{ $maskPhone($pemesanan->no_hp ?? $pemesanan->user?->no_hp) }}</strong></p>
                 </div>
             </div>
 
-            <div class="space-y-5">
-                {{-- Info Pemesanan --}}
-                <div class="admin-card p-5">
-                    <h2 class="admin-title mb-4 text-xl">Info Pemesanan</h2>
-                    <div class="space-y-3 text-sm">
-                        <div class="rounded-2xl bg-[#FAF3E0] p-3">
-                            <strong>{{ $pemesanan->created_at->format('d M Y H.i') }}</strong>
-                            <p class="admin-muted">Pesanan masuk</p>
-                        </div>
-
-                        @if ($pemesanan->status === 'menunggu')
-                            @php
-                                $deadline = $pemesanan->created_at->addHours(24);
-                                $sisaMenit = (int) now()->diffInMinutes($deadline, false);
-                                $sisaJam = (int) floor(abs($sisaMenit) / 60);
-                                $menitSisa = abs($sisaMenit) % 60;
-                                $sudahLewat = $sisaMenit <= 0;
-                            @endphp
-                            <div
-                                class="rounded-2xl border p-3
-                            {{ $sudahLewat ? 'border-red-200 bg-red-50' : ($sisaMenit < 180 ? 'border-orange-200 bg-orange-50' : 'border-amber-200 bg-amber-50') }}">
-                                <p
-                                    class="text-xs font-semibold
-                                {{ $sudahLewat ? 'text-red-700' : ($sisaMenit < 180 ? 'text-orange-700' : 'text-amber-700') }}">
-                                    @if ($sudahLewat)
-                                        ⚠ Batas konfirmasi sudah lewat — akan dibatalkan otomatis
-                                    @else
-                                        ⏱ Sisa waktu konfirmasi: {{ $sisaJam }}j {{ $menitSisa }}m
-                                    @endif
-                                </p>
-                                <p class="mt-0.5 text-xs admin-muted">Deadline: {{ $deadline->format('d M Y, H.i') }} WIB
-                                </p>
-                            </div>
+            {{-- Detail Pesanan --}}
+            <div class="admin-card p-5">
+                <h2 class="admin-title mb-4 text-xl">Detail Pesanan</h2>
+                @php
+                    $detail     = $pemesanan->detailPemesanans->first();
+                    $tglAmbil   = $detail?->tanggal_ambil;
+                    $tglKembali = $detail?->tanggal_kembali;
+                @endphp
+                <div class="grid gap-3 md:grid-cols-2 mb-4">
+                    <p><span class="admin-muted text-sm">Jenis</span><br><strong>{{ $jenisLabel }}</strong></p>
+                    @if($isSewa)
+                        <p><span class="admin-muted text-sm">Tanggal Ambil</span><br><strong>{{ $tglAmbil ? \Carbon\Carbon::parse($tglAmbil)->format('d F Y') : '-' }}</strong></p>
+                        <p><span class="admin-muted text-sm">Tanggal Kembali</span><br><strong>{{ $tglKembali ? \Carbon\Carbon::parse($tglKembali)->format('d F Y') : '-' }}</strong></p>
+                        @if($tglAmbil && $tglKembali)
+                            <p><span class="admin-muted text-sm">Durasi</span><br><strong>{{ \Carbon\Carbon::parse($tglAmbil)->diffInDays(\Carbon\Carbon::parse($tglKembali)) + 1 }} hari</strong></p>
                         @endif
-
-                        <div class="rounded-2xl bg-[#FAF3E0] p-3">
-                            <strong class="text-[#4A2E28]">Status saat ini</strong>
-                            <p class="font-semibold text-[#4A0F1A]">{{ $badge['label'] }}</p>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Aksi Admin --}}
-                <div class="admin-card p-5">
-                    <h2 class="admin-title mb-4 text-xl">Aksi Admin</h2>
-
-                    @if ($pemesanan->status === 'menunggu')
-                        <form method="POST" action="{{ route('admin.pemesanan.konfirmasi', $pemesanan->id) }}"
-                            class="space-y-2">
-                            @csrf @method('PATCH')
-                            <button type="submit" class="admin-btn-primary w-full">Konfirmasi Pesanan</button>
-                        </form>
-                        <button type="button" onclick="document.getElementById('modal-tolak').classList.remove('hidden')"
-                            class="admin-btn-danger w-full mt-2">
-                            Tolak Pesanan
-                        </button>
-                    @elseif(in_array($pemesanan->status, ['dikonfirmasi', 'menunggu_dp']))
-                        <p class="text-sm text-[#4A2E28] mb-3">Pesanan sudah dikonfirmasi. Menunggu pembayaran DP dari
-                            customer.</p>
-                        <button type="button" onclick="document.getElementById('modal-tolak').classList.remove('hidden')"
-                            class="admin-btn-danger w-full">
-                            Batalkan Pesanan
-                        </button>
-                    @elseif($pemesanan->status === 'berlangsung' && $pemesanan->jenis === 'acara')
-                        <p class="text-sm text-[#4A2E28] mb-3">Acara sedang berlangsung. Tandai selesai setelah acara
-                            selesai untuk mengirim tagihan pelunasan ke customer.</p>
-                        <form method="POST" action="{{ route('admin.pemesanan.acara-selesai', $pemesanan->id) }}">
-                            @csrf @method('PATCH')
-                            <button type="submit" class="admin-btn-primary w-full"
-                                onclick="return confirm('Tandai acara ini sebagai selesai? Email tagihan pelunasan akan dikirim ke customer.')">
-                                <i data-lucide="check-circle" class="h-4 w-4 inline mr-1"></i>
-                                Tandai Acara Selesai
-                            </button>
-                        </form>
-                    @elseif($pemesanan->status === 'menunggu_diambil')
-                        <p class="text-sm text-[#4A2E28] mb-3">DP sudah dibayar. Tandai barang sudah diambil oleh customer.
-                        </p>
-                        <form method="POST" action="{{ route('admin.pemesanan.diambil', $pemesanan->id) }}">
-                            @csrf @method('PATCH')
-                            <button type="submit" class="admin-btn-primary w-full"
-                                onclick="return confirm('Konfirmasi barang sudah diambil oleh customer?')">
-                                Tandai Sudah Diambil
-                            </button>
-                        </form>
-                    @elseif(in_array($pemesanan->status, ['sedang_disewa', 'menunggu_pengembalian']))
-                        <p class="text-sm text-[#4A2E28] mb-3">Barang sedang disewa. Catat pengembalian setelah barang
-                            dikembalikan.</p>
-                        <button type="button"
-                            onclick="document.getElementById('modal-dikembalikan').classList.remove('hidden')"
-                            class="admin-btn-primary w-full">
-                            Tandai Dikembalikan
-                        </button>
-                    @elseif($pemesanan->status === 'menunggu_pelunasan')
-                        <p class="text-sm text-[#4A2E28]/60">Menunggu customer melakukan pembayaran pelunasan.</p>
-                    @elseif($pemesanan->status === 'dibatalkan')
-                        <div class="rounded-xl border border-red-200 bg-red-50 p-4 text-sm">
-                            <p class="font-semibold text-red-700 mb-1">Pesanan telah dibatalkan</p>
-                            @if ($pemesanan->alasan_penolakan)
-                                <p class="text-red-600">Alasan: {{ $pemesanan->alasan_penolakan }}</p>
-                            @endif
-                        </div>
                     @else
-                        <p class="text-sm text-[#4A2E28]/60">Tidak ada aksi tersedia untuk status ini.</p>
+                        <p><span class="admin-muted text-sm">Tanggal Pakai</span><br><strong>{{ $pemesanan->tanggal_pakai ? \Carbon\Carbon::parse($pemesanan->tanggal_pakai)->format('d F Y') : '-' }}</strong></p>
+                        <p><span class="admin-muted text-sm">Lokasi / Zona</span><br><strong>{{ $pemesanan->zonaLokasi?->nama_zona ?? '-' }}</strong></p>
+                        <p><span class="admin-muted text-sm">Keterangan Lokasi</span><br><strong>{{ $pemesanan->lokasi ?? '-' }}</strong></p>
                     @endif
-
-                    <a href="{{ route('admin.pemesanan.index') }}"
-                        class="admin-btn-secondary w-full mt-2 block text-center">Kembali</a>
                 </div>
 
-                {{-- Notifikasi Pembatalan --}}
-                @php $pembatalanPesanan = $pemesanan->pembatalan ?? null; @endphp
-                @if ($pembatalanPesanan)
-                    <div
-                        class="admin-card p-5 border-l-4 {{ $pembatalanPesanan->status === 'menunggu' ? 'border-amber-400' : ($pembatalanPesanan->status === 'disetujui' ? 'border-green-400' : 'border-red-400') }}">
-                        <h2 class="admin-title mb-3 text-xl">Permintaan Pembatalan</h2>
-                        <div class="space-y-2 text-sm">
-                            <div class="flex justify-between">
-                                <span class="admin-muted">Status</span>
-                                <span
-                                    class="font-semibold {{ $pembatalanPesanan->status === 'menunggu' ? 'text-amber-700' : ($pembatalanPesanan->status === 'disetujui' ? 'text-green-700' : 'text-red-700') }}">
-                                    {{ ucfirst($pembatalanPesanan->status) }}
-                                </span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="admin-muted">Diajukan</span>
-                                <span>{{ $pembatalanPesanan->created_at->format('d M Y, H:i') }}</span>
-                            </div>
-                            @if ($pembatalanPesanan->jumlah_refund)
-                                <div class="flex justify-between">
-                                    <span class="admin-muted">Jumlah Refund</span>
-                                    <span class="font-semibold">Rp
-                                        {{ number_format($pembatalanPesanan->jumlah_refund, 0, ',', '.') }}</span>
-                                </div>
-                            @endif
-                        </div>
-                        <a href="{{ route('admin.pembatalan.show', $pembatalanPesanan->id) }}"
-                            class="admin-btn-secondary w-full mt-3 block text-center text-xs">
-                            Lihat Detail Pembatalan
-                        </a>
+                <table class="w-full text-sm border-collapse">
+                    <thead>
+                        <tr class="bg-[#FAF3E0] text-left">
+                            <th class="p-2 rounded-tl-lg">Item</th>
+                            <th class="p-2 text-center">Jml</th>
+                            <th class="p-2 text-right rounded-tr-lg">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($pemesanan->detailPemesanans as $det)
+                            @php
+                                $nama = $det->barang?->nama_barang
+                                     ?? $det->jasa?->nama_jasa
+                                     ?? $det->paket?->nama_paket
+                                     ?? '-';
+                            @endphp
+                            <tr class="border-b border-[#E2D4C0]">
+                                <td class="p-2 text-[#4A2E28]">{{ $nama }}</td>
+                                <td class="p-2 text-center text-[#4A2E28]">{{ $det->jumlah }}</td>
+                                <td class="p-2 text-right font-semibold text-[#4A0F1A]">Rp {{ number_format($det->subtotal, 0, ',', '.') }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
+                @if($pemesanan->catatan)
+                    <div class="mt-4">
+                        <p class="admin-muted text-sm">Catatan</p>
+                        <p class="rounded-2xl bg-[#FAF3E0] p-4 text-sm text-[#4A2E28]">{{ $pemesanan->catatan }}</p>
                     </div>
                 @endif
+            </div>
 
-                {{-- Validation error --}}
-                @error('alasan_penolakan')
-                    <div class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-                        {{ $message }}
+            {{-- Rincian Harga --}}
+            <div class="admin-card p-5">
+                <h2 class="admin-title mb-4 text-xl">Rincian Harga</h2>
+                <div class="space-y-3 text-sm">
+                    @if($pemesanan->ongkos_lokasi > 0)
+                        <div class="flex justify-between">
+                            <span>Ongkos Lokasi ({{ $pemesanan->zonaLokasi?->nama_zona }})</span>
+                            <strong>Rp {{ number_format($pemesanan->ongkos_lokasi, 0, ',', '.') }}</strong>
+                        </div>
+                    @endif
+                    <hr class="admin-divider">
+                    <div class="flex justify-between text-lg">
+                        <strong>Total</strong>
+                        <strong>Rp {{ number_format($pemesanan->total_harga, 0, ',', '.') }}</strong>
                     </div>
-                @enderror
+                    @if($isSewa)
+                        <p class="admin-muted text-sm">DP 50%: Rp {{ number_format($pemesanan->total_harga * 0.5, 0, ',', '.') }} + Pelunasan setelah pengembalian</p>
+                    @else
+                        @php $tahap = $pemesanan->pembayarans->first()?->tahap; @endphp
+                        <p class="admin-muted text-sm">
+                            Metode Bayar: {{ $tahap === 'langsung' ? 'Lunas' : 'DP 50% (Rp ' . number_format($pemesanan->total_harga * 0.5, 0, ',', '.') . ') + Pelunasan' }}
+                        </p>
+                    @endif
+                </div>
+            </div>
+
+            {{-- Riwayat Pembayaran --}}
+            @if($pemesanan->pembayarans->isNotEmpty())
+                <div class="admin-card p-5">
+                    <h2 class="admin-title mb-4 text-xl">Riwayat Pembayaran</h2>
+                    <div class="space-y-3">
+                        @foreach($pemesanan->pembayarans->sortBy('id') as $bayar)
+                            <div class="flex items-center justify-between rounded-xl border border-[#E2D4C0] bg-[#FAF3E0] px-4 py-3 text-sm">
+                                <div>
+                                    <p class="font-semibold text-[#4A0F1A]">{{ strtoupper($bayar->tahap) }}</p>
+                                    <p class="admin-muted text-xs">{{ $bayar->kode_transaksi }}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-semibold text-[#4A0F1A]">Rp {{ number_format($bayar->jumlah_bayar, 0, ',', '.') }}</p>
+                                    <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full {{ $bayar->status_pembayaran === 'lunas' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
+                                        {{ ucfirst($bayar->status_pembayaran) }}
+                                    </span>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+        </div>
+
+        {{-- Panel Aksi Admin --}}
+        <div class="space-y-5">
+            <div class="admin-card p-5">
+                <h2 class="admin-title mb-4 text-xl">Aksi Admin</h2>
+                <div class="flex flex-col gap-3">
+                    @if($pemesanan->status === 'menunggu')
+                        <form action="{{ route('admin.pemesanan.update-status', $pemesanan->id) }}" method="POST">
+                            @csrf @method('PATCH')
+                            <input type="hidden" name="status" value="menunggu_dp">
+                            <button type="submit" class="w-full btn bg-[#4A0F1A] text-white py-2.5 rounded-xl hover:bg-[#7B1C2E] font-semibold transition">Konfirmasi & Tagih DP</button>
+                        </form>
+                    @endif
+
+                    @if($pemesanan->status === 'menunggu_diambil')
+                        <form action="{{ route('admin.pemesanan.update-status', $pemesanan->id) }}" method="POST">
+                            @csrf @method('PATCH')
+                            <input type="hidden" name="status" value="sedang_disewa">
+                            <button type="submit" class="w-full btn bg-blue-600 text-white py-2.5 rounded-xl hover:bg-blue-700 font-semibold transition">Barang Sudah Diambil</button>
+                        </form>
+                    @endif
+
+                    @if($pemesanan->status === 'sedang_disewa')
+                        <form action="{{ route('admin.pemesanan.update-status', $pemesanan->id) }}" method="POST">
+                            @csrf @method('PATCH')
+                            <input type="hidden" name="status" value="menunggu_pengembalian">
+                            <button type="submit" class="w-full btn bg-orange-500 text-white py-2.5 rounded-xl hover:bg-orange-600 font-semibold transition">Tandai Masa Sewa Berakhir</button>
+                        </form>
+                    @endif
+
+                    @if($pemesanan->status === 'menunggu_pengembalian')
+                        <form action="{{ route('admin.pemesanan.update-status', $pemesanan->id) }}" method="POST">
+                            @csrf @method('PATCH')
+                            <input type="hidden" name="status" value="menunggu_pelunasan">
+                            <button type="submit" class="w-full btn bg-indigo-600 text-white py-2.5 rounded-xl hover:bg-indigo-700 font-semibold transition">Barang Sudah Dikembalikan</button>
+                        </form>
+                    @endif
+
+                    @if($pemesanan->status === 'menunggu_pelunasan')
+                        <form action="{{ route('admin.pemesanan.update-status', $pemesanan->id) }}" method="POST">
+                            @csrf @method('PATCH')
+                            <input type="hidden" name="status" value="selesai">
+                            <button type="submit" class="w-full btn bg-green-600 text-white py-2.5 rounded-xl hover:bg-green-700 font-semibold transition">Konfirmasi Pelunasan & Selesai</button>
+                        </form>
+                    @endif
+
+                    @if(in_array($pemesanan->status, ['menunggu', 'menunggu_dp', 'menunggu_diambil']))
+                        <form action="{{ route('admin.pemesanan.update-status', $pemesanan->id) }}" method="POST" onsubmit="return confirm('Apakah kamu yakin ingin membatalkan pesanan ini?')">
+                            @csrf @method('PATCH')
+                            <input type="hidden" name="status" value="dibatalkan">
+                            <button type="submit" class="w-full btn bg-red-600 text-white py-2.5 rounded-xl hover:bg-red-700 font-semibold transition">Batalkan Pesanan</button>
+                        </form>
+                    @endif
+
+                    <a href="{{ route('admin.pemesanan.index') }}" class="w-full text-center text-sm text-[#4A2E28] hover:underline mt-2">Kembali ke Daftar</a>
+                </div>
             </div>
         </div>
     </div>
-    {{-- Modal: Alasan Penolakan/Pembatalan --}}
-    @if (in_array($pemesanan->status, ['menunggu', 'dikonfirmasi']))
-        <div id="modal-tolak" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
-            <div class="w-full max-w-md rounded-2xl bg-white border border-gray-200 shadow-2xl p-6">
-                <div class="flex items-center gap-3 mb-4">
-                    <div
-                        class="flex h-10 w-10 items-center justify-center rounded-full bg-red-50 border border-red-200 shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
-                        </svg>
-                    </div>
-                    <div>
-                        <h3 class="font-semibold text-gray-800">
-                            {{ $pemesanan->status === 'menunggu' ? 'Tolak Pesanan' : 'Batalkan Pesanan' }}
-                        </h3>
-                        <p class="text-xs text-gray-500">#{{ $pemesanan->kode_pemesanan }}</p>
-                    </div>
-                </div>
-
-                <p class="text-sm text-gray-600 mb-4">
-                    Berikan alasan yang jelas agar pelanggan mengerti mengapa pesanan ini
-                    {{ $pemesanan->status === 'menunggu' ? 'ditolak' : 'dibatalkan' }}.
-                    Alasan ini akan ditampilkan ke pelanggan.
-                </p>
-
-                <form method="POST" action="{{ route('admin.pemesanan.tolak', $pemesanan->id) }}">
-                    @csrf @method('PATCH')
-                    <div class="mb-4">
-                        <label class="block text-xs font-semibold uppercase tracking-wide text-gray-600 mb-1.5">
-                            Alasan {{ $pemesanan->status === 'menunggu' ? 'Penolakan' : 'Pembatalan' }}
-                            <span class="text-red-500">*</span>
-                        </label>
-                        <textarea name="alasan_penolakan" rows="4" required minlength="10" maxlength="500"
-                            placeholder="Contoh: Tanggal yang dipilih tidak tersedia, slot sudah penuh untuk periode tersebut..."
-                            class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-800 placeholder-gray-400 focus:border-red-300 focus:outline-none focus:ring-2 focus:ring-red-100 resize-none transition">{{ old('alasan_penolakan') }}</textarea>
-                        <p class="mt-1 text-xs text-gray-400">Minimal 10 karakter, maksimal 500 karakter.</p>
-                    </div>
-                    <div class="flex gap-2">
-                        <button type="button" onclick="document.getElementById('modal-tolak').classList.add('hidden')"
-                            class="flex-1 rounded-xl border border-gray-200 bg-white py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition">
-                            Batal
-                        </button>
-                        <button type="submit"
-                            class="flex-1 rounded-xl bg-red-600 py-2.5 text-sm font-semibold text-white hover:bg-red-700 transition">
-                            Ya, {{ $pemesanan->status === 'menunggu' ? 'Tolak' : 'Batalkan' }} Pesanan
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <script>
-            // Buka ulang modal jika ada validation error
-            @error('alasan_penolakan')
-                document.addEventListener('DOMContentLoaded', function() {
-                    document.getElementById('modal-tolak').classList.remove('hidden');
-                });
-            @enderror
-
-            // Tutup modal klik backdrop
-            document.getElementById('modal-tolak')?.addEventListener('click', function(e) {
-                if (e.target === this) this.classList.add('hidden');
-            });
-        </script>
-    @endif
-
+</div>
 @endsection
