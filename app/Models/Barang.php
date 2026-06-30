@@ -13,14 +13,15 @@ class Barang extends Model
 
     protected $fillable = [
         'kategori_barang_id', 'nama_barang', 'deskripsi',
-        'harga', 'nilai_barang', 'stok', 'thumbnail_path', 'aktif',
+        'harga', 'nilai_barang', 'tarif_denda_per_hari', 'stok', 'thumbnail_path', 'aktif',
     ];
 
     protected $casts = [
-        'harga'        => 'decimal:2',
-        'nilai_barang' => 'decimal:2',
-        'stok'         => 'integer',
-        'aktif'        => 'boolean',
+        'harga'               => 'decimal:2',
+        'nilai_barang'        => 'decimal:2',
+        'tarif_denda_per_hari'=> 'decimal:2',
+        'stok'                => 'integer',
+        'aktif'               => 'boolean',
     ];
 
     public function kategori()
