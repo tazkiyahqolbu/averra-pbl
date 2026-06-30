@@ -85,4 +85,9 @@ class Pemesanan extends Model
     {
         return $this->hasOne(Testimoni::class, 'pemesanan_id');
     }
+
+    public function pembatalan()
+    {
+        return $this->hasOne(Pembatalan::class, 'pemesanan_id');
+    }
 }

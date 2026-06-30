@@ -21,6 +21,8 @@ use App\Http\Controllers\Frontend\KatalogController;
 use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\User\PemesananController;
 use App\Http\Controllers\User\PembayaranController;
+use App\Http\Controllers\User\PembatalanController;
+use App\Http\Controllers\Admin\PembatalanController as AdminPembatalanController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\ForgotPasswordController;
 
@@ -98,6 +100,9 @@ Route::middleware(['auth', 'redirect_if_admin'])->name('user.')->group(function 
     Route::post('/pembayaran/{id}/initiate', [PembayaranController::class, 'initiate'])->name('pembayaran.initiate');
     Route::get('/pembayaran/finish',         [PembayaranController::class, 'finish'])->name('pembayaran.finish');
 
+    // Pembatalan
+    Route::post('/pemesanan/{id}/pembatalan', [PembatalanController::class, 'ajukan'])->name('pembatalan.ajukan');
+
     // Profile
     Route::get('/profil', [ProfileController::class, 'index'])->name('profile.index');
     Route::put('/profil', [ProfileController::class, 'update'])->name('profile.update');
@@ -144,6 +149,14 @@ Route::middleware(['auth', 'role:admin'])
         Route::patch('/pemesanan/{id}/tolak',          [AdminPemesananController::class, 'tolak'])->name('pemesanan.tolak');
         Route::patch('/pemesanan/{id}/diambil',        [AdminPemesananController::class, 'tandaiDiambil'])->name('pemesanan.diambil');
         Route::post('/pemesanan/{id}/dikembalikan',    [AdminPemesananController::class, 'tandaiDikembalikan'])->name('pemesanan.dikembalikan');
+        Route::patch('/pemesanan/{id}/acara-selesai',  [AdminPemesananController::class, 'tandaiAcaraSelesai'])->name('pemesanan.acara-selesai');
+
+        // Pembatalan
+        Route::get('/pembatalan',                          [AdminPembatalanController::class, 'index'])->name('pembatalan.index');
+        Route::get('/pembatalan/{id}',                     [AdminPembatalanController::class, 'show'])->name('pembatalan.show');
+        Route::patch('/pembatalan/{id}/setujui',           [AdminPembatalanController::class, 'setujui'])->name('pembatalan.setujui');
+        Route::patch('/pembatalan/{id}/tolak',             [AdminPembatalanController::class, 'tolak'])->name('pembatalan.tolak');
+        Route::post('/pembatalan/{id}/bukti-refund',       [AdminPembatalanController::class, 'uploadBuktiRefund'])->name('pembatalan.bukti-refund');
 
         // Pembayaran
         Route::get('/pembayaran',                          [AdminPembayaranController::class, 'index'])->name('pembayaran.index');
@@ -186,6 +199,13 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('/kategori-jasa/{id}/edit', [KategoriJasaController::class, 'edit'])->name('kategori-jasa.edit');
         Route::put('/kategori-jasa/{id}', [KategoriJasaController::class, 'update'])->name('kategori-jasa.update');
         Route::delete('/kategori-jasa/{id}', [KategoriJasaController::class, 'destroy'])->name('kategori-jasa.destroy');
+
+        Route::get('/kategori-paket', [KategoriPaketController::class, 'index'])->name('kategori-paket.index');
+        Route::get('/kategori-paket/create', [KategoriPaketController::class, 'create'])->name('kategori-paket.create');
+        Route::post('/kategori-paket', [KategoriPaketController::class, 'store'])->name('kategori-paket.store');
+        Route::get('/kategori-paket/{id}/edit', [KategoriPaketController::class, 'edit'])->name('kategori-paket.edit');
+        Route::put('/kategori-paket/{id}', [KategoriPaketController::class, 'update'])->name('kategori-paket.update');
+        Route::delete('/kategori-paket/{id}', [KategoriPaketController::class, 'destroy'])->name('kategori-paket.destroy');
 
         Route::prefix('pengembalian')
             ->name('pengembalian.')

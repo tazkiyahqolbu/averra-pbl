@@ -2,7 +2,7 @@
 
 namespace App\Mail;
 
-use App\Models\Pemesanan;
+use App\Models\Pembatalan;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -10,25 +10,23 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class TagihanPelunasanMail extends Mailable implements ShouldQueue
+class PembatalanDisetujuiMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public Pemesanan $pesanan) {}
+    public function __construct(public Pembatalan $pembatalan) {}
 
     public function envelope(): Envelope
     {
-        $jenisLabel = $this->pesanan->jenis === 'sewa_barang' ? 'Sewa' : 'Acara';
-
         return new Envelope(
-            subject: "Tagihan Pelunasan {$jenisLabel} – #{$this->pesanan->kode_pemesanan}",
+            subject: "Pembatalan Disetujui – #{$this->pembatalan->pemesanan->kode_pemesanan}",
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            view: 'mail.tagihan-pelunasan',
+            view: 'mail.pembatalan-disetujui',
         );
     }
 }
