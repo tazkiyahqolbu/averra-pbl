@@ -5,12 +5,17 @@
 
         {{-- LOGO (Kiri) --}}
         <a href="{{ url('/') }}" class="flex items-center gap-3 group">
-            <div
-                class="relative flex h-10 w-10 items-center justify-center rounded-full border border-[#C8960C]/50 bg-white/5 group-hover:bg-white/10 transition duration-300">
-                <span class="font-serif text-lg font-bold italic text-[#C8960C]">S</span>
+            <div class="relative flex h-10 w-10 items-center justify-center rounded-full border border-[#C8960C]/50 bg-white/5 group-hover:bg-white/10 transition duration-300 overflow-hidden">
+                
+                <img 
+                    src="{{ asset('galeri/logo-rantiang-tagok.jpg') }}" 
+                    alt="Logo Rantiang Tagok" 
+                    class="h-full w-full object-cover">
+                
                 <div class="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition duration-300"
                     style="box-shadow: 0 0 12px rgba(200,168,75,0.4);"></div>
             </div>
+            
             <h1 class="text-lg font-bold tracking-[0.2em] text-[#FAF3E0]"
                 style="font-family:'Cormorant Garamond', serif;">SILART</h1>
         </a>
