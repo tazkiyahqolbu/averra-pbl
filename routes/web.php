@@ -251,12 +251,13 @@ Route::middleware(['auth', 'role:admin'])
 
         Route::delete('/blokir-tanggal/{id}', [BlokirTanggalController::class, 'destroy'])
             ->name('blokir-tanggal.destroy');
+
+        Route::view('/laporan',         'admin.laporan.index')->name('laporan.index');
+        Route::get('/laporan/export-excel', [LaporanController::class, 'exportExcel'])->name('laporan.export');
     });
 
 // Admin view-only routes (preview frontend)
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::view('/laporan',         'admin.laporan.index')->name('laporan.index');
-     Route::get('/laporan/export-excel', [LaporanController::class, 'exportExcel'])->name('laporan.export');
     Route::get('/testimoni', function () {
         $testimonis  = \App\Models\Testimoni::with([
             'user',
