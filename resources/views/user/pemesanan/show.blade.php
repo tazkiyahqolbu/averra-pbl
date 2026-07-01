@@ -140,8 +140,10 @@
     </div>
 @endif
 
-    {{-- ─── C. BERLANGSUNG ─────────────────────────────────────────────────── --}}
-    @if($pesanan->isBerlangsung())
+    {{-- ─── C. BERLANGSUNG / SIKLUS SEWA ───────────────────────────────────── --}}
+    {{-- Catatan: status menunggu_dp / menunggu_pelunasan tidak pernah sampai sini,
+         karena PemesananController@show sudah redirect ke halaman invoice untuk status itu. --}}
+    @if(in_array($pesanan->status, ['berlangsung', 'menunggu_diambil', 'sedang_disewa', 'menunggu_pengembalian']))
         @php
             $dpVerif         = $pesanan->pembayarans->where('tahap', 'dp')->where('status', 'terverifikasi')->first();
             $pelunasanRecord = $pesanan->pembayarans->where('tahap', 'pelunasan')->sortBy('id')->last();
@@ -155,6 +157,7 @@
             $tanggalAmbil    = $detail?->tanggal_ambil;
             $tanggalKembali  = $detail?->tanggal_kembali;
             $isSewa          = $pesanan->jenis === 'sewa_barang';
+            $sudahDiambil    = in_array($pesanan->status, ['sedang_disewa', 'menunggu_pengembalian']);
 
             $today           = \Carbon\Carbon::today();
             $hariSisa        = $isSewa && $tanggalKembali ? $today->diffInDays($tanggalKembali, false) : null;
@@ -166,16 +169,25 @@
                 $hariJalan   = min($totalHari, max(0, $tanggalAmbil->diffInDays($today) + 1));
                 $progressPct = round($hariJalan / $totalHari * 100);
             }
+
+            // Bayar Pelunasan hanya diizinkan controller saat status berlangsung (acara)
+            $bisaBayarPelunasan = $pesanan->status === 'berlangsung';
+
+            $bannerMap = [
+                'berlangsung'            => ['border-green-200 bg-green-50', 'text-green-600', 'text-green-800', 'text-green-600', 'play-circle', 'Sedang Berlangsung', 'Persiapan acara sedang berlangsung'],
+                'menunggu_diambil'       => ['border-blue-200 bg-blue-50', 'text-blue-600', 'text-blue-800', 'text-blue-600', 'package-check', 'Menunggu Pengambilan Barang', 'DP sudah diverifikasi, silakan ambil barang sesuai jadwal.'],
+                'sedang_disewa'          => ['border-green-200 bg-green-50', 'text-green-600', 'text-green-800', 'text-green-600', 'play-circle', 'Sedang Disewa', 'Barang sedang dalam masa sewa.'],
+                'menunggu_pengembalian'  => ['border-orange-200 bg-orange-50', 'text-orange-600', 'text-orange-800', 'text-orange-600', 'alert-triangle', 'Segera Kembalikan Barang', 'Barang sudah jatuh tempo, mohon segera dikembalikan.'],
+            ];
+            [$bannerBox, $bannerIcon, $bannerTitle, $bannerDesc, $iconName, $bannerText, $bannerSubtext] = $bannerMap[$pesanan->status];
         @endphp
 
         {{-- Status Banner --}}
-        <div class="rounded-2xl border border-green-200 bg-green-50 px-5 py-4 flex items-center gap-3">
-            <i data-lucide="play-circle" class="h-5 w-5 text-green-600 shrink-0"></i>
+        <div class="rounded-2xl border {{ $bannerBox }} px-5 py-4 flex items-center gap-3">
+            <i data-lucide="{{ $iconName }}" class="h-5 w-5 {{ $bannerIcon }} shrink-0"></i>
             <div>
-                <p class="text-sm font-semibold text-green-800">Sedang Berlangsung</p>
-                <p class="text-xs text-green-600 mt-0.5">
-                    {{ $isSewa ? 'Barang sedang dalam masa sewa' : 'Persiapan acara sedang berlangsung' }}
-                </p>
+                <p class="text-sm font-semibold {{ $bannerTitle }}">{{ $bannerText }}</p>
+                <p class="text-xs {{ $bannerDesc }} mt-0.5">{{ $bannerSubtext }}</p>
             </div>
         </div>
 
@@ -191,7 +203,23 @@
                 @endif
             </div>
 
-            @if($isSewa && $tanggalAmbil && $tanggalKembali)
+            @if($isSewa && !$sudahDiambil && $tanggalAmbil)
+                {{-- Jadwal Pengambilan (sebelum barang diambil) --}}
+                <div class="rounded-xl border border-[#E2D4C0] bg-[#FAF3E0] p-4">
+                    <div class="grid grid-cols-2 gap-3 text-sm">
+                        <div>
+                            <p class="text-[10px] uppercase tracking-wider text-[#4A2E28]/50">Jadwal Pengambilan</p>
+                            <p class="font-semibold text-[#4A0F1A] mt-0.5">{{ $tanggalAmbil->format('d F Y') }}</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] uppercase tracking-wider text-[#4A2E28]/50">Metode Pengambilan</p>
+                            <p class="font-semibold text-[#4A0F1A] mt-0.5">
+                                {{ $pesanan->lokasi ? 'Dikirim ke alamat' : 'Ambil sendiri' }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            @elseif($isSewa && $sudahDiambil && $tanggalAmbil && $tanggalKembali)
                 {{-- Countdown --}}
                 @php
                     $countdownBg = $terlambat
@@ -273,7 +301,7 @@
             @endif
 
             {{-- Pelunasan --}}
-            @if($isPelunasan)
+            @if($isPelunasan && $bisaBayarPelunasan)
                 <div class="border-t border-[#E2D4C0] pt-5 space-y-3">
                     <p class="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#C8960C]">Pelunasan Pembayaran</p>
                     <div class="rounded-xl border border-[#C8960C]/30 bg-[#FAF3E0] p-4">
@@ -285,6 +313,11 @@
                         <i data-lucide="credit-card" class="w-4 h-4"></i>
                         Bayar Pelunasan
                     </a>
+                </div>
+            @elseif($isPelunasan && !$bisaBayarPelunasan)
+                <div class="border-t border-[#E2D4C0] pt-4 flex items-center gap-2 text-sm font-semibold text-[#4A2E28]/70">
+                    <i data-lucide="info" class="h-4 w-4 text-[#C8960C] shrink-0"></i>
+                    DP terverifikasi. Sisa pembayaran akan ditagih setelah barang dikembalikan.
                 </div>
             @else
                 <div class="border-t border-[#E2D4C0] pt-4 flex items-center gap-2 text-sm font-semibold text-green-700">
@@ -475,19 +508,10 @@
                             Denda sudah dibayar
                         </div>
                     @else
-                        <form action="{{ route('user.pembayaran.upload') }}" method="POST" enctype="multipart/form-data">
-                            @csrf
-                            <input type="hidden" name="pemesanan_id" value="{{ $pesanan->id }}">
-                            <p class="text-[10px] uppercase tracking-wider text-[#4A2E28]/50 mb-2">Upload Bukti Bayar Denda</p>
-                            <div class="flex flex-col sm:flex-row gap-3">
-                                <input type="file" name="bukti_pembayaran" accept="image/*,.pdf"
-                                       class="flex-1 rounded-xl border border-[#E2D4C0] bg-white px-3 py-2 text-sm text-[#4A2E28] focus:border-[#C8960C] focus:outline-none transition cursor-pointer">
-                                <button type="submit"
-                                        class="shrink-0 rounded-full bg-gradient-to-br from-[#6B1625] to-[#3A0A12] px-5 py-2 text-sm font-semibold text-[#FAF3E0] shadow-[0_4px_12px_rgba(74,15,26,0.3)] hover:shadow-[0_6px_16px_rgba(74,15,26,0.4)] hover:from-[#7B1C2E] transition-all duration-200">
-                                    Kirim Bukti
-                                </button>
-                            </div>
-                        </form>
+                        <div class="flex items-center gap-2 text-sm font-semibold text-orange-700">
+                            <i data-lucide="info" class="h-4 w-4 shrink-0"></i>
+                            Denda ini akan otomatis disertakan pada saat pelunasan lewat halaman pembayaran.
+                        </div>
                     @endif
                 </div>
             @endif
@@ -507,13 +531,9 @@
                 <p class="text-sm text-[#4A2E28]/70">Permintaan pembatalan sudah diajukan dan sedang ditinjau oleh admin.</p>
             @else
                 <p class="text-xs text-[#4A2E28]/60 mb-4">
-                    @if(in_array($pesanan->status, ['menunggu_dp', 'menunggu_diambil', 'sedang_disewa']))
-                        DP yang sudah dibayar <strong>tidak dikembalikan</strong> jika pembatalan disetujui.
-                    @else
-                        Pembatalan akan diproses oleh admin dalam 1–2 hari kerja.
-                    @endif
+                    DP yang sudah dibayar <strong>tidak dikembalikan</strong> jika pembatalan disetujui.
                 </p>
-                <form action="{{ route('pembatalan.ajukan', $pesanan->id) }}" method="POST" class="space-y-3"
+                <form action="{{ route('user.pembatalan.ajukan', $pesanan->id) }}" method="POST" class="space-y-3"
                       x-data="{ open: false }">
                     @csrf
                     <button type="button" @click="open = !open"
@@ -526,23 +546,6 @@
                             <textarea name="alasan" rows="3" minlength="20" required
                                       placeholder="Ceritakan alasan pembatalan (min. 20 karakter)..."
                                       class="w-full rounded-xl border border-[#E2D4C0] bg-[#FAF3E0] px-4 py-2.5 text-sm text-[#4A2E28] placeholder-[#4A2E28]/40 focus:border-red-300 focus:outline-none resize-none"></textarea>
-                        </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                            <div>
-                                <label class="block text-xs font-semibold text-[#4A2E28] mb-1">Nama Bank <span class="text-red-500">*</span></label>
-                                <input type="text" name="nama_bank" required placeholder="BCA, BRI, dll"
-                                       class="w-full rounded-xl border border-[#E2D4C0] bg-[#FAF3E0] px-4 py-2.5 text-sm text-[#4A2E28] focus:border-red-300 focus:outline-none">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-[#4A2E28] mb-1">Nama Rekening <span class="text-red-500">*</span></label>
-                                <input type="text" name="nama_rekening" required placeholder="Nama pemilik rekening"
-                                       class="w-full rounded-xl border border-[#E2D4C0] bg-[#FAF3E0] px-4 py-2.5 text-sm text-[#4A2E28] focus:border-red-300 focus:outline-none">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-[#4A2E28] mb-1">Nomor Rekening <span class="text-red-500">*</span></label>
-                                <input type="text" name="nomor_rekening" required placeholder="1234567890"
-                                       class="w-full rounded-xl border border-[#E2D4C0] bg-[#FAF3E0] px-4 py-2.5 text-sm text-[#4A2E28] focus:border-red-300 focus:outline-none">
-                            </div>
                         </div>
                         <button type="submit"
                                 onclick="return confirm('Yakin ingin mengajukan pembatalan? Tindakan ini tidak bisa dibatalkan.')"

@@ -63,9 +63,6 @@
                         </div>
                         <p class="text-sm text-[#4A2E28]">{{ $item->user->name }}</p>
                         <p class="text-xs admin-muted">Diproses: {{ $item->diproses_pada?->format('d M Y, H:i') ?? '-' }}</p>
-                        @if($item->status === 'disetujui' && $item->jumlah_refund)
-                            <p class="text-xs font-semibold text-green-700">Refund: Rp {{ number_format($item->jumlah_refund, 0, ',', '.') }}</p>
-                        @endif
                     </div>
                     <a href="{{ route('admin.pembatalan.show', $item->id) }}"
                        class="admin-btn-secondary shrink-0 text-sm">

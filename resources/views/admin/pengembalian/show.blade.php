@@ -25,11 +25,7 @@
             </p>
         </div>
 
-        @php
-            $statusClass = match($return->status_pengembalian){
-
-                'belum_diperiksa' => 'badge-warning',
-                'sedang_diperiksa' => 'badge-warning',
+        <span class="badge-warning">Belum Diperiksa</span>
                 'selesai' => 'badge-active',
 
                 default => 'badge-inactive',
@@ -39,6 +35,7 @@
         <span class="{{ $statusClass }}">
             {{ ucfirst(str_replace('_',' ',$return->status_pengembalian)) }}
         </span>
+
 
     </div>
 

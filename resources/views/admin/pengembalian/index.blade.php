@@ -28,11 +28,13 @@
                 <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     <div class="space-y-2">
                         <div class="flex flex-wrap items-center gap-2">
+                            <h2 class="font-heading text-xl font-bold text-[#4A0F1A]">#{{ $return['kode'] }}</h2>
+                            <span class="badge-warning">{{ $return['status'] }}</span>
                             <h2 class="font-heading text-xl font-bold text-[#4A0F1A]">#{{ $return->kode_pengembalian }}</h2>
                             @php
                                 $statusClass = match($return->status_pengembalian) {
                                     'selesai' => 'badge-active',
-                                    'sedang_diperiksa' => 'badge-warning',
+                                    'diperiksa' => 'badge-warning',
                                     default => 'badge-inactive',
                                 };
                                 @endphp
@@ -40,6 +42,7 @@
                                 <span class="{{ $statusClass }}">
                                     {{ ucfirst(str_replace('_',' ', $return->status_pengembalian)) }}
                                 </span>
+
                         </div>
 
                         <p class="text-sm text-[#4A2E28] flex items-center gap-1.5">Pesanan: ##{{ $return->detailPemesanan->pemesanan->kode_pemesanan }} <span class="text-[#E2D4C0] mx-1">|</span> <i data-lucide="user" class="h-3.5 w-3.5 text-[#4A2E28]/50 shrink-0"></i> {{ $return->detailPemesanan->pemesanan->nama_pemesan }}</p>

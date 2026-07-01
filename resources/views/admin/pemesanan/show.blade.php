@@ -196,6 +196,16 @@
                         </form>
                     @endif
 
+                    @if($pemesanan->jenis === 'acara' && $pemesanan->status === 'berlangsung')
+                        <form action="{{ route('admin.pemesanan.acara-selesai', $pemesanan->id) }}" method="POST"
+                              onsubmit="return confirm('Tandai acara ini sudah selesai?')">
+                            @csrf @method('PATCH')
+                            <button type="submit" class="w-full btn bg-emerald-600 text-white py-2.5 rounded-xl hover:bg-emerald-700 font-semibold transition">
+                                Tandai Acara Selesai
+                            </button>
+                        </form>
+                    @endif
+
                     @if($pemesanan->status === 'menunggu_diambil')
                         <form action="{{ route('admin.pemesanan.update-status', $pemesanan->id) }}" method="POST">
                             @csrf @method('PATCH')
@@ -213,10 +223,12 @@
                     @endif
 
                     @if($pemesanan->status === 'menunggu_pengembalian')
-                        <form action="{{ route('admin.pemesanan.update-status', $pemesanan->id) }}" method="POST">
-                            @csrf @method('PATCH')
-                            <input type="hidden" name="status" value="menunggu_pelunasan">
-                            <button type="submit" class="w-full btn bg-indigo-600 text-white py-2.5 rounded-xl hover:bg-indigo-700 font-semibold transition">Barang Sudah Dikembalikan</button>
+                        <form action="{{ route('admin.pemesanan.dikembalikan', $pemesanan->id) }}" method="POST"
+                              onsubmit="return confirm('Tandai barang ini sudah dikembalikan? Kondisi barang & denda kerusakan akan diperiksa di halaman Pengembalian.')">
+                            @csrf
+                            <button type="submit" class="w-full btn bg-indigo-600 text-white py-2.5 rounded-xl hover:bg-indigo-700 font-semibold transition">
+                                Barang Sudah Dikembalikan
+                            </button>
                         </form>
                     @endif
 
@@ -228,7 +240,7 @@
                         </form>
                     @endif
 
-                    @if(in_array($pemesanan->status, ['menunggu', 'menunggu_dp', 'menunggu_diambil']))
+                    @if(in_array($pemesanan->status, ['menunggu', 'dikonfirmasi', 'menunggu_dp', 'menunggu_diambil']))
                         <form action="{{ route('admin.pemesanan.update-status', $pemesanan->id) }}" method="POST" onsubmit="return confirm('Apakah kamu yakin ingin membatalkan pesanan ini?')">
                             @csrf @method('PATCH')
                             <input type="hidden" name="status" value="dibatalkan">

@@ -68,14 +68,12 @@ class PengembalianBarangController extends Controller
             'denda_kerusakan'     => $request->denda_kerusakan,
             'total_denda'         => $totalDenda,
             'status_pengembalian' => 'selesai',
+            'status_denda'        => $totalDenda > 0 ? 'menunggu_bayar' : 'tidak_ada',
         ]);
 
-        // Update status pemesanan menjadi selesai
-        $pengembalian->detailPemesanan
-            ->pemesanan
-            ->update([
-                'status' => 'selesai'
-            ]);
+        // Pesanan tetap menunggu_pelunasan (diset sejak tandaiDikembalikan()) — customer
+        // masih perlu melunasi sisa sewa (+ denda jika ada) lewat payment gateway.
+        // Status baru pindah ke selesai lewat webhook saat pelunasan itu terverifikasi.
 
         return redirect()
             ->route('admin.pengembalian.index')
