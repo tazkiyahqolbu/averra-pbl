@@ -3,10 +3,8 @@
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\JasaController;
 use App\Http\Controllers\Admin\PaketController;
-use App\Http\Controllers\Admin\KategoriPaketController;
+use App\Http\Controllers\Admin\KategoriController;
 use App\Http\Controllers\Admin\BarangController;
-use App\Http\Controllers\Admin\KategoriBarangController;
-use App\Http\Controllers\Admin\KategoriJasaController;
 use App\Http\Controllers\Admin\GaleriController;
 use App\Http\Controllers\Admin\ZonaLokasiController;
 use App\Http\Controllers\Admin\BlokirTanggalController;
@@ -187,26 +185,14 @@ Route::middleware(['auth', 'role:admin'])
         Route::delete('/barang/{id}', [BarangController::class, 'destroy'])
             ->name('barang.destroy');
 
-        Route::get('/kategori-barang', [KategoriBarangController::class, 'index'])->name('kategori-barang.index');
-        Route::get('/kategori-barang/create', [KategoriBarangController::class, 'create'])->name('kategori-barang.create');
-        Route::post('/kategori-barang', [KategoriBarangController::class, 'store'])->name('kategori-barang.store');
-        Route::get('/kategori-barang/{id}/edit', [KategoriBarangController::class, 'edit'])->name('kategori-barang.edit');
-        Route::put('/kategori-barang/{id}', [KategoriBarangController::class, 'update'])->name('kategori-barang.update');
-        Route::delete('/kategori-barang/{id}', [KategoriBarangController::class, 'destroy'])->name('kategori-barang.destroy');
-
-        Route::get('/kategori-jasa', [KategoriJasaController::class, 'index'])->name('kategori-jasa.index');
-        Route::get('/kategori-jasa/create', [KategoriJasaController::class, 'create'])->name('kategori-jasa.create');
-        Route::post('/kategori-jasa', [KategoriJasaController::class, 'store'])->name('kategori-jasa.store');
-        Route::get('/kategori-jasa/{id}/edit', [KategoriJasaController::class, 'edit'])->name('kategori-jasa.edit');
-        Route::put('/kategori-jasa/{id}', [KategoriJasaController::class, 'update'])->name('kategori-jasa.update');
-        Route::delete('/kategori-jasa/{id}', [KategoriJasaController::class, 'destroy'])->name('kategori-jasa.destroy');
-
-        Route::get('/kategori-paket', [KategoriPaketController::class, 'index'])->name('kategori-paket.index');
-        Route::get('/kategori-paket/create', [KategoriPaketController::class, 'create'])->name('kategori-paket.create');
-        Route::post('/kategori-paket', [KategoriPaketController::class, 'store'])->name('kategori-paket.store');
-        Route::get('/kategori-paket/{id}/edit', [KategoriPaketController::class, 'edit'])->name('kategori-paket.edit');
-        Route::put('/kategori-paket/{id}', [KategoriPaketController::class, 'update'])->name('kategori-paket.update');
-        Route::delete('/kategori-paket/{id}', [KategoriPaketController::class, 'destroy'])->name('kategori-paket.destroy');
+        Route::prefix('kategori/{tipe}')->name('kategori.')->group(function () {
+    Route::get('/', [KategoriController::class, 'index'])->name('index');
+    Route::get('/create', [KategoriController::class, 'create'])->name('create');
+    Route::post('/', [KategoriController::class, 'store'])->name('store');
+    Route::get('/{id}/edit', [KategoriController::class, 'edit'])->name('edit');
+    Route::put('/{id}', [KategoriController::class, 'update'])->name('update');
+    Route::delete('/{id}', [KategoriController::class, 'destroy'])->name('destroy');
+});
 
         Route::prefix('pengembalian')->name('pengembalian.')->group(function () {
 

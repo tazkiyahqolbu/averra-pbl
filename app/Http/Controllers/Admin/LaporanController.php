@@ -185,14 +185,15 @@ class LaporanController extends Controller
 
     foreach ($transactions as $trx) {
 
-        $sheet->setCellValue('A'.$row, $trx->kode_pemesanan);
-        $sheet->setCellValue('B'.$row, $trx->nama_pemesan);
-        $sheet->setCellValue('C'.$row, ucfirst($trx->jenis));
-        $sheet->setCellValue('D'.$row, 'Rp '.number_format($trx->total_harga,0,',','.'));
-        $sheet->setCellValue('F'.$row,Carbon::parse($trx->tanggal_pemesanan)->translatedFormat('d F Y'));
+    $sheet->setCellValue('A'.$row, $trx->kode_pemesanan);
+    $sheet->setCellValue('B'.$row, $trx->nama_pemesan);
+    $sheet->setCellValue('C'.$row, ucfirst($trx->jenis));
+    $sheet->setCellValue('D'.$row, 'Rp '.number_format($trx->total_harga,0,',','.'));
+    $sheet->setCellValue('E'.$row, ucfirst($trx->status));
+    $sheet->setCellValue('F'.$row, Carbon::parse($trx->tanggal_pemesanan)->translatedFormat('d F Y'));
 
-        $row++;
-    }
+    $row++;
+}
 
     $lastRow = $row - 1;
 
