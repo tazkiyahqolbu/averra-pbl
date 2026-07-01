@@ -67,16 +67,25 @@
                     <textarea id="catatan" name="catatan" class="admin-textarea focus:admin-input-focus">{{ old('catatan', $paket->catatan) }}</textarea>
                 </div>
 
-                <div>
-                    <label class="admin-label">Thumbnail Saat Ini</label>
-                    @if ($paket->thumbnail_path)
-                    <img src="{{ asset('storage/' . $paket->thumbnail_path) }}" class="admin-preview-image">
-                    @else
-                        <div class="admin-preview-image flex items-center justify-center text-sm font-semibold text-[#4A2E28]">
-                            Belum ada
-                        </div>
-                    @endif
+                            <div>
+                <label class="admin-label">Thumbnail Saat Ini</label>
+                @if ($paket->thumbnail_path)
+                <img src="{{ asset('storage/' . $paket->thumbnail_path) }}" class="admin-preview-image">
+                @else
+                    <div class="admin-preview-image flex items-center justify-center text-sm font-semibold text-[#4A2E28]">
+                        Belum ada
+                    </div>
+                @endif
+            </div>
+
+            <div x-data="{ preview: null }">
+                <label for="thumbnail_path" class="admin-label">Ganti Thumbnail</label>
+                <input id="thumbnail_path" name="thumbnail_path" type="file" accept="image/*" class="admin-file"
+                    @change="preview = $event.target.files[0] ? URL.createObjectURL($event.target.files[0]) : null">
+                <div class="mt-2" x-show="preview">
+                    <img :src="preview" class="h-24 w-24 object-cover rounded-lg border border-[#E2D4C0]">
                 </div>
+            </div>
 
                 <div>
                     <label for="thumbnail_path" class="admin-label">Ganti Thumbnail</label>
@@ -180,24 +189,24 @@
         </div>
 
         <div class="admin-card p-6">
-            <div>
-                <label class="admin-label">Tambah Foto Baru</label>
-                <p class="admin-muted mb-2 text-xs">Tambahkan satu per satu atau klik "+ Tambah Foto".</p>
-                <div id="foto-paket-list" class="space-y-2">
-                    <div class="foto-item flex items-center gap-2">
-                        <input type="file" name="foto_paket[]" class="admin-file flex-1" accept="image/*"
-                               onchange="previewSingleFoto(this)">
-                    </div>
-                </div>
-                <button type="button" onclick="tambahFotoPaket()"
-                        class="mt-2 flex items-center gap-1.5 text-sm text-[#C8960C] hover:text-[#B8983A] font-medium transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                    </svg>
-                    Tambah Foto
-                </button>
+    <div x-data="{ items: [{ id: Date.now(), preview: null }] }">
+        <label class="admin-label">Tambah Foto Baru</label>
+        <p class="admin-muted mb-2 text-xs">Tambahkan satu per satu atau klik "+ Tambah Foto".</p>
+        <template x-for="(item, index) in items" :key="item.id">
+            <div class="foto-item flex items-center gap-2 mb-2">
+                <input type="file" name="foto_paket[]" class="admin-file flex-1" accept="image/*"
+                       @change="item.preview = $event.target.files[0] ? URL.createObjectURL($event.target.files[0]) : null">
+                <img x-show="item.preview" :src="item.preview" class="h-16 w-16 rounded-lg object-cover border border-[#E2D4C0]">
+                <button type="button" x-show="items.length > 1" @click="items = items.filter(i => i.id !== item.id)"
+                        class="text-red-400 hover:text-red-600 text-xs">Hapus</button>
             </div>
-        </div>
+        </template>
+        <button type="button" @click="items.push({ id: Date.now(), preview: null })"
+                class="mt-2 flex items-center gap-1.5 text-sm text-[#C8960C] hover:text-[#B8983A] font-medium transition">
+            + Tambah Foto
+        </button>
+    </div>
+</div>
 
         <div class="flex justify-end gap-3">
             <a href="{{ route('admin.paket.index') }}" class="admin-btn-secondary">Batal</a>
@@ -207,27 +216,6 @@
 </div>
 
 <script>
-function previewSingleFoto(input) {
-    let preview = input.parentElement.querySelector('.preview-img');
-    if (!preview) {
-        preview = document.createElement('img');
-        preview.className = 'preview-img h-16 w-16 rounded-lg object-cover border border-[#E2D4C0] shrink-0';
-        input.parentElement.appendChild(preview);
-    }
-    if (input.files[0]) preview.src = URL.createObjectURL(input.files[0]);
-}
-
-function tambahFotoPaket() {
-    const list = document.getElementById('foto-paket-list');
-    const div = document.createElement('div');
-    div.className = 'foto-item flex items-center gap-2';
-    div.innerHTML = `
-        <input type="file" name="foto_paket[]" class="admin-file flex-1" accept="image/*" onchange="previewSingleFoto(this)">
-        <button type="button" onclick="this.parentElement.remove()"
-                class="text-red-400 hover:text-red-600 text-xs shrink-0">Hapus</button>
-    `;
-    list.appendChild(div);
-}
 
 let itemBaruCount = 0;
 const jasaList = @json($jasaList ?? []);

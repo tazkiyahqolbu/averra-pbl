@@ -39,46 +39,32 @@
 
         <div class="grid gap-4 md:grid-cols-2">
             {{-- Foto Utama --}}
-            <div>
+            <div x-data="{ preview: null }">
                 <label class="admin-label">Foto Utama</label>
-                @if($barang->thumbnail_path)
-                    <img src="{{ Storage::url($barang->thumbnail_path) }}"
-                         class="mb-2 h-32 w-32 rounded-xl object-cover border border-[#E2D4C0]">
-                    <p class="mb-1 text-xs text-[#4A2E28]/60">Upload baru untuk mengganti foto di atas</p>
-                @endif
-                <input type="file" name="thumbnail_path" class="admin-file"
-                       onchange="previewFoto(this, 'preview-utama')">
-                <div id="preview-utama" class="mt-2 flex gap-2 flex-wrap"></div>
+                <input type="file" name="thumbnail_path" class="admin-file" accept="image/*"
+                    @change="preview = $event.target.files[0] ? URL.createObjectURL($event.target.files[0]) : null">
+                <div class="mt-2" x-show="preview">
+                    <img :src="preview" class="h-24 w-24 object-cover rounded-lg border border-[#E2D4C0]">
+                </div>
             </div>
 
             {{-- Foto Tambahan --}}
-            <div>
-                <label class="admin-label">Foto Tambahan</label>
-                @if($barang->fotos->isNotEmpty())
-                    <div class="mb-2 flex flex-wrap gap-2">
-                        @foreach($barang->fotos as $foto)
-                            <img src="{{ $foto->foto_url }}"
-                                 class="h-20 w-20 rounded-lg object-cover border border-[#E2D4C0]">
-                        @endforeach
-                    </div>
-                    <p class="mb-1 text-xs text-[#4A2E28]/60">Foto baru akan ditambahkan ke yang sudah ada</p>
-                @endif
-
-                <div id="foto-tambahan-list" class="space-y-2">
-                    <div class="foto-tambahan-item flex items-center gap-2">
-                        <input type="file" name="foto_tambahan[]" class="admin-file flex-1"
-                               onchange="previewSingle(this)">
-                    </div>
+             <div x-data="{ items: [{ id: Date.now(), preview: null }] }">
+            <label class="admin-label">Foto Tambahan</label>
+            <template x-for="(item, index) in items" :key="item.id">
+                <div class="foto-item flex items-center gap-2 mb-2">
+                    <input type="file" name="foto_tambahan[]" class="admin-file flex-1" accept="image/*"
+                        @change="item.preview = $event.target.files[0] ? URL.createObjectURL($event.target.files[0]) : null">
+                    <img x-show="item.preview" :src="item.preview" class="h-16 w-16 rounded-lg object-cover border border-[#E2D4C0]">
+                    <button type="button" x-show="items.length > 1" @click="items = items.filter(i => i.id !== item.id)"
+                            class="text-red-400 hover:text-red-600 text-xs">Hapus</button>
                 </div>
-
-                <button type="button" onclick="tambahFoto('foto-tambahan-list', 'foto_tambahan[]')"
-                        class="mt-2 flex items-center gap-1.5 text-sm text-[#C8960C] hover:text-[#B8983A] font-medium transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                    </svg>
-                    Tambah Foto
-                </button>
-            </div>
+            </template>
+            <button type="button" @click="items.push({ id: Date.now(), preview: null })"
+                    class="mt-2 flex items-center gap-1.5 text-sm text-[#C8960C] hover:text-[#B8983A] font-medium transition">
+                + Tambah Foto
+            </button>
+        </div>
         </div>
 
         <div class="flex justify-end gap-3">
@@ -87,43 +73,5 @@
         </div>
     </form>
 </div>
-
-<script>
-function previewFoto(input, previewId) {
-    const container = document.getElementById(previewId);
-    container.innerHTML = '';
-    if (!input.files.length) return;
-    Array.from(input.files).forEach(file => {
-        const img = document.createElement('img');
-        img.src = URL.createObjectURL(file);
-        img.className = 'h-24 w-24 object-cover rounded-lg border border-[#E2D4C0]';
-        container.appendChild(img);
-    });
-}
-
-function previewSingle(input) {
-    let preview = input.parentElement.querySelector('.preview-img');
-    if (!preview) {
-        preview = document.createElement('img');
-        preview.className = 'preview-img h-16 w-16 rounded-lg object-cover border border-[#E2D4C0] shrink-0';
-        input.parentElement.appendChild(preview);
-    }
-    if (input.files[0]) {
-        preview.src = URL.createObjectURL(input.files[0]);
-    }
-}
-
-function tambahFoto(listId, inputName) {
-    const list = document.getElementById(listId);
-    const div = document.createElement('div');
-    div.className = 'foto-item flex items-center gap-2';
-    div.innerHTML = `
-        <input type="file" name="${inputName}" class="admin-file flex-1" onchange="previewSingle(this)">
-        <button type="button" onclick="this.parentElement.remove()"
-                class="text-red-400 hover:text-red-600 text-xs shrink-0">Hapus</button>
-    `;
-    list.appendChild(div);
-}
-</script>
 
 @endsection

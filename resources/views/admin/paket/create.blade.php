@@ -82,28 +82,30 @@
             </div>
 
             <div class="grid gap-4 md:grid-cols-2">
-                <div>
-                    <label class="admin-label">Foto Utama</label>
-                    <input type="file" name="thumbnail_path" accept="image/*" class="admin-file"
-                           onchange="previewSingle(this, 'preview-utama')">
-                    <div id="preview-utama" class="mt-2"></div>
+                            <div x-data="{ preview: null }">
+                <label class="admin-label">Foto Utama</label>
+                <input type="file" name="thumbnail_path" class="admin-file" accept="image/*"
+                    @change="preview = $event.target.files[0] ? URL.createObjectURL($event.target.files[0]) : null">
+                <div class="mt-2" x-show="preview">
+                    <img :src="preview" class="h-24 w-24 object-cover rounded-lg border border-[#E2D4C0]">
                 </div>
-                <div>
-                    <label class="admin-label">Foto Tambahan</label>
-                    <div id="foto-paket-list" class="space-y-2">
-                        <div class="foto-item flex items-center gap-2">
-                            <input type="file" name="foto_paket[]" class="admin-file flex-1" accept="image/*"
-                                   onchange="previewSingleFoto(this)">
-                        </div>
+            </div>
+                            <div x-data="{ items: [{ id: Date.now(), preview: null }] }">
+                <label class="admin-label">Foto Tambahan</label>
+                <template x-for="(item, index) in items" :key="item.id">
+                    <div class="foto-item flex items-center gap-2 mb-2">
+                        <input type="file" name="foto_tambahan[]" class="admin-file flex-1" accept="image/*"
+                            @change="item.preview = $event.target.files[0] ? URL.createObjectURL($event.target.files[0]) : null">
+                        <img x-show="item.preview" :src="item.preview" class="h-16 w-16 rounded-lg object-cover border border-[#E2D4C0]">
+                        <button type="button" x-show="items.length > 1" @click="items = items.filter(i => i.id !== item.id)"
+                                class="text-red-400 hover:text-red-600 text-xs">Hapus</button>
                     </div>
-                    <button type="button" onclick="tambahFotoPaket()"
-                            class="mt-2 flex items-center gap-1.5 text-sm text-[#C8960C] hover:text-[#B8983A] font-medium transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                        </svg>
-                        Tambah Foto
-                    </button>
-                </div>
+                </template>
+                <button type="button" @click="items.push({ id: Date.now(), preview: null })"
+                        class="mt-2 flex items-center gap-1.5 text-sm text-[#C8960C] hover:text-[#B8983A] font-medium transition">
+                    + Tambah Foto
+                </button>
+            </div>
             </div>
         </div>
 
@@ -122,101 +124,4 @@
     </form>
 </div>
 
-<script>
-function previewSingle(input, previewId) {
-    const container = document.getElementById(previewId);
-    container.innerHTML = '';
-    if (input.files[0]) {
-        const img = document.createElement('img');
-        img.src = URL.createObjectURL(input.files[0]);
-        img.className = 'h-24 w-24 object-cover rounded-lg border border-[#E2D4C0]';
-        container.appendChild(img);
-    }
-}
-
-function previewSingleFoto(input) {
-    let preview = input.parentElement.querySelector('.preview-img');
-    if (!preview) {
-        preview = document.createElement('img');
-        preview.className = 'preview-img h-16 w-16 rounded-lg object-cover border border-[#E2D4C0] shrink-0';
-        input.parentElement.appendChild(preview);
-    }
-    if (input.files[0]) preview.src = URL.createObjectURL(input.files[0]);
-}
-
-function tambahFotoPaket() {
-    const list = document.getElementById('foto-paket-list');
-    const div = document.createElement('div');
-    div.className = 'foto-item flex items-center gap-2';
-    div.innerHTML = `
-        <input type="file" name="foto_paket[]" class="admin-file flex-1" accept="image/*" onchange="previewSingleFoto(this)">
-        <button type="button" onclick="this.parentElement.remove()"
-                class="text-red-400 hover:text-red-600 text-xs shrink-0">Hapus</button>
-    `;
-    list.appendChild(div);
-}
-
-let itemCount = 0;
-const jasaList = @json($jasaList ?? []);
-
-function tambahItem() {
-    const notice = document.getElementById('empty-notice');
-    if (notice) notice.remove();
-
-    const i = itemCount++;
-    const container = document.getElementById('item-container');
-
-    const jasaOptions = jasaList.length
-        ? jasaList.map(j => `<option value="${j.id}" data-nama="${j.nama_jasa}">${j.nama_jasa}</option>`).join('')
-        : '<option disabled>Belum ada data jasa (hubungi backend)</option>';
-
-    container.insertAdjacentHTML('beforeend', `
-        <div class="item-row rounded-2xl border border-[#E2D4C0] bg-white p-5 space-y-4">
-            <div class="flex items-center justify-between">
-                <span class="text-sm font-semibold text-[#4A0F1A]">Item ${i + 1}</span>
-                <button type="button" onclick="this.closest('.item-row').remove()" class="text-sm font-semibold text-red-500 hover:text-red-700">Hapus</button>
-            </div>
-            <div class="grid gap-4 md:grid-cols-2">
-                <div class="md:col-span-2">
-                    <label class="admin-label">Pilih dari Jasa <span class="admin-muted text-xs">(opsional — atau ketik nama di bawah)</span></label>
-                    <select onchange="isiNamaDariJasa(this, ${i})" class="admin-select">
-                        <option value="">-- Pilih jasa --</option>
-                        ${jasaOptions}
-                    </select>
-                    <input type="hidden" name="jasa_id[]" id="jasa_id_${i}" value="">
-                </div>
-                <div class="md:col-span-2">
-                    <label class="admin-label">Nama Item <span class="text-red-600">*</span></label>
-                    <input id="nama_item_${i}" name="nama_item[]" type="text" class="admin-input" placeholder="Nama item (terisi otomatis jika pilih jasa di atas)">
-                </div>
-                <div>
-                    <label class="admin-label">Jumlah</label>
-                    <input name="jumlah[]" type="number" min="1" value="1" class="admin-input">
-                </div>
-                <div>
-                    <label class="admin-label">Tipe</label>
-                    <select name="tipe[]" class="admin-select">
-                        <option value="wajib">Wajib</option>
-                        <option value="opsional">Opsional (+biaya tambahan)</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="admin-label">Harga Tambahan</label>
-                    <input name="harga_tambahan[]" type="number" min="0" value="0" class="admin-input">
-                </div>
-                <div>
-                    <label class="admin-label">Keterangan</label>
-                    <input name="keterangan[]" type="text" class="admin-input" placeholder="Opsional">
-                </div>
-            </div>
-        </div>
-    `);
-}
-
-function isiNamaDariJasa(select, index) {
-    const selected = select.options[select.selectedIndex];
-    document.getElementById('nama_item_' + index).value = selected.dataset.nama ?? '';
-    document.getElementById('jasa_id_' + index).value = selected.value;
-}
-</script>
 @endsection
