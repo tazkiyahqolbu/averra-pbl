@@ -252,7 +252,8 @@ Route::middleware(['auth', 'role:admin'])
         Route::delete('/blokir-tanggal/{id}', [BlokirTanggalController::class, 'destroy'])
             ->name('blokir-tanggal.destroy');
 
-        Route::view('/laporan',         'admin.laporan.index')->name('laporan.index');
+        Route::get('/laporan', [LaporanController::class, 'index'])
+    ->name('laporan.index');
         Route::get('/laporan/export-excel', [LaporanController::class, 'exportExcel'])->name('laporan.export');
     });
 
