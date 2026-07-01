@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\KategoriJasaController;
 use App\Http\Controllers\Admin\GaleriController;
 use App\Http\Controllers\Admin\ZonaLokasiController;
 use App\Http\Controllers\Admin\BlokirTanggalController;
+use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\PemesananController as AdminPemesananController;
 use App\Http\Controllers\Admin\PembayaranController as AdminPembayaranController;
 use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
@@ -255,6 +256,7 @@ Route::middleware(['auth', 'role:admin'])
 // Admin view-only routes (preview frontend)
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::view('/laporan',         'admin.laporan.index')->name('laporan.index');
+     Route::get('/laporan/export-excel', [LaporanController::class, 'exportExcel'])->name('laporan.export');
     Route::get('/testimoni', function () {
         $testimonis  = \App\Models\Testimoni::with([
             'user',
