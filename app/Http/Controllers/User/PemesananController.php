@@ -166,7 +166,7 @@ class PemesananController extends Controller
             $jenis    = 'acara';
 
             if ($jenisItem === 'barang') {
-                $model    = Barang::findOrFail($itemId);
+                $model    = Barang::where('id', $itemId)->lockForUpdate()->firstOrFail();
                 $jumlahDiminta = max(1, (int) ($request->jumlah_unit ?? 1));
 
                 // Cek stok sebelum menyimpan apapun — tolak lebih awal agar tidak ada

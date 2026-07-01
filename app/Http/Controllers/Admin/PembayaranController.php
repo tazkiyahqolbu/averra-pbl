@@ -22,7 +22,7 @@ class PembayaranController extends Controller
         }
 
         $pembayarans   = $query->get();
-        $countMenunggu = 0;
+        $countMenunggu = Pembayaran::where('status', 'menunggu')->count();
 
         return view('admin.pembayaran.index', compact('pembayarans', 'countMenunggu'));
     }
@@ -37,6 +37,10 @@ class PembayaranController extends Controller
     public function verifikasi($id): RedirectResponse
     {
         $pembayaran = Pembayaran::with('pemesanan')->findOrFail($id);
+
+        if ($pembayaran->status !== 'menunggu') {
+            return back()->with('error', 'Pembayaran ini sudah diproses sebelumnya.');
+        }
 
         $pembayaran->update([
             'status'            => 'terverifikasi',
@@ -64,6 +68,11 @@ class PembayaranController extends Controller
         ]);
 
         $pembayaran = Pembayaran::findOrFail($id);
+
+        if ($pembayaran->status !== 'menunggu') {
+            return back()->with('error', 'Pembayaran ini sudah diproses sebelumnya.');
+        }
+
         $pembayaran->update([
             'status'            => 'ditolak',
             'catatan_penolakan' => $request->catatan_penolakan,
