@@ -66,16 +66,16 @@ Route::middleware('auth')->group(function () {
 
 // Autentikasi
 Route::get('/login',     [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login',    [AuthController::class, 'login']);
+Route::post('/login',    [AuthController::class, 'login'])->middleware('throttle:5,1');
 Route::get('/register',        [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register',       [AuthController::class, 'register']);
 Route::get('/register/sukses', [AuthController::class, 'showRegisterSuccess'])->name('register.success');
 Route::post('/logout',   [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 // Forgot Password
 Route::get('/lupa-password', [ForgotPasswordController::class, 'showForgotPassword'])->name('password.request');
-Route::post('/lupa-password', [ForgotPasswordController::class, 'sendOtp'])->name('password.send-otp');
+Route::post('/lupa-password', [ForgotPasswordController::class, 'sendOtp'])->name('password.send-otp')->middleware('throttle:5,1');
 Route::get('/verifikasi-otp', [ForgotPasswordController::class, 'showVerifyOtp'])->name('password.verify-otp');
-Route::post('/verifikasi-otp', [ForgotPasswordController::class, 'verifyOtp'])->name('password.check-otp');
+Route::post('/verifikasi-otp', [ForgotPasswordController::class, 'verifyOtp'])->name('password.check-otp')->middleware('throttle:5,1');
 Route::get('/reset-password', [ForgotPasswordController::class, 'showResetPassword'])->name('password.reset-form');
 Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('password.update');
 
@@ -250,29 +250,7 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('/laporan/export-excel', [LaporanController::class, 'exportExcel'])->name('laporan.export');
     });
 
-// Admin view-only routes (preview frontend)
-Route::prefix('admin')->name('admin.')->group(function () {
-    Route::get('/testimoni', function () {
-        $testimonis  = \App\Models\Testimoni::with([
-            'user',
-            'pemesanan.detailPemesanans.jasa',
-            'pemesanan.detailPemesanans.paket',
-            'pemesanan.detailPemesanans.barang',
-            'fotos',
-        ])->latest()->get();
-        $rataRating  = round($testimonis->avg('rating'), 1);
-        $totalUlasan = $testimonis->count();
-        return view('admin.testimoni.index', compact('testimonis', 'rataRating', 'totalUlasan'));
-    })->name('testimoni.index');
-});
 
-//     Route::patch('/testimoni/{id}/balas', function ($id) {
-//         $t = \App\Models\Testimoni::findOrFail($id);
-//         request()->validate(['dibalas' => 'required|string|max:1000']);
-//         $t->update(['dibalas' => request('dibalas')]);
-//         return redirect()->route('admin.testimoni.index')->with('success', 'Balasan berhasil disimpan.');
-//     })->name('testimoni.balas');
-// });
 
 // Admin akun (profil)
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -281,38 +259,3 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::put('/akun/password',     [AdminProfileController::class, 'updatePassword'])->name('akun.password');
 });
 
-// Preview Frontend Kategori Paket
-Route::get('/admin/kategori-paket-preview', function () {
-    $kategoriPakets = collect([
-        (object) [
-            'id' => 1,
-            'nama' => 'Paket Pernikahan',
-            'deskripsi' => 'Paket lengkap untuk acara pernikahan',
-            'ikon_path' => null,
-        ],
-        (object) [
-            'id' => 2,
-            'nama' => 'Paket Wisuda',
-            'deskripsi' => 'Paket dokumentasi wisuda',
-            'ikon_path' => null,
-        ],
-    ]);
-
-    return view('admin.kategori-paket.index', compact('kategoriPakets'));
-})->name('admin.kategori-paket.index.preview');
-
-Route::view(
-    '/admin/kategori-paket/create-preview',
-    'admin.kategori-paket.create'
-)->name('admin.kategori-paket.create');
-
-Route::get('/admin/kategori-paket/edit-preview', function () {
-    $kategoriPaket = (object) [
-        'id' => 1,
-        'nama' => 'Paket Pernikahan',
-        'deskripsi' => 'Paket lengkap untuk acara pernikahan',
-        'ikon_path' => null,
-    ];
-
-    return view('admin.kategori-paket.edit', compact('kategoriPaket'));
-})->name('admin.kategori-paket.edit');

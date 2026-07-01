@@ -46,66 +46,68 @@ class PaketController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-        'kategori_paket_id' => 'required',
-        'nama_paket' => 'required',
-        'harga' => 'required',
-    ]);
+            'kategori_paket_id' => 'required|exists:kategori_paket,id',
+            'nama_paket'        => 'required',
+            'harga'             => 'required|numeric',
+            'thumbnail_path'    => 'nullable|image',
+            'foto_paket.*'      => 'nullable|image',
+        ]);
 
         $thumbnailPath = null;
 
-    if ($request->hasFile('thumbnail_path')) {
+        if ($request->hasFile('thumbnail_path')) {
 
-        $thumbnailPath = $request->file('thumbnail_path')
-            ->store('paket/thumbnail', 'public');
-    }
+            $thumbnailPath = $request->file('thumbnail_path')
+                ->store('paket/thumbnail', 'public');
+        }
 
         $paket = Paket::create([
-        'kategori_paket_id' => $request->kategori_paket_id,
-        'nama_paket' => $request->nama_paket,
-        'deskripsi' => $request->deskripsi,
-        'harga' => $request->harga,
-        'keterangan_acara' => $request->keterangan_acara,
-        'catatan' => $request->catatan,
-        'thumbnail_path' => $thumbnailPath,
-        'aktif' => $request->input('aktif', 1) == 1,
-    ]);
+            'kategori_paket_id' => $request->kategori_paket_id,
+            'nama_paket' => $request->nama_paket,
+            'deskripsi' => $request->deskripsi,
+            'harga' => $request->harga,
+            'keterangan_acara' => $request->keterangan_acara,
+            'catatan' => $request->catatan,
+            'thumbnail_path' => $thumbnailPath,
+            'aktif' => $request->input('aktif', 1) == 1,
+        ]);
 
-    if ($request->nama_item) {
+        if ($request->nama_item) {
 
-        foreach ($request->nama_item as $index => $item) {
+            foreach ($request->nama_item as $index => $item) {
 
-            if (!empty($item)) {
+                if (!empty($item)) {
 
-                PaketDetail::create([
-                    'paket_id'       => $paket->id,
-                    'jasa_id'        => !empty($request->jasa_id[$index]) ? $request->jasa_id[$index] : null,
-                    'nama_item'      => $item,
-                    'jumlah'         => $request->jumlah[$index] ?? 1,
-                    'tipe'           => $request->tipe[$index] ?? 'wajib',
-                    'harga_tambahan' => $request->harga_tambahan[$index] ?? 0,
-                    'keterangan'     => $request->keterangan[$index] ?? null,
+                    PaketDetail::create([
+                        'paket_id'       => $paket->id,
+                        'jasa_id'        => !empty($request->jasa_id[$index]) ? $request->jasa_id[$index] : null,
+                        'nama_item'      => $item,
+                        'jumlah'         => $request->jumlah[$index] ?? 1,
+                        'tipe'           => $request->tipe[$index] ?? 'wajib',
+                        'harga_tambahan' => $request->harga_tambahan[$index] ?? 0,
+                        'keterangan'     => $request->keterangan[$index] ?? null,
+                    ]);
+                }
+            }
+        }
+
+        if ($request->hasFile('foto_paket')) {
+
+            foreach ($request->file('foto_paket') as $index => $foto) {
+
+                $fotoPath = $foto->store('paket/foto', 'public');
+
+                FotoPaket::create([
+                    'paket_id' => $paket->id,
+                    'foto_path' => $fotoPath,
+                    'urutan' => $index + 1,
                 ]);
             }
         }
-    }
 
-    if ($request->hasFile('foto_paket')) {
-
-        foreach ($request->file('foto_paket') as $index => $foto) {
-
-            $fotoPath = $foto->store('paket/foto', 'public');
-
-            FotoPaket::create([
-                'paket_id' => $paket->id,
-                'foto_path' => $fotoPath,
-                'urutan' => $index + 1,
-            ]);
-        }
-    }
-
-    return redirect()
-    ->route('admin.paket.index')
-    ->with('success', 'Paket berhasil ditambahkan');
+        return redirect()
+            ->route('admin.paket.index')
+            ->with('success', 'Paket berhasil ditambahkan');
     }
 
     /**
@@ -142,9 +144,11 @@ class PaketController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'kategori_paket_id' => 'required',
+            'kategori_paket_id' => 'required|exists:kategori_paket,id',
             'nama_paket'        => 'required',
             'harga'             => 'required|numeric',
+            'thumbnail_path'    => 'nullable|image',
+            'foto_paket.*'      => 'nullable|image',
         ]);
 
         $paket = Paket::findOrFail($id);
@@ -156,7 +160,7 @@ class PaketController extends Controller
             if (
                 $paket->thumbnail_path &&
                 Storage::disk('public')
-                    ->exists($paket->thumbnail_path)
+                ->exists($paket->thumbnail_path)
             ) {
 
                 Storage::disk('public')
@@ -190,17 +194,14 @@ class PaketController extends Controller
                     $foto->update([
 
                         'keterangan' =>
-                            $request->keterangan_foto[$index] ?? null,
+                        $request->keterangan_foto[$index] ?? null,
 
                         'urutan' =>
-                            $request->urutan_foto[$index] ?? 1,
+                        $request->urutan_foto[$index] ?? 1,
 
                     ]);
-
                 }
-
             }
-
         }
 
         if ($request->hasFile('foto_paket')) {
@@ -242,7 +243,7 @@ class PaketController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-  public function destroy($id)
+    public function destroy($id)
     {
         $paket = Paket::with(['fotos', 'paketDetails'])
             ->findOrFail($id);
@@ -251,7 +252,7 @@ class PaketController extends Controller
         if (
             $paket->thumbnail_path &&
             Storage::disk('public')
-                ->exists($paket->thumbnail_path)
+            ->exists($paket->thumbnail_path)
         ) {
 
             Storage::disk('public')
@@ -264,7 +265,7 @@ class PaketController extends Controller
             if (
                 $foto->foto_path &&
                 Storage::disk('public')
-                    ->exists($foto->foto_path)
+                ->exists($foto->foto_path)
             ) {
 
                 Storage::disk('public')
