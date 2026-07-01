@@ -8,11 +8,6 @@
     $nav = [
         ['label' => 'Dashboard',   'route' => 'admin.dashboard',      'icon' => 'layout-dashboard'],
     ];
-    $transaksi = [
-        ['label' => 'Pemesanan',   'route' => 'admin.pemesanan.index', 'icon' => 'clipboard-list',   'badge_key' => 'pemesanan'],
-        ['label' => 'Pembayaran',  'route' => 'admin.pembayaran.index','icon' => 'credit-card',       'badge_key' => 'pembayaran'],
-        ['label' => 'Pengembalian','route' => 'admin.pengembalian.index','icon' => 'package',         'badge_key' => 'pengembalian'],
-    ];
 
     $transaksi = [
     ['label' => 'Pemesanan',   'route' => 'admin.pemesanan.index', 'icon' => 'clipboard-list',   'badge_key' => 'pemesanan'],
@@ -44,7 +39,7 @@
     $badges = [
         'pemesanan'    => \App\Models\Pemesanan::where('status', 'menunggu')->count(),
         'pembayaran'   => \App\Models\Pembayaran::where('status', 'menunggu')->count(),
-        'pengembalian' => 0,
+        'pengembalian' => \App\Models\PengembalianBarang::where('status_pengembalian', 'belum_diperiksa')->count(),
     ];
 @endphp
 
@@ -62,22 +57,22 @@
     {{-- Logo --}}
         <div class="shrink-0 border-b border-white/10 px-5 py-5 flex items-center justify-between">
         <a href="{{ $routeUrl('admin.dashboard') }}" class="flex items-center gap-2.5 group">
-            
+
             <div class="flex h-9 w-9 items-center justify-center rounded-full border border-[#C8960C]/50 bg-white/5 group-hover:bg-white/10 transition overflow-hidden">
-                
-                <img 
-                    src="{{ asset('galeri/logo-rantiang-tagok.jpg') }}" 
-                    alt="Logo Rantiang Tagok" 
+
+                <img
+                    src="{{ asset('galeri/logo-rantiang-tagok.jpg') }}"
+                    alt="Logo Rantiang Tagok"
                     class="h-full w-full object-cover">
-                    
+
             </div>
-            
+
             <div>
                 <span class="font-serif text-base font-bold tracking-[0.2em] text-[#FAF3E0]">SILART</span>
                 <p class="text-[9px] font-semibold uppercase tracking-[0.25em] text-[#C8960C]/70 leading-none mt-0.5">Admin Panel</p>
             </div>
         </a>
-        
+
         <button @click="sidebarOpen = false" class="lg:hidden flex h-8 w-8 items-center justify-center rounded-lg text-white/50 hover:bg-white/10 hover:text-white transition">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
