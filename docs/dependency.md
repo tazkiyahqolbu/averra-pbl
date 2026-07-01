@@ -90,3 +90,20 @@
 | How | Install via Composer, set server key pada config/services.php, panggil Snap::getSnapToken() melalui MidtransService untuk generate token pembayaran, lalu tangani notifikasi status transaksi lewat Notification() |
 
 **Referensi:** https://docs.midtrans.com/docs/midtrans-php
+
+Cara Install
+
+\\\`bash
+composer require phpoffice/phpspreadsheet
+composer require barryvdh/laravel-dompdf
+composer require midtrans/midtrans-php
+composer require spatie/laravel-permission
+npm install tailwindcss @tailwindcss/vite
+npm install alpinejs
+\\\`
+
+Dampak pada Proyek
+
+- Menambah fitur (export laporan, cetak invoice, payment gateway, role & permission, styling, interaktivitas UI)
+- Menambah ukuran dependency, terutama phpspreadsheet dan dompdf yang cukup besar
+- Risiko update versi: midtrans/midtrans-php bergantung pada layanan eksternal (uptime & perubahan API Midtrans di masa depan)
