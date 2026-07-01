@@ -157,7 +157,6 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('/pembatalan/{id}',                     [AdminPembatalanController::class, 'show'])->name('pembatalan.show');
         Route::patch('/pembatalan/{id}/setujui',           [AdminPembatalanController::class, 'setujui'])->name('pembatalan.setujui');
         Route::patch('/pembatalan/{id}/tolak',             [AdminPembatalanController::class, 'tolak'])->name('pembatalan.tolak');
-        Route::post('/pembatalan/{id}/bukti-refund',       [AdminPembatalanController::class, 'uploadBuktiRefund'])->name('pembatalan.bukti-refund');
 
         // Pembayaran
         Route::get('/pembayaran',                          [AdminPembayaranController::class, 'index'])->name('pembayaran.index');

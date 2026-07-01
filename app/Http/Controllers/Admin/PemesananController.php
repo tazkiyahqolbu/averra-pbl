@@ -81,15 +81,8 @@ class PemesananController extends Controller
             ->with('success', "Barang #{$pemesanan->kode_pemesanan} ditandai sudah diambil. Status diubah ke Sedang Disewa.");
     }
 
-    public function tandaiDikembalikan(Request $request, $id): RedirectResponse
+    public function tandaiDikembalikan($id): RedirectResponse
     {
-        $request->validate([
-            'kondisi'          => 'required|string|max:255',
-            'catatan_kerusakan'=> 'nullable|string|max:1000',
-            'denda_kerusakan'  => 'nullable|numeric|min:0',
-            'foto_bukti'       => 'nullable|image|max:5120',
-        ]);
-
         $pemesanan = Pemesanan::with([
             'user',
             'detailPemesanans.barang',
@@ -109,34 +102,21 @@ class PemesananController extends Controller
             $dendaKeterlambatan = $hariTerlambat * $tarifDenda;
         }
 
-        $dendaKerusakan = (float) ($request->denda_kerusakan ?? 0);
-        $totalDenda     = $dendaKeterlambatan + $dendaKerusakan;
-
-        $fotoBuktiPath = null;
-        if ($request->hasFile('foto_bukti')) {
-            $fotoBuktiPath = $request->file('foto_bukti')->store('pengembalian', 'public');
-        }
-
+        // Kondisi & denda kerusakan diisi admin nanti lewat halaman Pengembalian (form pemeriksaan).
         PengembalianBarang::create([
             'detail_pemesanan_id'    => $detail->id,
             'tanggal_kembali_aktual' => now()->toDateString(),
-            'kondisi'                => $request->kondisi,
-            'catatan_kerusakan'      => $request->catatan_kerusakan,
-            'foto_bukti_path'        => $fotoBuktiPath,
-            'status_pengembalian'    => 'diterima',
+            'status_pengembalian'    => 'menunggu',
             'denda_keterlambatan'    => $dendaKeterlambatan,
-            'denda_kerusakan'        => $dendaKerusakan,
-            'total_denda'            => $totalDenda,
-            'status_denda'           => $totalDenda > 0 ? 'menunggu_bayar' : 'tidak_ada',
+            'total_denda'            => $dendaKeterlambatan,
+            'status_denda'           => $dendaKeterlambatan > 0 ? 'menunggu_bayar' : 'tidak_ada',
             'dicatat_oleh'           => Auth::id(),
         ]);
 
         $pemesanan->update(['status' => 'menunggu_pelunasan']);
 
-        Mail::to($pemesanan->user->email)->queue(new TagihanPelunasanMail($pemesanan));
-
         return redirect()->route('admin.pemesanan.show', $id)
-            ->with('success', "Pengembalian dicatat. Email tagihan pelunasan dikirim ke {$pemesanan->user->email}.");
+            ->with('success', "Pengembalian dicatat. Silakan periksa kondisi barang di halaman Pengembalian.");
     }
 
     public function tandaiAcaraSelesai($id): RedirectResponse
@@ -178,7 +158,7 @@ class PemesananController extends Controller
         $newStatus = $request->input('status');
 
         if ($newStatus === 'dibatalkan') {
-            if (!in_array($pemesanan->status, ['menunggu', 'menunggu_dp', 'menunggu_diambil'])) {
+            if (!in_array($pemesanan->status, ['menunggu', 'dikonfirmasi', 'menunggu_dp', 'menunggu_diambil'])) {
                 return back()->with('error', 'Pesanan tidak bisa dibatalkan di status ini.');
             }
             $pemesanan->update(['status' => 'dibatalkan']);

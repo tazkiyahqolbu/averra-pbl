@@ -10,7 +10,25 @@
             <p class="admin-subtitle mt-1 text-sm">Form pemeriksaan kondisi barang dan denda.</p>
         </div>
 
+<<<<<<< Updated upstream
         <span class="badge-warning">Belum Diperiksa</span>
+=======
+        @php
+            $statusClass = match($return->status_pengembalian){
+
+                'menunggu' => 'badge-warning',
+                'diperiksa' => 'badge-warning',
+                'selesai' => 'badge-active',
+
+                default => 'badge-inactive',
+            };
+        @endphp
+
+        <span class="{{ $statusClass }}">
+            {{ ucfirst(str_replace('_',' ',$return->status_pengembalian)) }}
+        </span>
+
+>>>>>>> Stashed changes
     </div>
 
     <div class="grid gap-5 xl:grid-cols-3">

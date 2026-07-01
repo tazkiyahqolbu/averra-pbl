@@ -13,16 +13,10 @@ class PembatalanController extends Controller
     public function ajukan(Request $request, int $id): RedirectResponse
     {
         $request->validate([
-            'alasan'          => 'required|string|min:20|max:1000',
-            'nama_rekening'   => 'required|string|max:255',
-            'nomor_rekening'  => 'required|string|max:100',
-            'nama_bank'       => 'required|string|max:100',
+            'alasan' => 'required|string|min:20|max:1000',
         ], [
-            'alasan.required'         => 'Alasan pembatalan wajib diisi.',
-            'alasan.min'              => 'Alasan minimal 20 karakter.',
-            'nama_rekening.required'  => 'Nama pemilik rekening wajib diisi.',
-            'nomor_rekening.required' => 'Nomor rekening wajib diisi.',
-            'nama_bank.required'      => 'Nama bank wajib diisi.',
+            'alasan.required' => 'Alasan pembatalan wajib diisi.',
+            'alasan.min'      => 'Alasan minimal 20 karakter.',
         ]);
 
         $pesanan = Pemesanan::where('user_id', Auth::id())
@@ -43,12 +37,9 @@ class PembatalanController extends Controller
         }
 
         $pesanan->pembatalan()->create([
-            'user_id'        => Auth::id(),
-            'alasan'         => $request->alasan,
-            'nama_rekening'  => $request->nama_rekening,
-            'nomor_rekening' => $request->nomor_rekening,
-            'nama_bank'      => $request->nama_bank,
-            'status'         => 'menunggu',
+            'user_id' => Auth::id(),
+            'alasan'  => $request->alasan,
+            'status'  => 'menunggu',
         ]);
 
         return back()->with('success', 'Permintaan pembatalan berhasil dikirim. Admin akan meninjau dalam 1–2 hari kerja.');

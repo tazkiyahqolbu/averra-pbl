@@ -76,51 +76,6 @@
                 </div>
             </div>
 
-            {{-- Info Rekening Refund --}}
-            @if($pembatalan->nomor_rekening && $pembatalan->nomor_rekening !== '-')
-                <div class="admin-card p-5">
-                    <h2 class="admin-title mb-4 text-xl">Info Rekening Refund</h2>
-                    <div class="grid gap-3 md:grid-cols-3 text-sm">
-                        <div>
-                            <p class="admin-muted">Bank</p>
-                            <p class="font-semibold">{{ $pembatalan->nama_bank }}</p>
-                        </div>
-                        <div>
-                            <p class="admin-muted">Nomor Rekening</p>
-                            <p class="font-semibold">{{ $pembatalan->nomor_rekening }}</p>
-                        </div>
-                        <div>
-                            <p class="admin-muted">Atas Nama</p>
-                            <p class="font-semibold">{{ $pembatalan->nama_rekening }}</p>
-                        </div>
-                    </div>
-                </div>
-            @endif
-
-            {{-- Upload Bukti Transfer (jika sudah disetujui) --}}
-            @if($pembatalan->status === 'disetujui')
-                <div class="admin-card p-5">
-                    <h2 class="admin-title mb-4 text-xl">Bukti Transfer Refund</h2>
-                    @if($pembatalan->bukti_transfer_path)
-                        <img src="{{ asset('storage/' . $pembatalan->bukti_transfer_path) }}"
-                             alt="Bukti Transfer" class="rounded-xl max-h-80 object-contain border border-[#E2D4C0]">
-                        <p class="text-xs admin-muted mt-2">Diupload: {{ $pembatalan->diproses_pada?->format('d M Y, H:i') }}</p>
-                    @else
-                        <p class="text-sm admin-muted mb-4">Belum ada bukti transfer. Upload setelah dana ditransfer.</p>
-                        <form method="POST" action="{{ route('admin.pembatalan.bukti-refund', $pembatalan->id) }}" enctype="multipart/form-data">
-                            @csrf
-                            <div class="flex flex-col sm:flex-row gap-3">
-                                <input type="file" name="bukti_transfer" accept="image/*" required
-                                       class="flex-1 rounded-xl border border-[#E2D4C0] bg-white px-3 py-2 text-sm text-[#4A2E28] focus:border-[#C8960C] focus:outline-none transition cursor-pointer">
-                                <button type="submit" class="admin-btn-primary shrink-0">Upload Bukti</button>
-                            </div>
-                            @error('bukti_transfer')
-                                <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
-                            @enderror
-                        </form>
-                    @endif
-                </div>
-            @endif
         </div>
 
         <div class="space-y-5">
@@ -131,7 +86,7 @@
                 @if($pembatalan->status === 'menunggu')
                     <button type="button" onclick="document.getElementById('modal-setujui').classList.remove('hidden')"
                             class="admin-btn-primary w-full mb-2">
-                        Setujui & Tentukan Refund
+                        Setujui Pembatalan
                     </button>
                     <button type="button" onclick="document.getElementById('modal-tolak').classList.remove('hidden')"
                             class="admin-btn-danger w-full">
@@ -140,7 +95,7 @@
                 @elseif($pembatalan->status === 'disetujui')
                     <div class="rounded-xl border border-green-200 bg-green-50 p-4 text-sm">
                         <p class="font-semibold text-green-700 mb-1">Pembatalan Disetujui</p>
-                        <p class="text-green-600">Refund: Rp {{ number_format($pembatalan->jumlah_refund, 0, ',', '.') }}</p>
+                        <p class="text-green-600">DP tidak dikembalikan.</p>
                         <p class="text-green-600">Diproses: {{ $pembatalan->diproses_pada?->format('d M Y, H:i') }}</p>
                         @if($pembatalan->catatan_admin)
                             <p class="text-green-600 mt-1">{{ $pembatalan->catatan_admin }}</p>
@@ -166,19 +121,10 @@
 <div id="modal-setujui" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
     <div class="w-full max-w-md rounded-2xl bg-white border border-gray-200 shadow-2xl p-6">
         <h3 class="font-semibold text-gray-800 mb-4">Setujui Pembatalan</h3>
+        <p class="text-sm text-gray-500 mb-4">DP yang sudah dibayar (Rp {{ number_format($dpBayar ?? 0, 0, ',', '.') }}) tidak dikembalikan ke customer.</p>
         <form method="POST" action="{{ route('admin.pembatalan.setujui', $pembatalan->id) }}">
             @csrf @method('PATCH')
             <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wide text-gray-600 mb-1.5">
-                        Jumlah Refund (Rp) <span class="text-red-500">*</span>
-                    </label>
-                    <input type="number" name="jumlah_refund" required min="0"
-                           value="{{ old('jumlah_refund', $dpBayar ?? 0) }}"
-                           placeholder="Nominal refund dalam rupiah"
-                           class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-green-300 focus:outline-none focus:ring-2 focus:ring-green-100 transition">
-                    <p class="mt-1 text-xs text-gray-400">DP yang sudah dibayar: Rp {{ number_format($dpBayar ?? 0, 0, ',', '.') }}</p>
-                </div>
                 <div>
                     <label class="block text-xs font-semibold uppercase tracking-wide text-gray-600 mb-1.5">Catatan (Opsional)</label>
                     <textarea name="catatan_admin" rows="3" maxlength="500"

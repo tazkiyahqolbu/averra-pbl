@@ -41,7 +41,6 @@ class PembatalanController extends Controller
     public function setujui(Request $request, int $id): RedirectResponse
     {
         $request->validate([
-            'jumlah_refund' => 'required|numeric|min:0',
             'catatan_admin' => 'nullable|string|max:500',
         ]);
 
@@ -53,7 +52,6 @@ class PembatalanController extends Controller
 
         $pembatalan->update([
             'status'        => 'disetujui',
-            'jumlah_refund' => $request->jumlah_refund,
             'catatan_admin' => $request->catatan_admin,
             'diproses_oleh' => Auth::id(),
             'diproses_pada' => now(),
@@ -72,7 +70,7 @@ class PembatalanController extends Controller
 
         $pesanan->update([
             'status'           => 'dibatalkan',
-            'alasan_penolakan' => 'Pembatalan disetujui. Refund Rp ' . number_format($request->jumlah_refund, 0, ',', '.') . ' sedang diproses.',
+            'alasan_penolakan' => 'Pembatalan disetujui. DP yang sudah dibayar tidak dikembalikan.',
         ]);
 
         Mail::to($pembatalan->user->email)->queue(new PembatalanDisetujuiMail($pembatalan));
@@ -107,27 +105,5 @@ class PembatalanController extends Controller
 
         return redirect()->route('admin.pembatalan.show', $id)
             ->with('success', 'Permintaan pembatalan ditolak dan email notifikasi dikirim ke customer.');
-    }
-
-    public function uploadBuktiRefund(Request $request, int $id): RedirectResponse
-    {
-        $request->validate([
-            'bukti_transfer' => 'required|image|max:5120',
-        ], [
-            'bukti_transfer.required' => 'Bukti transfer wajib diunggah.',
-            'bukti_transfer.image'    => 'File harus berupa gambar.',
-            'bukti_transfer.max'      => 'Ukuran file maksimal 5MB.',
-        ]);
-
-        $pembatalan = Pembatalan::findOrFail($id);
-        $buktiPath  = $request->file('bukti_transfer')->store('refund', 'public');
-
-        $pembatalan->update([
-            'bukti_transfer_path' => $buktiPath,
-            'diproses_pada'       => now(),
-        ]);
-
-        return redirect()->route('admin.pembatalan.show', $id)
-            ->with('success', 'Bukti transfer refund berhasil diupload.');
     }
 }

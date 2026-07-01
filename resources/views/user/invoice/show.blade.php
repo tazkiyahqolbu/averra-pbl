@@ -168,8 +168,29 @@
                     @elseif ($pesanan->isMenungguPelunasan())
                         @php
                             $sudahBayar = $pesanan->pembayarans->where('status', 'terverifikasi')->sum('jumlah_bayar');
-                            $sisaBayar  = max(0, $pesanan->total_harga - $sudahBayar);
+                            $sisaSewa   = max(0, $pesanan->total_harga - $sudahBayar);
+
+                            $totalDenda = 0;
+                            if ($pesanan->jenis === 'sewa_barang') {
+                                $pengembalian = \App\Models\PengembalianBarang::whereHas(
+                                    'detailPemesanan',
+                                    fn($q) => $q->where('pemesanan_id', $pesanan->id)
+                                )->first();
+                                $totalDenda = $pengembalian ? (float) $pengembalian->total_denda : 0;
+                            }
+
+                            $sisaBayar = $sisaSewa + $totalDenda;
                         @endphp
+                        @if ($totalDenda > 0)
+                            <div class="flex justify-between w-full text-sm text-[#4A2E28]/70">
+                                <span>Sisa Sewa</span>
+                                <span class="font-mono font-medium text-[#4A2E28]">Rp {{ number_format($sisaSewa, 0, ',', '.') }}</span>
+                            </div>
+                            <div class="flex justify-between w-full text-sm text-[#4A2E28]/70">
+                                <span>Denda Kerusakan/Keterlambatan</span>
+                                <span class="font-mono font-medium text-[#4A2E28]">Rp {{ number_format($totalDenda, 0, ',', '.') }}</span>
+                            </div>
+                        @endif
                         <div class="flex justify-between w-full text-sm rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 mt-2">
                             <span class="text-amber-700 font-semibold">Sisa Pelunasan yang Harus Dibayar</span>
                             <span class="font-serif text-base text-amber-700 font-semibold font-mono">Rp {{ number_format($sisaBayar, 0, ',', '.') }}</span>
@@ -182,7 +203,17 @@
                     @php
                         $bayar = $pesanan->pembayarans->first();
                         $sudahBayar = $pesanan->pembayarans->where('status', 'terverifikasi')->sum('jumlah_bayar');
-                        $sisa = $pesanan->total_harga - $sudahBayar;
+
+                        $totalDendaInfo = 0;
+                        if ($pesanan->jenis === 'sewa_barang') {
+                            $pengembalianInfo = \App\Models\PengembalianBarang::whereHas(
+                                'detailPemesanan',
+                                fn($q) => $q->where('pemesanan_id', $pesanan->id)
+                            )->first();
+                            $totalDendaInfo = $pengembalianInfo ? (float) $pengembalianInfo->total_denda : 0;
+                        }
+
+                        $sisa = max(0, $pesanan->total_harga - $sudahBayar) + $totalDendaInfo;
                     @endphp
                     <div class="mt-6 rounded-2xl border border-[#E2D4C0] bg-[#FAF3E0] px-5 py-4">
                         <p class="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#C8960C] mb-3">Status
