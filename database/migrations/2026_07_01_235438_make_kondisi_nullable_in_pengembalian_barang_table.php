@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -10,7 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement("ALTER TABLE pengembalian_barang MODIFY kondisi ENUM('baik', 'rusak_ringan', 'rusak_berat', 'hilang') NULL");
+        Schema::table('pengembalian_barang', function (Blueprint $table) {
+            $table->enum('kondisi', ['baik', 'rusak_ringan', 'rusak_berat', 'hilang'])->nullable()->change();
+        });
     }
 
     /**
@@ -18,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement("ALTER TABLE pengembalian_barang MODIFY kondisi ENUM('baik', 'rusak_ringan', 'rusak_berat', 'hilang') NOT NULL");
+        Schema::table('pengembalian_barang', function (Blueprint $table) {
+            $table->enum('kondisi', ['baik', 'rusak_ringan', 'rusak_berat', 'hilang'])->nullable(false)->change();
+        });
     }
 };
