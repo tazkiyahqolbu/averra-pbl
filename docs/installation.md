@@ -68,6 +68,18 @@ Generate application key:
 php artisan key:generate
 ```
 
+### 2.4b Konfigurasi Payment Gateway (Midtrans)
+
+Tambahkan variabel berikut secara manual ke file `.env` (belum ada di `.env.example`):
+
+```env
+MIDTRANS_SERVER_KEY=your-server-key
+MIDTRANS_CLIENT_KEY=your-client-key
+MIDTRANS_IS_PRODUCTION=false
+```
+
+Dapatkan Server Key & Client Key dari [Midtrans Dashboard (Sandbox)](https://dashboard.sandbox.midtrans.com/). Tanpa konfigurasi ini, fitur pembayaran (Snap popup) tidak akan berfungsi.
+
 ### 2.5 Setup Database
 
 Buat database baru pada MySQL
@@ -153,5 +165,12 @@ php artisan migrate:fresh --seed
 
 ```bash
 chmod -R 775 storage bootstrap/cache
+```
+
+### Error Permission Storage (Windows)
+
+```powershell
+icacls storage /grant Users:F /T
+icacls bootstrap\cache /grant Users:F /T
 ```
 
