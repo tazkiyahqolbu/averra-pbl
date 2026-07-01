@@ -118,6 +118,7 @@ class LaporanController extends Controller
         ];
     });
 
+
     return view('admin.laporan.index', compact(
         'pendapatanBulanIni',
         'totalPemesanan',
@@ -188,12 +189,7 @@ class LaporanController extends Controller
         $sheet->setCellValue('B'.$row, $trx->nama_pemesan);
         $sheet->setCellValue('C'.$row, ucfirst($trx->jenis));
         $sheet->setCellValue('D'.$row, 'Rp '.number_format($trx->total_harga,0,',','.'));
-        $sheet->setCellValue(
-    'F'.$row,
-    Carbon::parse($trx->tanggal_pemesanan)
-        ->translatedFormat('d F Y')
-);
-        $sheet->setCellValue('F'.$row, $trx->tanggal_pemesanan);
+        $sheet->setCellValue('F'.$row,Carbon::parse($trx->tanggal_pemesanan)->translatedFormat('d F Y'));
 
         $row++;
     }
