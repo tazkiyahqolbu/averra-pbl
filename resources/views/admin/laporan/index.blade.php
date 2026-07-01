@@ -110,11 +110,11 @@ $summary = [
     <div class="admin-card p-6">
         <h2 class="admin-title mb-4 text-xl">Item Terpopuler</h2>
         <div class="space-y-3">
-            @foreach ($popularItems as $index => $item)
+            @foreach ($popularItems as $item)
                 <div class="flex items-center justify-between rounded-2xl bg-[#FAF3E0] p-4">
                     <div class="flex items-center gap-3">
                         <span class="flex h-8 w-8 items-center justify-center rounded-full bg-[#4A0F1A] text-sm font-bold text-white">
-                            {{ $index + 1 }}
+                            {{ $loop->iteration }}
                         </span>
                         <div>
                         <p class="font-semibold text-[#4A2E28]">
