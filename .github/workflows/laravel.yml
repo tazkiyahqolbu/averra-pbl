@@ -58,5 +58,11 @@ jobs:
       - name: Jalankan migrasi
         run: php artisan migrate --env=testing --force
 
-      - name: Jalankan test
-        run: php artisan test --env=testing
+      - name: Jalankan test (hanya jika ada folder tests)
+        run: |
+          if [ -d "tests" ] && [ "$(ls -A tests 2>/dev/null)" ]; then
+            echo "Tests directory found, running tests..."
+            php artisan test --env=testing
+          else
+            echo "No tests found; skipping test step."
+          fi
