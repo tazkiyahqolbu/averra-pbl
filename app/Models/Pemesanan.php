@@ -56,6 +56,11 @@ class Pemesanan extends Model
             ->first();
     }
 
+    public function totalDibayar(): float
+    {
+        return (float) $this->pembayarans()->where('status', 'terverifikasi')->sum('jumlah_bayar');
+    }
+
     // ── Relations ──────────────────────────────────────────────────────────────
     public function user()
     {

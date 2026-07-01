@@ -127,9 +127,7 @@ class PemesananController extends Controller
             return back()->with('error', 'Aksi ini hanya untuk pesanan acara yang sedang berlangsung.');
         }
 
-        $sudahBayar = (float) $pemesanan->pembayarans()
-            ->where('status', 'terverifikasi')
-            ->sum('jumlah_bayar');
+        $sudahBayar = $pemesanan->totalDibayar();
 
         if ($sudahBayar < (float) $pemesanan->total_harga) {
             $pemesanan->update(['status' => 'menunggu_pelunasan']);

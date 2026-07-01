@@ -25,7 +25,7 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-[#E2D4C0]">
-                    @forelse ($kategoriPakets as $kategori)
+                    @forelse ($kategori as $kategori)
                         <tr class="hover:bg-[#FAF3E0]">
                             <td class="admin-table-td">{{ $loop->iteration }}</td>
                             <td class="admin-table-td font-semibold text-[#4A0F1A]">{{ $kategori->nama }}</td>

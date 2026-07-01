@@ -32,9 +32,7 @@ class PembayaranController extends Controller
                 ->with('error', 'Pesanan belum dikonfirmasi oleh admin.');
         }
 
-        $sudahBayar = $pesanan->pembayarans
-            ->where('status', 'terverifikasi')
-            ->sum('jumlah_bayar');
+        $sudahBayar = $pesanan->totalDibayar();
 
         if ($sudahBayar >= $pesanan->total_harga && $pesanan->status !== 'menunggu_pelunasan') {
             return redirect()->route('user.pemesanan.show', $id)
