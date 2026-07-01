@@ -13,7 +13,7 @@
             </p>
         </div>
 
-        <button class="admin-btn-primary">+ Tambah Blokir</button>
+        <a href="#form-tambah-blokir" class="admin-btn-primary">+ Tambah Blokir</a>
     </div>
 
     <div class="admin-card p-6">
@@ -43,19 +43,13 @@
                             <td class="admin-table-td">Semua Layanan</td>
                             <td class="admin-table-td">{{ $date->keterangan }}</td>
                             <td class="admin-table-td">
-                                <form action="{{ route('admin.blokir-tanggal.destroy', $date->id) }}"
-                            method="POST">
-
-                            @csrf
-                            @method('DELETE')
-
-                            <button
-                                class="admin-btn-danger"
-                                onclick="return confirm('Hapus tanggal ini?')">
-                                Hapus
-                            </button>
-
-                        </form>
+                            <form action="{{ route('admin.blokir-tanggal.destroy', $date->id) }}"
+                                method="POST"
+                                onsubmit="return confirmDelete(event, 'Apakah Anda yakin ingin menghapus tanggal ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="admin-btn-danger">Hapus</button>
+                            </form>
                             </td>
                         </tr>
                     @endforeach
@@ -64,69 +58,26 @@
         </div>
 
         <hr class="admin-divider my-6">
-
-        <h2 class="admin-title mb-4 text-xl">Form Tambah Blokir</h2>
-
-        <div class="grid gap-4 md:grid-cols-3">
-            <div>
-                <label class="admin-label">Tanggal *</label>
-                <input type="date" class="admin-input">
-            </div>
-
-            <div>
-                <label class="admin-label">Berlaku Untuk *</label>
-                <select class="admin-select">
-                    <option>Semua Layanan</option>
-                    <option>Item Tertentu</option>
-                </select>
-            </div>
-
-            <div>
-                <label class="admin-label">Alasan</label>
-                <input type="text" class="admin-input" placeholder="Contoh: Hari Libur / Perawatan">
-            </div>
+        
+        <h2 id="form-tambah-blokir" class="admin-title mb-4 text-xl">Form Tambah Blokir</h2>
+<form action="{{ route('admin.blokir-tanggal.store') }}" method="POST">
+    @csrf
+    <div class="grid gap-4 md:grid-cols-3">
+        <div>
+            <label class="admin-label">Tanggal *</label>
+            <input type="date" name="tanggal" class="admin-input" required>
         </div>
-
-        <div class="mt-5 flex justify-end gap-3">
-            <button class="admin-btn-secondary">Batal</button>
-            <form action="{{ route('admin.blokir-tanggal.store') }}" method="POST">
-
-            @csrf
-
-            <div class="grid gap-4 md:grid-cols-3">
-
-                <div>
-                    <label class="admin-label">Tanggal *</label>
-
-                    <input
-                        type="date"
-                        name="tanggal"
-                        class="admin-input"
-                        required>
-                </div>
-
-                <div>
-                    <label class="admin-label">Keterangan</label>
-
-                    <input
-                        type="text"
-                        name="keterangan"
-                        class="admin-input"
-                        placeholder="Hari Libur / Maintenance">
-                </div>
-
-            </div>
-
-            <div class="mt-5 flex justify-end">
-
-                <button class="admin-btn-primary">
-                    Simpan
-                </button>
-
-            </div>
-
-        </form>
+        <div>
+            <label class="admin-label">Keterangan</label>
+            <input type="text" name="keterangan" class="admin-input" placeholder="Hari Libur / Maintenance">
         </div>
+    </div>
+    <div class="mt-5 flex justify-end gap-3">
+        <button type="submit" class="admin-btn-primary">Simpan</button>
+    </div>
+</form>
+        
+
     </div>
 </div>
 @endsection

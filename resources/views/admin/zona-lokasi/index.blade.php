@@ -47,20 +47,11 @@
                                     </a>
                                     <form
                                     action="{{ route('admin.zona-lokasi.destroy',$zona->id) }}"
-                                    method="POST">
-
+                                    method="POST"
+                                    onsubmit="return confirmDelete(event, 'Apakah Anda yakin ingin menghapus zona ini?')">
                                     @csrf
                                     @method('DELETE')
-
-                                    <button
-                                        type="submit"
-                                        class="admin-btn-danger py-2"
-                                        onclick="return confirm('Yakin ingin menghapus zona ini?')">
-
-                                        Hapus
-
-                                    </button>
-
+                                    <button type="submit" class="admin-btn-danger py-2">Hapus</button>
                                 </form>
                                 </div>
                             </td>
@@ -69,32 +60,5 @@
                 </tbody>
             </table>
         </div>
-
-        <hr class="admin-divider my-6">
-
-        <h2 class="admin-title mb-4 text-xl">Form Tambah/Edit Zona</h2>
-
-        <div class="grid gap-4 md:grid-cols-3">
-            <div>
-                <label class="admin-label">Nama Zona *</label>
-                <input type="text" class="admin-input" placeholder="Zona A">
-            </div>
-
-            <div>
-                <label class="admin-label">Keterangan *</label>
-                <input type="text" class="admin-input" placeholder="Dalam Kota">
-            </div>
-
-            <div>
-                <label class="admin-label">Biaya *</label>
-                <input type="text" class="admin-input" placeholder="Rp 30.000">
-            </div>
-        </div>
-
-        <div class="mt-5 flex justify-end gap-3">
-            <button class="admin-btn-secondary">Batal</button>
-            <button class="admin-btn-primary">Simpan</button>
-        </div>
-    </div>
 </div>
 @endsection
