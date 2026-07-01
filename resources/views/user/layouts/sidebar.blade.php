@@ -22,14 +22,20 @@
     style="background: linear-gradient(to bottom, #5C1520 0%, #4A0F1A 50%, #3A0A12 100%);">
 
     {{-- Logo --}}
-    <div class="px-5 py-6 border-b border-white/10 flex items-center justify-between">
+        <div class="px-5 py-6 border-b border-white/10 flex items-center justify-between">
         <a href="{{ url('/') }}" class="flex items-center gap-2.5 group">
-            <div
-                class="flex h-9 w-9 items-center justify-center rounded-full border border-[#C8960C]/50 bg-white/5 group-hover:bg-white/10 transition duration-200">
-                <span class="font-serif text-base font-bold italic text-[#C8960C]">S</span>
+            
+            <div class="flex h-9 w-9 items-center justify-center rounded-full border border-[#C8960C]/50 bg-white/5 group-hover:bg-white/10 transition duration-200 overflow-hidden">
+                
+                <img 
+                    src="{{ asset('galeri/logo-rantiang-tagok.jpg') }}" 
+                    alt="Logo Rantiang Tagok" 
+                    class="h-full w-full object-cover">
+
             </div>
             <span class="font-serif text-base font-bold tracking-[0.2em] text-[#FAF3E0]">SILART</span>
         </a>
+        
         <button @click="sidebarOpen = false" class="lg:hidden flex h-8 w-8 items-center justify-center rounded-lg text-white/50 hover:bg-white/10 hover:text-white transition">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
