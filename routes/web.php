@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\GaleriController;
 use App\Http\Controllers\Admin\ZonaLokasiController;
 use App\Http\Controllers\Admin\BlokirTanggalController;
 use App\Http\Controllers\Admin\LaporanController;
+use App\Http\Controllers\Admin\PengembalianBarangController;
 use App\Http\Controllers\Admin\PemesananController as AdminPemesananController;
 use App\Http\Controllers\Admin\PembayaranController as AdminPembayaranController;
 use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
@@ -209,9 +210,16 @@ Route::middleware(['auth', 'role:admin'])
         Route::delete('/kategori-paket/{id}', [KategoriPaketController::class, 'destroy'])->name('kategori-paket.destroy');
 
         Route::prefix('pengembalian')->name('pengembalian.')->group(function () {
-            Route::get('/', fn() => view('admin.pengembalian.index'))->name('index');
-            Route::get('/{id}', fn($_id) => view('admin.pengembalian.show'))->name('show');
-            Route::put('/{id}', fn() => back()->with('error', 'Fitur ini belum diimplementasikan.'))->name('update');
+
+            Route::get('/', [PengembalianBarangController::class, 'index'])
+                ->name('index');
+
+            Route::get('/{id}', [PengembalianBarangController::class, 'show'])
+                ->name('show');
+
+            Route::put('/{id}', [PengembalianBarangController::class, 'update'])
+                ->name('update');
+
         });
 
         Route::prefix('galeri')

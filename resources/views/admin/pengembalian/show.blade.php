@@ -3,85 +3,365 @@
 @section('title', 'Pemeriksaan Pengembalian')
 
 @section('content')
+
+<form action="{{ route('admin.pengembalian.update',$return->id) }}"
+      method="POST"
+      enctype="multipart/form-data">
+
+    @csrf
+    @method('PUT')
+
 <div class="admin-section">
+
     <div class="admin-page-header md:flex-row md:items-center md:justify-between">
+
         <div>
-            <h1 class="admin-title text-3xl">#RET-20260613-001</h1>
-            <p class="admin-subtitle mt-1 text-sm">Form pemeriksaan kondisi barang dan denda.</p>
+            <h1 class="admin-title text-3xl">
+                #{{ $return->kode_pengembalian }}
+            </h1>
+
+            <p class="admin-subtitle mt-1 text-sm">
+                Form pemeriksaan kondisi barang dan denda.
+            </p>
         </div>
 
-        <span class="badge-warning">Belum Diperiksa</span>
+        @php
+            $statusClass = match($return->status_pengembalian){
+
+                'belum_diperiksa' => 'badge-warning',
+                'sedang_diperiksa' => 'badge-warning',
+                'selesai' => 'badge-active',
+
+                default => 'badge-inactive',
+            };
+        @endphp
+
+        <span class="{{ $statusClass }}">
+            {{ ucfirst(str_replace('_',' ',$return->status_pengembalian)) }}
+        </span>
+
     </div>
+
 
     <div class="grid gap-5 xl:grid-cols-3">
+
         <div class="space-y-5 xl:col-span-2">
-            <div class="admin-card p-5">
-                <h2 class="admin-title mb-4 text-xl">Informasi Pengembalian</h2>
-                <div class="grid gap-3 md:grid-cols-2">
-                    <p><span class="admin-muted text-sm">Pesanan</span><br><strong>#AVR-20260610-002</strong></p>
-                    <p><span class="admin-muted text-sm">Customer</span><br><strong>Siti Rahmah</strong></p>
-                    <p><span class="admin-muted text-sm">Item</span><br><strong>Kamera Canon EOS + Tripod</strong></p>
-                    <p><span class="admin-muted text-sm">Jadwal Kembali</span><br><strong>13 Juni 2026</strong></p>
-                    <p><span class="admin-muted text-sm">Tanggal Kembali</span><br><strong>13 Juni 2026 <span class="inline-flex items-center gap-1 text-green-600 font-normal text-sm"><i data-lucide="check-circle" class="h-3.5 w-3.5"></i> Tepat Waktu</span></strong></p>
-                </div>
-            </div>
+
+            {{-- ===================== --}}
+            {{-- Informasi --}}
+            {{-- ===================== --}}
 
             <div class="admin-card p-5">
-                <h2 class="admin-title mb-4 text-xl">Form Pemeriksaan</h2>
+
+                <h2 class="admin-title mb-4 text-xl">
+                    Informasi Pengembalian
+                </h2>
+
+                <div class="grid gap-3 md:grid-cols-2">
+
+                    <p>
+                        <span class="admin-muted text-sm">Pesanan</span><br>
+
+                        <strong>
+                            #{{ $return->detailPemesanan->pemesanan->kode_pemesanan }}
+                        </strong>
+                    </p>
+
+                    <p>
+                        <span class="admin-muted text-sm">Customer</span><br>
+
+                        <strong>
+                            {{ $return->detailPemesanan->pemesanan->nama_pemesan }}
+                        </strong>
+                    </p>
+
+                    <p>
+
+                        <span class="admin-muted text-sm">
+                            Item
+                        </span><br>
+
+                        <strong>
+
+                            @if($return->detailPemesanan->barang)
+
+                                {{ $return->detailPemesanan->barang->nama_barang }}
+
+                            @elseif($return->detailPemesanan->jasa)
+
+                                {{ $return->detailPemesanan->jasa->nama_jasa }}
+
+                            @elseif($return->detailPemesanan->paket)
+
+                                {{ $return->detailPemesanan->paket->nama_paket }}
+
+                            @else
+
+                                -
+
+                            @endif
+
+                        </strong>
+
+                    </p>
+
+                    <p>
+
+                        <span class="admin-muted text-sm">
+                            Jadwal Kembali
+                        </span><br>
+
+                        <strong>
+
+                            {{ optional($return->detailPemesanan->tanggal_kembali)->translatedFormat('d F Y') ?? '-' }}
+
+                        </strong>
+
+                    </p>
+
+                    <p>
+
+                        <span class="admin-muted text-sm">
+                            Tanggal Kembali
+                        </span><br>
+
+                        <strong>
+
+                            {{ optional($return->tanggal_kembali_aktual)->translatedFormat('d F Y') ?? '-' }}
+
+                        </strong>
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            {{-- ===================== --}}
+            {{-- Form Pemeriksaan --}}
+            {{-- ===================== --}}
+
+            <div class="admin-card p-5">
+
+                <h2 class="admin-title mb-4 text-xl">
+                    Form Pemeriksaan
+                </h2>
 
                 <div class="space-y-4">
+
                     <div>
-                        <label class="admin-label">Kondisi Barang *</label>
+
+                        <label class="admin-label">
+                            Kondisi Barang *
+                        </label>
+
+                        @php
+
+                        $kondisiList = [
+
+                            'baik' => 'Baik — tidak ada kerusakan',
+
+                            'rusak_ringan' => 'Rusak Ringan — kerusakan minor',
+
+                            'rusak_berat' => 'Rusak Berat — perlu perbaikan signifikan',
+
+                            'hilang' => 'Hilang — barang tidak dikembalikan',
+
+                        ];
+
+                        @endphp
+
                         <div class="grid gap-3 md:grid-cols-2">
-                            @foreach (['Baik — tidak ada kerusakan', 'Rusak Ringan — kerusakan minor', 'Rusak Berat — perlu perbaikan signifikan', 'Hilang — barang tidak dikembalikan'] as $condition)
-                                <label class="flex items-center gap-3 rounded-2xl border border-[#E2D4C0] bg-[#ffffff] p-4 text-sm">
-                                    <input type="radio" name="kondisi" class="h-4 w-4">
-                                    <span>{{ $condition }}</span>
-                                </label>
+
+                            @foreach($kondisiList as $value => $label)
+
+                            <label class="flex items-center gap-3 rounded-2xl border border-[#E2D4C0] bg-white p-4">
+
+                                <input
+                                    type="radio"
+                                    name="kondisi"
+                                    value="{{ $value }}"
+                                    {{ old('kondisi',$return->kondisi)==$value ? 'checked' : '' }}
+                                >
+
+                                <span>{{ $label }}</span>
+
+                            </label>
+
                             @endforeach
+
                         </div>
+
+                        @error('kondisi')
+
+                            <div class="text-red-500 text-sm mt-2">
+
+                                {{ $message }}
+
+                            </div>
+
+                        @enderror
+
                     </div>
 
-                    <div>
-                        <label class="admin-label">Catatan Kerusakan</label>
-                        <textarea class="admin-textarea" placeholder="Isi jika ada kerusakan atau catatan tambahan..."></textarea>
-                    </div>
 
                     <div>
-                        <label class="admin-label">Foto Bukti Kondisi</label>
-                        <input type="file" class="admin-file">
+
+                        <label class="admin-label">
+                            Catatan Kerusakan
+                        </label>
+
+                        <textarea
+                            name="catatan_kerusakan"
+                            class="admin-textarea">{{ old('catatan_kerusakan',$return->catatan_kerusakan) }}</textarea>
+
+                        @error('catatan_kerusakan')
+
+                            <div class="text-red-500 text-sm mt-2">
+
+                                {{ $message }}
+
+                            </div>
+
+                        @enderror
+
                     </div>
+
+
+                    <div>
+
+                        <label class="admin-label">
+                            Foto Bukti Kondisi
+                        </label>
+
+                        <input
+                            type="file"
+                            name="foto_bukti_path"
+                            class="admin-file">
+
+                        @if($return->foto_bukti_url)
+                        <img
+                            src="{{ $return->foto_bukti_url }}"
+                            alt="Foto Bukti"
+                            class="mt-3 w-48 rounded-xl border object-cover">
+                    @endif
+
+                        @error('foto_bukti_path')
+
+                            <div class="text-red-500 text-sm mt-2">
+
+                                {{ $message }}
+
+                            </div>
+
+                        @enderror
+
+                    </div>
+
                 </div>
+
             </div>
+
         </div>
+
+        {{-- ===================== --}}
+        {{-- Denda --}}
+        {{-- ===================== --}}
 
         <div class="space-y-5">
+
             <div class="admin-card p-5">
-                <h2 class="admin-title mb-4 text-xl">Perhitungan Denda</h2>
+
+                <h2 class="admin-title mb-4 text-xl">
+                    Perhitungan Denda
+                </h2>
 
                 <div class="space-y-4">
+
                     <div>
-                        <label class="admin-label">Denda Keterlambatan</label>
-                        <input type="text" class="admin-input" value="Rp 0" readonly>
+
+                        <label class="admin-label">
+                            Denda Keterlambatan
+                        </label>
+
+                        <input
+                            type="text"
+                            class="admin-input"
+                            readonly
+                            value="Rp {{ number_format($return->denda_keterlambatan,0,',','.') }}">
+
                     </div>
 
                     <div>
-                        <label class="admin-label">Denda Kerusakan</label>
-                        <input type="text" class="admin-input" placeholder="Rp 0">
+
+                        <label class="admin-label">
+                            Denda Kerusakan
+                        </label>
+
+                        <input
+                            type="number"
+                            name="denda_kerusakan"
+                            min="0"
+                            step="1000"
+                            class="admin-input"
+                            value="{{ old('denda_kerusakan',$return->denda_kerusakan) }}">
+
+                        @error('denda_kerusakan')
+
+                            <div class="text-red-500 text-sm mt-2">
+
+                                {{ $message }}
+
+                            </div>
+
+                        @enderror
+
                     </div>
 
                     <div>
-                        <label class="admin-label">Total Denda</label>
-                        <input type="text" class="admin-input font-bold" placeholder="Rp 0">
+
+                        <label class="admin-label">
+                            Total Denda
+                        </label>
+
+                        <input
+                            type="text"
+                            readonly
+                            class="admin-input font-bold"
+                            value="Rp {{ number_format($return->total_denda,0,',','.') }}">
+
                     </div>
+
                 </div>
+
             </div>
 
             <div class="admin-card p-5">
-                <button class="admin-btn-primary w-full">Simpan Hasil Pemeriksaan</button>
-                <a href="{{ route('admin.pengembalian.index') }}" class="admin-btn-secondary mt-2 w-full">Kembali</a>
+
+                <button
+                    type="submit"
+                    class="admin-btn-primary w-full">
+
+                    Simpan Hasil Pemeriksaan
+
+                </button>
+
+                <a
+                    href="{{ route('admin.pengembalian.index') }}"
+                    class="admin-btn-secondary mt-2 w-full">
+
+                    Kembali
+
+                </a>
+
             </div>
+
         </div>
+
     </div>
+
 </div>
+
+</form>
+
 @endsection
