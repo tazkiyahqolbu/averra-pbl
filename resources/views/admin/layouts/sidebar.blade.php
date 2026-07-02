@@ -116,7 +116,7 @@
     <nav class="flex-1 overflow-y-auto px-3 py-3 space-y-0.5 hide-scrollbar">
 
         @foreach ($nav as $n)
-            <a href="{{ $routeUrl($item['route'], $item['params'] ?? []) }}"
+            <a href="{{ $routeUrl($n['route'], $n['params'] ?? []) }}"
                 class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition duration-200 {{ $active($n['route']) }}">
                 <i data-lucide="{{ $n['icon'] }}" class="h-4 w-4 shrink-0"></i>
                 {{ $n['label'] }}
