@@ -1,4 +1,5 @@
 # Sistem Informasi Sanggar Rantiang Tagok
+![Laravel CI](https://github.com/tazkiyahqolbu/averra-pbl/actions/workflows/laravel.yml/badge.svg)
 
 ## Deskripsi Proyek
 
@@ -42,7 +43,7 @@ Dengan adanya sistem ini, proses operasional sanggar menjadi lebih efektif, efis
 | PhpSpreadsheet    | Export Excel        |
 | DomPDF            | Generate PDF        |
 | Spatie Permission | Role & Permission   |
-| Laravel Sanctum   | API Authentication  |
+| Midtrans          | Payment Gateway     |
 
 ---
 
