@@ -14,12 +14,12 @@ route/controller terkait. Status menunjukkan progres pengembangan tiap fitur.
 | 5  | [Dashboard Admin](#5-dashboard-admin)                     | Admin        | ✅ Selesai      |
 | 6  | [Riwayat Pemesanan User](#6-riwayat-pemesanan-user)       | User         | ✅ Selesai      |
 | 7  | [Upload Bukti Pembayaran](#7-upload-bukti-pembayaran)     | User         | ✅ Selesai      |
-| 8  | [Profil User](#8-profil-user)                             | User         | 🔄 Dalam Proses |
+| 8  | [Profil User](#8-profil-user)                             | User         | ✅ Selesai  |
 | 9  | [Kelola Pemesanan (Admin)](#9-kelola-pemesanan-admin)     | Admin        | ✅ Selesai      |
 | 10 | [Verifikasi Pembayaran (Admin)](#10-verifikasi-pembayaran-admin) | Admin | ✅ Selesai      |
 | 11 | [Kelola Jasa (Admin)](#11-kelola-jasa-admin)             | Admin        | ✅ Selesai      |
 | 12 | [Kelola Paket (Admin)](#12-kelola-paket-admin)           | Admin        | ✅ Selesai      |
-| 13 | [Kelola Barang (Admin)](#13-kelola-barang-admin)         | Admin        | 🔄 Dalam Proses |
+| 13 | [Kelola Barang (Admin)](#13-kelola-barang-admin)         | Admin        | ✅ Selesai  |
 | 14 | [Kelola Testimoni (Admin)](#14-kelola-testimoni-admin)   | Admin        | 🔄 Dalam Proses |
 | 15 | [Laporan (Admin)](#15-laporan-admin)                     | Admin        | 🔄 Dalam Proses |
 | 16 | [Notifikasi Email Pemesanan](#16-notifikasi-email-pemesanan) | Sistem   | 🔄 Dalam Proses |
