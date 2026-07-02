@@ -33,22 +33,7 @@
 
 ---
 
-### Package 3 — laravel/sanctum
-
-| 5W+1H | Penjelasan |
-|-------|------------|
-| What | laravel/sanctum |
-| Why | Dibutuhkan untuk mengamankan endpoint API seperti /api/booking dan /api/payment agar hanya bisa diakses oleh user yang sudah login |
-| Who | Developer, user aplikasi, admin sistem |
-| When | Saat user mengakses form booking yang mengambil data dari API atau saat submit data booking dan pembayaran |
-| Where | Modul API dan autentikasi |
-| How | Sudah tersedia bawaan Laravel 11, tambahkan trait HasApiTokens pada Model User dan terapkan middleware auth:sanctum pada route yang perlu dilindungi |
-
-**Referensi:** https://laravel.com/docs/11.x/sanctum
-
----
-
-### Package 4 — spatie/laravel-permission
+### Package 3 — spatie/laravel-permission
 
 | 5W+1H | Penjelasan |
 |-------|------------|
@@ -63,7 +48,7 @@
 
 ---
 
-### Package 5 — tailwindcss + @tailwindcss/vite
+### Package 4 — tailwindcss + @tailwindcss/vite
 
 | 5W+1H | Penjelasan |
 |-------|------------|
@@ -78,7 +63,7 @@
 
 ---
 
-### Package 6 — alpinejs
+### Package 5 — alpinejs
 
 | 5W+1H | Penjelasan |
 |-------|------------|
@@ -90,3 +75,35 @@
 | How | Install via npm, import dan inisialisasi di resources/js/app.js menggunakan import Alpine from 'alpinejs', lalu gunakan directive x-data, x-show, x-on:click pada elemen HTML |
 
 **Referensi:** https://alpinejs.dev/start-here
+
+---
+
+### Package 6 — midtrans/midtrans-php
+
+| 5W+1H | Penjelasan |
+|-------|------------|
+| What | midtrans/midtrans-php |
+| Why | Dibutuhkan untuk memproses pembayaran online (DP dan pelunasan) via Midtrans Snap, termasuk generate popup pembayaran dan verifikasi status transaksi secara otomatis lewat notifikasi/webhook |
+| Who | User/pelanggan saat melakukan pembayaran, admin saat verifikasi status pembayaran |
+| When | Saat user checkout pemesanan (sewa/acara) dan saat melakukan pelunasan tagihan |
+| Where | Modul pemesanan dan pembayaran (MidtransService, PembayaranController) |
+| How | Install via Composer, set server key pada config/services.php, panggil Snap::getSnapToken() melalui MidtransService untuk generate token pembayaran, lalu tangani notifikasi status transaksi lewat Notification() |
+
+**Referensi:** https://docs.midtrans.com/docs/midtrans-php
+
+Cara Install
+
+\\\`bash
+composer require phpoffice/phpspreadsheet
+composer require barryvdh/laravel-dompdf
+composer require midtrans/midtrans-php
+composer require spatie/laravel-permission
+npm install tailwindcss @tailwindcss/vite
+npm install alpinejs
+\\\`
+
+Dampak pada Proyek
+
+- Menambah fitur (export laporan, cetak invoice, payment gateway, role & permission, styling, interaktivitas UI)
+- Menambah ukuran dependency, terutama phpspreadsheet dan dompdf yang cukup besar
+- Risiko update versi: midtrans/midtrans-php bergantung pada layanan eksternal (uptime & perubahan API Midtrans di masa depan)
