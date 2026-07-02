@@ -84,7 +84,7 @@ Buka /login → isi email & password → sistem validasi
 
 **Screenshot:**
 
-<img width="593" height="721" alt="image" src="https://github.com/user-attachments/assets/714b65c0-ada2-4fcd-b69e-8490abf58fb3" />
+<img width="1600" height="731" alt="WhatsApp Image 2026-07-02 at 11 10 07 AM" src="https://github.com/user-attachments/assets/2539ed14-7e68-405c-83ca-48b63558c118" />
 
 ---
 
@@ -111,7 +111,7 @@ Buka /register → isi nama, email, no HP, password
 
 **Screenshot:**
 
-<img width="1600" height="714" alt="WhatsApp Image 2026-07-02 at 11 10 47 AM" src="https://github.com/user-attachments/assets/a80aab91-ab99-4d14-a5c7-cbae4635a5c5" />
+<img width="1600" height="714" alt="WhatsApp Image 2026-07-02 at 11 10 47 AM" src="https://github.com/user-attachments/assets/49b12268-3db6-483d-a7e5-6f60b49a682a" />
 
 ---
 
