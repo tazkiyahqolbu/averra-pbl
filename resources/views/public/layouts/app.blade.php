@@ -1,10 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>@yield('title', 'SILART')</title>
+    <title>@yield('title', 'Sanggar Rantiang Tagok')</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
 
     <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -49,27 +50,14 @@
             <!-- Logo -->
             <a href="{{ url('/') }}" class="flex items-center gap-3 group">
 
-                <div class="flex h-12 w-12 items-center justify-center rounded-full border border-[#C8A84B]/50 bg-transparent transition duration-300 group-hover:scale-105">
-
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                        class="h-5 w-5 text-[#C8A84B]"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor">
-
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M12 3l1.912 5.813H20l-4.956 3.6L16.912 18 12 14.4 7.088 18l1.868-5.587L4 8.813h6.088L12 3z"/>
-                    </svg>
-                </div>
+                <img src="{{ asset('galeri/logo-rantiang-tagok.jpg') }}" alt="Logo Sanggar Rantiang Tagok"
+                    class="h-12 w-12 rounded-full object-cover shrink-0 border border-[#C8A84B]/50 transition duration-300 group-hover:scale-105">
 
                 <div class="leading-tight">
                     <h1
                         class="text-xl font-semibold tracking-[0.25em] text-[#FAF3E0]"
                         style="font-family:'Cormorant Garamond', serif;">
-                        SILART
+                        Sanggar Rantiang Tagok
                     </h1>
 
                     <p class="text-[11px] tracking-[0.35em] text-[#C8A84B] uppercase">
@@ -143,7 +131,7 @@
                              x-transition:leave-end="opacity-0"
                              class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
                              x-on:click.self="confirmLogout = false">
-                            <div class="w-full max-w-xs rounded-2xl bg-white border border-[#E2D4C0] shadow-2xl p-6">
+                            <div class="w-full max-w-xs rounded-2xl bg-white card-fade-border shadow-2xl p-6">
                                 <div class="flex flex-col items-center text-center">
                                     <div class="flex h-12 w-12 items-center justify-center rounded-full bg-red-50 border border-red-200 mb-4">
                                         <i data-lucide="log-out" class="h-5 w-5 text-red-500"></i>
@@ -153,7 +141,7 @@
                                 </div>
                                 <div class="mt-5 flex gap-2">
                                     <button x-on:click="confirmLogout = false"
-                                            class="flex-1 rounded-full border border-[#E2D4C0] bg-white py-2.5 text-sm font-semibold text-[#4A0F1A] hover:bg-[#FAF3E0] transition">
+                                            class="flex-1 rounded-full card-fade-border bg-white py-2.5 text-sm font-semibold text-[#4A0F1A] hover:bg-[#FAF3E0] transition">
                                         Batal
                                     </button>
                                     <form method="POST" action="/logout" class="flex-1">
@@ -212,7 +200,7 @@
 
                 <div>
                     <div class="text-2xl tracking-[0.25em] text-gold font-serif">
-                        SILART
+                        Sanggar Rantiang Tagok
                     </div>
 
                     <p class="mt-2 text-sm text-cream/70">
@@ -272,7 +260,7 @@
             <div class="h-[1px] bg-gold/20 my-6 w-full"></div>
 
             <p class="text-center text-xs text-cream/50 font-light">
-                © {{ date('Y') }} SILART · Sanggar Rantiang Tagok.
+                © {{ date('Y') }} Sanggar Rantiang Tagok.
                 Adat Basandi Syarak, Syarak Basandi Kitabullah.
             </p>
         </div>

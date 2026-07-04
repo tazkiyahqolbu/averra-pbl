@@ -1,4 +1,4 @@
-@php
+﻿@php
 $cats       = ['Semua', 'Jasa', 'Paket Acara', 'Sewa Barang'];
 $currentCat = request('category', 'Semua');
 $search     = request('search', '');
@@ -9,7 +9,7 @@ $search     = request('search', '');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Layanan & Koleksi — SILART</title>
+    <title>Katalog Layanan & Koleksi — Sanggar Rantiang Tagok</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -52,7 +52,7 @@ $search     = request('search', '');
 
             {{-- Search bar compact --}}
             <form method="GET" action="{{ route('public.katalog.index') }}"
-                  class="flex items-center gap-0 rounded-full border border-[#E2D4C0] bg-[#FFFDF7] shadow-sm overflow-hidden focus-within:border-[#C8A84B]/60 transition">
+                  class="flex items-center gap-0 rounded-full card-fade-border bg-[#FFFDF7] shadow-sm overflow-hidden focus-within:border-[#C8A84B]/60 transition">
                 <input type="hidden" name="category" value="{{ $currentCat === 'Semua' ? '' : $currentCat }}">
                 <div class="pl-4 shrink-0 text-[#C8A84B]">
                     <i data-lucide="search" class="h-4 w-4"></i>
@@ -80,7 +80,7 @@ $search     = request('search', '');
                            class="rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200
                                {{ $currentCat === $c
                                    ? 'bg-[#4A0F1A] text-[#FAF3E0] shadow-sm'
-                                   : 'border border-[#E2D4C0] text-[#4A0F1A] hover:border-[#C8A84B]/50 hover:bg-[#C8A84B]/8' }}">
+                                   : 'card-fade-border text-[#4A0F1A] hover:border-[#C8A84B]/50 hover:bg-[#C8A84B]/8' }}">
                             {{ $c }}
                         </a>
                     @endforeach
@@ -91,7 +91,7 @@ $search     = request('search', '');
                     <input type="hidden" name="category" value="{{ $currentCat === 'Semua' ? '' : $currentCat }}">
                     <input type="hidden" name="search" value="{{ $search }}">
                     <select name="sort" onchange="this.form.submit()"
-                            class="rounded-full border border-[#E2D4C0] bg-[#FFFDF7] px-4 py-1.5 text-sm text-[#4A0F1A] focus:outline-none focus:border-[#C8A84B]/50 cursor-pointer">
+                            class="rounded-full card-fade-border bg-[#FFFDF7] px-4 py-1.5 text-sm text-[#4A0F1A] focus:outline-none focus:border-[#C8A84B]/50 cursor-pointer">
                         <option value="terbaru"  {{ ($sort ?? 'terbaru') === 'terbaru'  ? 'selected' : '' }}>Terbaru</option>
                         <option value="termurah" {{ ($sort ?? '') === 'termurah' ? 'selected' : '' }}>Termurah</option>
                         <option value="termahal" {{ ($sort ?? '') === 'termahal' ? 'selected' : '' }}>Termahal</option>
@@ -133,7 +133,7 @@ $search     = request('search', '');
             @else
                 <div class="grid gap-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     @foreach ($items as $item)
-                        <article class="group flex flex-col overflow-hidden rounded-2xl border border-[#E2D4C0] bg-[#FFFDF7] shadow-sm transition-all duration-300 hover:scale-[1.025] hover:border-[#C8A84B]/50 hover:shadow-xl scroll-fade scroll-delay-{{ min($loop->index % 4 + 1, 4) }}">
+                        <article class="group flex flex-col overflow-hidden rounded-2xl bg-[#FFFDF7] shadow-sm transition-all duration-300 hover:scale-[1.025] hover:shadow-xl scroll-fade scroll-delay-{{ min($loop->index % 4 + 1, 4) }}">
 
                             {{-- Gambar --}}
                             <a href="{{ route('katalog.show', $item->id) }}"
@@ -174,7 +174,7 @@ $search     = request('search', '');
 
                                 {{-- Warna & bahan --}}
                                 @if($item->category !== 'Paket Pernikahan' && $item->category !== 'Jasa' && isset($item->color) && $item->color !== '-')
-                                    <div class="mt-2 flex flex-wrap gap-x-3 text-[10px] text-[#4A2E28] border-t border-[#E2D4C0] pt-2">
+                                    <div class="mt-2 flex flex-wrap gap-x-3 text-[10px] text-[#4A2E28] border-t border-[#E2D4C0]/30 pt-2">
                                         <span><span class="font-semibold text-[#4A0F1A]">Warna:</span> {{ $item->color }}</span>
                                         @if(isset($item->material) && $item->material !== '-')
                                             <span><span class="font-semibold text-[#4A0F1A]">Bahan:</span> {{ $item->material }}</span>
@@ -183,7 +183,7 @@ $search     = request('search', '');
                                 @endif
 
                                 {{-- Harga & tombol --}}
-                                <div class="mt-4 flex items-end justify-between gap-2 border-t border-[#E2D4C0] pt-3">
+                                <div class="mt-4 flex items-end justify-between gap-2 border-t border-[#E2D4C0]/30 pt-3">
                                     <div>
                                         @if(isset($item->price) && $item->price > 0)
                                             <p class="text-[10px] uppercase tracking-wider text-[#4A2E28]">

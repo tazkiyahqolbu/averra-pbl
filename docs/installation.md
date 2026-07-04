@@ -1,16 +1,21 @@
-# Installation Documentation
+# Refactoring Documentation
+## Sistem Informasi Sanggar Rantiang Tagok
 
-## 1. Persyaratan Sistem
+Dokumen ini mencatat refactoring signifikan yang sudah dilakukan selama pengembangan.
 
-Pastikan perangkat telah terinstal:
+---
 
-* PHP 8.3 atau lebih baru
-* Composer 2.x
-* Node.js
-* NPM
-* MySQL
-* Git
-* Web Browser (Google Chrome, Mozilla Firefox, Microsoft Edge)
+## 1. Restrukturisasi Penamaan Modul (booking → pemesanan)
+
+**Sebelum — Masalah:**
+Modul awal memakai istilah booking/payment, tidak konsisten dengan bahasa yang dipakai di UI dan permintaan dosen/klien (bahasa Indonesia).
+
+**Perubahan:**
+Rename booking → pemesanan, payment → pembayaran di seluruh model, tabel, controller, dan route. Standarisasi penamaan field `_path` untuk semua kolom file upload.
+
+**Alasan:** Konsistensi penamaan antara kode dan domain bisnis, memudahkan onboarding anggota tim baru.
+
+**Dampak:** Struktur folder dan nama class lebih mudah dipahami; risiko: butuh migration ulang untuk rename kolom FK.
 
 ---
 

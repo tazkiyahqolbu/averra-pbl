@@ -3,55 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Galeri | SILART — Sanggar Rantiang Tagok</title>
-
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <title>Galeri | Sanggar Rantiang Tagok</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Instrument+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        maroon: {
-                            DEFAULT: '#7B1C2E',
-                            deep: '#4A0F1A',
-                        },
-                        gold: '#C8A84B',
-                        cream: '#FAF3E0',
-                    },
-                    fontFamily: {
-                        sans: ['Instrument Sans', 'sans-serif'],
-                        serif: ['Cormorant Garamond', 'serif'],
-                    }
-                }
-            }
-        }
-    </script>
-
-    <style>
-        [x-cloak] { display:none !important; }
-
-        .animate-fade-in-up {
-            animation: fadeInUp .6s ease-out both;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    </style>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
 <body class="min-h-screen bg-[#FAF3E0] text-[#4A0F1A] antialiased selection:bg-[#C8A84B]/30 pt-20">
@@ -107,7 +67,7 @@
 
 {{-- GALERI --}}
 <section
-    class="py-24 px-6 sm:px-12 lg:px-24 max-w-7xl mx-auto bg-[#FFFDF7] border-y border-[#E2D4C0]/50 relative isolate"
+    class="py-24 px-6 sm:px-12 lg:px-24 bg-[#FFFDF7] relative isolate section-fade-y"
     x-data="{
         items: {{ $galeriJson->toJson() }},
         open: false,
@@ -140,7 +100,7 @@
     @else
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach($galeris as $i => $item)
-                <div class="relative rounded-2xl overflow-hidden group cursor-pointer shadow-lg h-[400px] border border-[#E2D4C0] animate-fade-in-up"
+                <div class="relative rounded-2xl overflow-hidden group cursor-pointer shadow-lg h-[400px] card-fade-border animate-fade-in-up"
                      style="animation-delay: {{ $i * 0.1 }}s"
                      @click="show({{ $i }})">
 

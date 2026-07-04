@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
@@ -79,13 +79,13 @@
 </section>
 
     {{-- ══ PROFIL KAMI ══ --}}
-    <section class="py-24 px-6 sm:px-12 lg:px-24 max-w-7xl mx-auto bg-[#FFFDF7] border-y border-[#E2D4C0]/50 relative isolate">
+    <section class="py-24 px-6 sm:px-12 lg:px-24 bg-[#FFFDF7] relative isolate section-fade-y">
         <div class="pointer-events-none absolute inset-x-0 top-0 h-24 -z-10 bg-gradient-to-b from-[#FAF3E0] to-transparent"></div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
             
             <div class="relative group mx-auto max-w-lg w-full">
                 <div class="absolute -inset-2 rounded-2xl bg-[#C8A84B]/10 blur opacity-70 transition duration-500 group-hover:opacity-100"></div>
-                <div class="relative aspect-[3/4] overflow-hidden rounded-2xl border border-[#E2D4C0] shadow-lg">
+                <div class="relative aspect-[3/4] overflow-hidden rounded-2xl card-fade-border shadow-lg">
                     <img            
                         src="{{ asset('foto/Busana tari.jpeg') }}" 
                         alt="Tim Sanggar" 
@@ -104,7 +104,7 @@
                 <div class="space-y-4 text-sm sm:text-base leading-relaxed text-[#4A2E28] text-justify">
                     <p>Perjalanan Sanggar Rantiang Tagok dimulai pada tahun 2012 sebagai sanggar sekolah. Seiring berjalannya waktu, kami berevolusi menjadi sanggar yang profesional. Meski dulunya dikenal dengan nama Sanggar Rampak Bandantiang, kami telah menggunakan nama Sanggar Rantiang Tagok sejak tahun 2020 hingga hari ini.</p>
                     
-                    <div class="space-y-3 rounded-2xl border border-[#E2D4C0] bg-[#FAF3E0] p-5 mt-6">
+                    <div class="space-y-3 rounded-2xl card-fade-border bg-[#FAF3E0] p-5 mt-6">
                         <h4 class="flex items-center gap-2 font-serif text-lg font-medium text-[#4A0F1A]">
                             <i data-lucide="info" class="h-4 w-4 text-[#C8A84B]"></i>
                             Profil Ringkas
@@ -129,14 +129,14 @@
             <div class="mx-auto mt-3 mb-10 h-[1px] w-32 bg-gradient-to-r from-transparent via-[#C8A84B] to-transparent"></div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                <div class="group rounded-2xl border border-[#E2D4C0] bg-[#FFFDF7] p-8 transition-all duration-300 hover:scale-[1.03] hover:border-[#C8A84B]/50 hover:shadow-xl text-left">
+                <div class="group rounded-2xl card-fade-border bg-[#FFFDF7] p-8 transition-all duration-300 hover:scale-[1.03] hover:border-[#C8A84B]/50 hover:shadow-xl text-left">
                     <div class="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-[#C8A84B]/10 text-[#C8A84B]">
                         <i data-lucide="music" class="h-8 w-8"></i>
                     </div>
                     <h4 class="font-serif text-2xl text-[#4A0F1A] font-medium mb-3">Entertain</h4>
                     <p class="text-[#4A2E28] text-sm leading-relaxed">Menyediakan hiburan memukau untuk berbagai acara dan perayaan. Seperti MC, Wedding Organizer, Jasa Tari, Akustik, dll.</p>
                 </div>
-                <div class="group rounded-2xl border border-[#E2D4C0] bg-[#FFFDF7] p-8 transition-all duration-300 hover:scale-[1.03] hover:border-[#C8A84B]/50 hover:shadow-xl text-left">
+                <div class="group rounded-2xl card-fade-border bg-[#FFFDF7] p-8 transition-all duration-300 hover:scale-[1.03] hover:border-[#C8A84B]/50 hover:shadow-xl text-left">
                     <div class="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-[#C8A84B]/10 text-[#C8A84B]">
                         <i data-lucide="shirt" class="h-8 w-8"></i>
                     </div>
