@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pesanan Diterima — SILART</title>
+    <title>Pesanan Diterima — Sanggar Rantiang Tagok</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,10 +29,10 @@
 
     {{-- Logo kecil di atas --}}
     <a href="{{ route('user.dashboard.index') }}" class="mb-8 flex items-center gap-2.5 group">
-        <div class="flex h-9 w-9 items-center justify-center rounded-full border border-[#C8960C]/50 bg-[#4A0F1A]/5 group-hover:bg-[#4A0F1A]/10 transition">
-            <span class="font-serif text-base font-bold italic text-[#C8960C]">S</span>
+        <div class="flex h-9 w-9 items-center justify-center rounded-full border border-[#C8960C]/50 overflow-hidden group-hover:scale-105 transition">
+            <img src="/galeri/logo-rantiang-tagok.jpg" alt="Logo Sanggar Rantiang Tagok" class="h-full w-full object-cover">
         </div>
-        <span class="font-serif text-base font-bold tracking-[0.2em] text-[#4A0F1A]">SILART</span>
+        <span class="font-serif text-base font-bold tracking-[0.2em] text-[#4A0F1A]">Sanggar Rantiang Tagok</span>
     </a>
 
     {{-- Card utama --}}
