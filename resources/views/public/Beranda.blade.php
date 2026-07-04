@@ -1,4 +1,4 @@
-@php
+﻿@php
 $services = [
     ['icon' => 'heart',    'title' => 'Paket Pernikahan',  'desc' => 'Rangkaian acara adat lengkap dari akad hingga resepsi dengan sentuhan Minangkabau.'],
     ['icon' => 'sparkles', 'title' => 'Hiburan / Acara',   'desc' => 'Konsep hiburan untuk syukuran, ulang tahun, dan perayaan keluarga.'],
@@ -20,9 +20,10 @@ $costumes = [
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SILART — Sanggar Rantiang Tagok | Layanan Adat Minangkabau</title>
-    <meta name="description" content="Sistem Informasi & Layanan Sanggar Rantiang Tagok.">
-    <meta property="og:title"       content="SILART — Sanggar Rantiang Tagok">
+    <title>Sanggar Rantiang Tagok | Layanan Adat Minangkabau</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <meta name="description" content="Sistem Informasi &amp; Layanan Sanggar Rantiang Tagok.">
+    <meta property="og:title"       content="Sanggar Rantiang Tagok">
     <meta property="og:description" content="Kehangatan budaya Minang berbalut kemewahan modern.">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -87,7 +88,7 @@ $costumes = [
     </section>
 
     {{-- ══ LAYANAN KAMI ══ --}}
-    <section id="layanan" class="relative isolate py-24 bg-[#FFFDF7]">
+    <section id="layanan" class="relative isolate py-24 bg-[#FFFDF7] section-fade-y">
         <div class="pointer-events-none absolute inset-x-0 top-0 h-24 -z-10 bg-gradient-to-b from-[#FAF3E0] to-transparent"></div>
 
         <div class="mx-auto max-w-6xl px-6 text-center scroll-fade">
@@ -97,7 +98,7 @@ $costumes = [
         </div>
 
         <div class="mt-14 mx-auto max-w-6xl px-6 flex flex-wrap justify-center gap-8">
-            <div class="group w-full md:w-[380px] rounded-2xl border border-[#E2D4C0] bg-[#FAF3E0] p-8 text-center transition-all duration-300 hover:scale-[1.03] hover:border-[#C8A84B]/50 hover:shadow-xl scroll-fade scroll-delay-1">
+            <div class="group w-full md:w-[380px] rounded-2xl card-fade-border bg-[#FAF3E0] p-8 text-center transition-all duration-300 hover:scale-[1.03] hover:border-[#C8A84B]/50 hover:shadow-xl scroll-fade scroll-delay-1">
                 <div class="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-[#C8A84B]/10 text-[#C8A84B]">
                     <i data-lucide="gift" class="h-8 w-8"></i>
                 </div>
@@ -112,7 +113,7 @@ $costumes = [
                 </a>
             </div>
 
-            <div class="group w-full md:w-[380px] rounded-2xl border border-[#E2D4C0] bg-[#FAF3E0] p-8 text-center transition-all duration-300 hover:scale-[1.03] hover:border-[#C8A84B]/50 hover:shadow-xl scroll-fade scroll-delay-2">
+            <div class="group w-full md:w-[380px] rounded-2xl card-fade-border bg-[#FAF3E0] p-8 text-center transition-all duration-300 hover:scale-[1.03] hover:border-[#C8A84B]/50 hover:shadow-xl scroll-fade scroll-delay-2">
                 <div class="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-[#C8A84B]/10 text-[#C8A84B]">
                     <i data-lucide="package" class="h-8 w-8"></i>
                 </div>
@@ -178,7 +179,7 @@ $costumes = [
             {{-- Mobile grid 3x2 --}}
             <div class="grid grid-cols-3 gap-4 lg:hidden">
                 @foreach($steps as $s)
-                    <div class="flex flex-col items-center text-center p-3 rounded-xl bg-[#FAF3E0] border border-[#E2D4C0]">
+                    <div class="flex flex-col items-center text-center p-3 rounded-xl bg-[#FAF3E0] card-fade-border">
                         <div class="relative flex h-12 w-12 items-center justify-center rounded-full bg-[#4A0F1A] shadow-md">
                             <i data-lucide="{{ $s['icon'] }}" class="h-5 w-5 text-[#C8A84B]"></i>
                             <span class="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#C8A84B] text-[9px] font-bold text-[#4A0F1A]">{{ $s['num'] }}</span>
@@ -191,7 +192,7 @@ $costumes = [
     </section>
 
     {{-- ══ PAKET UNGGULAN ══ --}}
-    <section id="paket" class="relative isolate py-24 bg-[#FFFDF7]">
+    <section id="paket" class="relative isolate py-24 bg-[#FFFDF7] section-fade-y">
         <div class="pointer-events-none absolute inset-x-0 top-0 h-24 -z-10 bg-gradient-to-b from-[#FAF3E0] to-transparent"></div>
 
         <div class="mx-auto max-w-6xl px-6 text-center scroll-fade">
@@ -202,7 +203,7 @@ $costumes = [
 
         <div class="mt-14 mx-auto max-w-6xl px-6 grid gap-4 sm:gap-8 grid-cols-2 md:grid-cols-3">
             @foreach($pakets ?? [] as $p)
-    <div class="overflow-hidden rounded-2xl border border-[#E2D4C0] bg-[#FAF3E0] transition-all duration-300 hover:scale-[1.03] hover:border-[#C8A84B]/50 hover:shadow-xl scroll-fade scroll-delay-{{ $loop->index + 1 }}">
+    <div class="overflow-hidden rounded-2xl card-fade-border bg-[#FAF3E0] transition-all duration-300 hover:scale-[1.03] hover:border-[#C8A84B]/50 hover:shadow-xl scroll-fade scroll-delay-{{ $loop->index + 1 }}">
         <div class="aspect-[4/3] overflow-hidden">
             <img src="{{ $p->thumbnail_path ? Storage::url($p->thumbnail_path) : asset('foto/background.png') }}"
                  alt="{{ $p->nama_paket }}" class="h-full w-full object-cover">
@@ -232,7 +233,7 @@ $costumes = [
 
                 <div class="relative group scroll-fade scroll-delay-1">
                     <div class="absolute -inset-2 rounded-2xl bg-[#C8A84B]/10 blur opacity-70 transition duration-500 group-hover:opacity-100"></div>
-                    <div class="relative overflow-hidden rounded-2xl border border-[#E2D4C0] shadow-lg aspect-[4/3] sm:aspect-video md:aspect-[3/4]">
+                    <div class="relative overflow-hidden rounded-2xl card-fade-border shadow-lg aspect-[4/3] sm:aspect-video md:aspect-[3/4]">
                         <img src="{{ asset('foto/Busana tari.jpeg') }}" alt="Busana Tari Rantiang Tagok"
                              class="h-full w-full object-cover transition duration-500 group-hover:scale-105">
                     </div>
@@ -252,7 +253,7 @@ $costumes = [
                         lahir dari dedikasi mendalam untuk melestarikan seni, musik, dan adat tradisi khususnya Minangkabau.
                         Beroperasi sejak tahun 2012, sanggar ini terus berkembang menjadi wadah profesional seni budaya Minang.
                     </p>
-                    <div class="space-y-3 rounded-2xl border border-[#E2D4C0] bg-[#FFFDF7] p-5">
+                    <div class="space-y-3 rounded-2xl card-fade-border bg-[#FFFDF7] p-5">
                         <h4 class="flex items-center gap-2 font-serif text-lg font-medium text-[#4A0F1A]">
                             <i data-lucide="sparkles" class="h-4 w-4 text-[#C8A84B]"></i>
                             Profil & Filosofi Sanggar
@@ -263,7 +264,7 @@ $costumes = [
                             <span class="font-medium text-[#4A0F1A]">Sanggar Rampak Badan</span>,
                             kami berkomitmen menjaga seni autentik Minangkabau dan memadukannya dengan pengelolaan modern.
                         </p>
-                        <div class="border-t border-[#E2D4C0] pt-2 text-xs text-[#4A2E28]">
+                        <div class="border-t border-[#E2D4C0]/30 pt-2 text-xs text-[#4A2E28]">
                             <span class="font-semibold text-[#4A0F1A]">Pengelolaan:</span> Tim 7 Anggota Terlatih
                         </div>
                     </div>
@@ -278,17 +279,17 @@ $costumes = [
     </section>
 
     {{-- ══ GALERI ══ --}}
-    <section id="galeri" class="relative isolate py-20 bg-[#FFFDF7]">
+    <section id="galeri" class="relative isolate py-20 bg-[#FFFDF7] section-fade-y">
         <div class="pointer-events-none absolute inset-x-0 top-0 h-24 -z-10 bg-gradient-to-b from-[#FAF3E0] to-transparent"></div>
         <div class="mx-auto max-w-7xl px-6">
             <div class="mb-10 text-center scroll-fade">
                 <p class="text-xs tracking-[0.4em] text-[#C8A84B] uppercase font-semibold">— MOMEN INDAH —</p>
-                <h2 class="mt-2 font-serif text-4xl font-light text-[#4A0F1A] sm:text-5xl">Dokumentasi Galeri SILART</h2>
+                <h2 class="mt-2 font-serif text-4xl font-light text-[#4A0F1A] sm:text-5xl">Dokumentasi Galeri Sanggar Rantiang Tagok</h2>
                 <div class="mx-auto mt-2 h-[1px] w-32 bg-gradient-to-r from-transparent via-[#C8A84B] to-transparent"></div>
             </div>
             <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                 @forelse ($galeriUnggulan as $gal)
-                    <div class="group relative rounded-2xl border border-[#E2D4C0] bg-[#FAF3E0] p-3 shadow-sm transition-all duration-300 hover:scale-[1.03] hover:border-[#C8A84B]/50 hover:shadow-lg scroll-fade scroll-delay-{{ $loop->index + 1 }}">
+                    <div class="group relative rounded-2xl card-fade-border bg-[#FAF3E0] p-3 shadow-sm transition-all duration-300 hover:scale-[1.03] hover:border-[#C8A84B]/50 hover:shadow-lg scroll-fade scroll-delay-{{ $loop->index + 1 }}">
                         <div class="aspect-square overflow-hidden rounded-xl">
                             @if($gal->jenis_media === 'video')
                                 <video class="h-full w-full object-cover" muted preload="metadata">

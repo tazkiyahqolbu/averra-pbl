@@ -1,23 +1,21 @@
-<header class="fixed top-0 inset-x-0 z-50 backdrop-blur-md"
+﻿<header class="fixed top-0 inset-x-0 z-50 backdrop-blur-md"
     style="background: linear-gradient(to right, #0d0206 0%, #3D0010 35%, #7B1C2E 100%); border-bottom: 1px solid rgba(200,168,75,0.18);">
 
     <nav class="mx-auto max-w-6xl px-6 lg:px-10 h-20 flex items-center justify-between lg:grid lg:grid-cols-3">
 
         {{-- LOGO (Kiri) --}}
         <a href="{{ url('/') }}" class="flex items-center gap-3 group">
-            <div class="relative flex h-10 w-10 items-center justify-center rounded-full border border-[#C8960C]/50 bg-white/5 group-hover:bg-white/10 transition duration-300 overflow-hidden">
-                
+            <div class="relative shrink-0">
                 <img 
                     src="{{ asset('galeri/logo-rantiang-tagok.jpg') }}" 
                     alt="Logo Rantiang Tagok" 
-                    class="h-full w-full object-cover">
-                
+                    class="h-10 w-10 rounded-full object-cover border border-[#C8960C]/50">
                 <div class="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition duration-300"
                     style="box-shadow: 0 0 12px rgba(200,168,75,0.4);"></div>
             </div>
             
-            <h1 class="text-lg font-bold tracking-[0.2em] text-[#FAF3E0]"
-                style="font-family:'Cormorant Garamond', serif;">SILART</h1>
+            <h1 class="text-base font-bold tracking-[0.1em] text-[#FAF3E0] leading-tight"
+                style="font-family:'Cormorant Garamond', serif;">Sanggar Rantiang Tagok</h1>
         </a>
 
         {{-- MENU DESKTOP (Tengah — benar-benar center) --}}
@@ -119,7 +117,7 @@
                                     class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 px-4"
                                     x-on:click.self="confirmLogout = false">
                                     <div
-                                        class="w-full max-w-xs rounded-2xl bg-white border border-[#E2D4C0] shadow-2xl p-6">
+                                        class="w-full max-w-xs rounded-2xl bg-white card-fade-border shadow-2xl p-6">
                                         <div class="flex flex-col items-center text-center">
                                             <div
                                                 class="flex h-12 w-12 items-center justify-center rounded-full bg-red-50 border border-red-200 mb-4">
@@ -132,7 +130,7 @@
                                         </div>
                                         <div class="mt-5 flex gap-2">
                                             <button x-on:click="confirmLogout = false"
-                                                class="flex-1 rounded-full border border-[#E2D4C0] bg-white py-2.5 text-sm font-semibold text-[#4A0F1A] hover:bg-[#FAF3E0] transition">
+                                                class="flex-1 rounded-full card-fade-border bg-white py-2.5 text-sm font-semibold text-[#4A0F1A] hover:bg-[#FAF3E0] transition">
                                                 Batal
                                             </button>
                                             <form method="POST" action="/logout" class="flex-1">

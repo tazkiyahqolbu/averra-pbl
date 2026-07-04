@@ -5,7 +5,7 @@
             <!-- BRAND -->
             <div class="pt-0 pb-6 md:py-0">
                 <div class="text-2xl tracking-[0.25em] text-gold font-serif">
-                    SILART
+                    Sanggar Rantiang Tagok
                 </div>
 
                 <p class="mt-2 text-sm text-cream/70">
@@ -84,7 +84,7 @@
         </div>
 
         <p class="mt-8 text-center text-xs text-cream/50 font-light">
-            © {{ date('Y') }} SILART · Sanggar Rantiang Tagok.
+            © {{ date('Y') }} Sanggar Rantiang Tagok.
             Adat Basandi Syarak, Syarak Basandi Kitabullah.
         </p>
     </div>

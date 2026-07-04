@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $item->name }} — SILART</title>
+    <title>{{ $item->name }} — Sanggar Rantiang Tagok</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -47,7 +47,7 @@
             <div x-data="{ cur: 0, slides: @js($slideUrls) }" class="scroll-fade scroll-delay-1">
 
                 {{-- Panel gambar utama --}}
-                <div class="relative rounded-2xl border border-[#E2D4C0] shadow-lg bg-[#EDE0C2] overflow-hidden"
+                <div class="relative rounded-2xl card-fade-border shadow-lg bg-[#EDE0C2] overflow-hidden"
                      style="aspect-ratio: 3/4;">
 
                     {{-- Gambar aktif --}}
@@ -100,7 +100,7 @@
                             <button x-on:click="cur = i"
                                     x-bind:class="cur === i
                                         ? 'ring-2 ring-[#C8A84B] border-[#C8A84B] opacity-100'
-                                        : 'border-[#E2D4C0] opacity-55 hover:opacity-90'"
+                                        : 'border-[#E2D4C0]/30 opacity-55 hover:opacity-90'"
                                     class="shrink-0 h-[72px] w-[72px] overflow-hidden rounded-xl border-2 transition-all duration-200">
                                 <img x-bind:src="foto" class="h-full w-full object-cover">
                             </button>
@@ -110,15 +110,15 @@
 
                 {{-- Trust badges --}}
                 <div class="mt-4 grid grid-cols-3 gap-3 text-center">
-                    <div class="rounded-xl border border-[#E2D4C0] bg-[#FFFDF7] py-3 px-2">
+                    <div class="rounded-xl card-fade-border bg-[#FFFDF7] py-3 px-2">
                         <i data-lucide="shield-check" class="mx-auto h-5 w-5 text-[#C8A84B]"></i>
                         <p class="mt-1 text-[10px] font-medium text-[#4A2E28]">Terverifikasi</p>
                     </div>
-                    <div class="rounded-xl border border-[#E2D4C0] bg-[#FFFDF7] py-3 px-2">
+                    <div class="rounded-xl card-fade-border bg-[#FFFDF7] py-3 px-2">
                         <i data-lucide="clock" class="mx-auto h-5 w-5 text-[#C8A84B]"></i>
                         <p class="mt-1 text-[10px] font-medium text-[#4A2E28]">Respons Cepat</p>
                     </div>
-                    <div class="rounded-xl border border-[#E2D4C0] bg-[#FFFDF7] py-3 px-2">
+                    <div class="rounded-xl card-fade-border bg-[#FFFDF7] py-3 px-2">
                         <i data-lucide="award" class="mx-auto h-5 w-5 text-[#C8A84B]"></i>
                         <p class="mt-1 text-[10px] font-medium text-[#4A2E28]">Top Rated</p>
                     </div>
@@ -163,7 +163,7 @@
 
                 {{-- Harga --}}
                 @if(isset($item->price) && $item->price > 0)
-                    <div class="rounded-2xl border border-[#E2D4C0] bg-[#FFFDF7] px-5 py-4">
+                    <div class="rounded-2xl card-fade-border bg-[#FFFDF7] px-5 py-4">
                         <p class="text-[10px] uppercase tracking-widest text-[#4A2E28] font-medium">
                             {{ in_array($item->category, ['Sewa Barang', 'Properti', 'Kostum']) ? 'Harga Sewa' : 'Harga Paket' }}
                         </p>
@@ -186,7 +186,7 @@
                             || in_array($item->category, ['Sewa Barang', 'Properti', 'Kostum']);
                     @endphp
                     @if($showSpecs)
-                        <div class="rounded-2xl border border-[#E2D4C0] bg-[#FFFDF7] divide-y divide-[#E2D4C0] overflow-hidden">
+                        <div class="rounded-2xl card-fade-border bg-[#FFFDF7] divide-y divide-[#E2D4C0] overflow-hidden">
                             @if(isset($item->color) && $item->color && $item->color !== '-')
                                 <div class="flex items-center px-5 py-3 text-sm">
                                     <span class="w-28 shrink-0 font-semibold text-[#4A0F1A]">Warna</span>
@@ -224,12 +224,12 @@
                 @endphp
 
                 @if($isSewaTari && count($colors) > 0)
-                    <div class="rounded-2xl border border-[#E2D4C0] bg-[#FFFDF7] p-5">
+                    <div class="rounded-2xl card-fade-border bg-[#FFFDF7] p-5">
                         <p class="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#4A0F1A]">Pilih Warna</p>
                         <div class="flex flex-wrap gap-2">
                             @foreach($colors as $c)
                                 <button type="button"
-                                        class="warna-chip rounded-full border border-[#E2D4C0] px-4 py-1.5 text-xs font-medium text-[#4A0F1A] transition hover:border-[#C8A84B] hover:bg-[#C8A84B]/10"
+                                        class="warna-chip rounded-full card-fade-border px-4 py-1.5 text-xs font-medium text-[#4A0F1A] transition hover:border-[#C8A84B] hover:bg-[#C8A84B]/10"
                                         onclick="document.querySelectorAll('.warna-chip').forEach(el => { el.classList.remove('border-[#C8A84B]','bg-[#C8A84B]/10','font-semibold'); }); this.classList.add('border-[#C8A84B]','bg-[#C8A84B]/10','font-semibold')">
                                     {{ $c }}
                                 </button>
@@ -239,7 +239,7 @@
                 @endif
 
                 {{-- Deskripsi --}}
-                <div class="rounded-2xl border border-[#E2D4C0] bg-[#FFFDF7] p-5">
+                <div class="rounded-2xl card-fade-border bg-[#FFFDF7] p-5">
                     <h4 class="mb-3 flex items-center gap-2 font-serif text-base font-medium text-[#4A0F1A]">
                         <i data-lucide="sparkles" class="h-4 w-4 text-[#C8A84B]"></i>
                         {{ $item->category === 'Paket Pernikahan' ? 'Rincian & Fasilitas' : 'Deskripsi' }}
@@ -247,7 +247,7 @@
                     <p class="text-sm leading-relaxed text-[#4A2E28] whitespace-pre-line">{{ $item->desc }}</p>
 
                     @if($item->category === 'Paket Pernikahan')
-                        <div class="mt-4 rounded-xl border border-[#E2D4C0] bg-[#FAF3E0] px-4 py-3 text-xs text-[#4A2E28]">
+                        <div class="mt-4 rounded-xl card-fade-border bg-[#FAF3E0] px-4 py-3 text-xs text-[#4A2E28]">
                             <span class="font-semibold text-[#4A0F1A]">Maks. booking per hari:</span> 2 slot
                         </div>
                     @endif
@@ -259,7 +259,7 @@
                         $itemWajib     = $item->details->where('tipe', 'wajib');
                         $itemOpsional  = $item->details->where('tipe', 'opsional');
                     @endphp
-                    <div class="rounded-2xl border border-[#E2D4C0] bg-[#FFFDF7] p-5 space-y-4">
+                    <div class="rounded-2xl card-fade-border bg-[#FFFDF7] p-5 space-y-4">
                         <h4 class="flex items-center gap-2 font-serif text-base font-medium text-[#4A0F1A]">
                             <i data-lucide="package-check" class="h-4 w-4 text-[#C8A84B]"></i>
                             Sudah Termasuk dalam Paket
@@ -282,7 +282,7 @@
                         </ul>
 
                         @if($itemOpsional->isNotEmpty())
-                            <div class="border-t border-[#E2D4C0] pt-4">
+                            <div class="border-t border-[#E2D4C0]/30 pt-4">
                                 <h5 class="mb-2 flex items-center gap-2 text-sm font-semibold text-[#4A0F1A]">
                                     <i data-lucide="plus-circle" class="h-4 w-4 text-[#C8A84B]"></i>
                                     Item Opsional (Biaya Tambahan)
@@ -345,7 +345,7 @@
                         </p>
                     @else
                         <button disabled
-                                class="w-full rounded-full border border-[#E2D4C0] bg-[#FFFDF7] py-3.5 px-6 font-serif text-base font-semibold text-[#4A2E28]/50 cursor-not-allowed">
+                                class="w-full rounded-full card-fade-border bg-[#FFFDF7] py-3.5 px-6 font-serif text-base font-semibold text-[#4A2E28]/50 cursor-not-allowed">
                             Jadwal Terbooking — Penuh
                         </button>
                     @endif
@@ -379,7 +379,7 @@
                 @if($total > 0)
 
                     {{-- Ringkasan rating (Shopee style) --}}
-                    <div class="mb-8 flex flex-col sm:flex-row items-center gap-8 rounded-2xl border border-[#E2D4C0] bg-[#FFFDF7] p-6 scroll-fade">
+                    <div class="mb-8 flex flex-col sm:flex-row items-center gap-8 rounded-2xl card-fade-border bg-[#FFFDF7] p-6 scroll-fade">
                         {{-- Angka besar --}}
                         <div class="text-center shrink-0">
                             <p class="font-serif text-7xl font-light leading-none text-[#4A0F1A]">{{ number_format($avg, 1) }}</p>
@@ -427,7 +427,7 @@
                                 $avatarBg    = $bgColors[$idx % count($bgColors)];
                                 $hasFoto     = $t->fotos->isNotEmpty();
                             @endphp
-                            <div class="rounded-2xl border border-[#E2D4C0] bg-[#FFFDF7] p-5 scroll-fade scroll-delay-{{ ($idx % 4) + 1 }} {{ $hasFoto ? 'cursor-pointer hover:shadow-md hover:border-[#C8A84B] transition-all duration-200' : '' }}"
+                            <div class="rounded-2xl card-fade-border bg-[#FFFDF7] p-5 scroll-fade scroll-delay-{{ ($idx % 4) + 1 }} {{ $hasFoto ? 'cursor-pointer hover:shadow-md hover:border-[#C8A84B] transition-all duration-200' : '' }}"
                                  @if($hasFoto) onclick="bukaModalTestimoni({{ $t->id }})" @endif>
                                 <div class="flex items-start gap-3">
                                     {{-- Avatar --}}
@@ -459,7 +459,7 @@
                                                 @foreach($t->fotos->take(3) as $foto)
                                                     <img src="{{ Storage::url($foto->foto_path) }}"
                                                          alt="foto testimoni"
-                                                         class="h-16 w-16 rounded-lg object-cover border border-[#E2D4C0]">
+                                                         class="h-16 w-16 rounded-lg object-cover card-fade-border">
                                                 @endforeach
                                                 @if($t->fotos->count() > 3)
                                                     <div class="h-16 w-16 rounded-lg bg-[#E2D4C0] flex items-center justify-center text-xs font-semibold text-[#4A0F1A]">
@@ -473,7 +473,7 @@
                                         @endif
                                         {{-- Balasan admin --}}
                                         @if($t->dibalas)
-                                            <div class="mt-3 rounded-xl border border-[#E2D4C0] bg-[#FAF3E0] px-4 py-3 text-xs text-[#4A2E28]">
+                                            <div class="mt-3 rounded-xl card-fade-border bg-[#FAF3E0] px-4 py-3 text-xs text-[#4A2E28]">
                                                 <p class="mb-1 flex items-center gap-1.5 font-semibold text-[#4A0F1A]">
                                                     <i data-lucide="reply" class="h-3 w-3 text-[#C8A84B]"></i>
                                                     Balasan Sanggar
@@ -512,7 +512,7 @@
                                             @foreach($t->fotos as $foto)
                                                 <img src="{{ Storage::url($foto->foto_path) }}"
                                                      alt="foto testimoni"
-                                                     class="w-full rounded-xl object-cover border border-[#E2D4C0]">
+                                                     class="w-full rounded-xl object-cover card-fade-border">
                                             @endforeach
                                         </div>
                                     </div>
@@ -536,7 +536,7 @@
 
                 @else
                     {{-- Empty state ulasan --}}
-                    <div class="py-16 text-center rounded-2xl border border-[#E2D4C0] bg-[#FFFDF7] scroll-fade">
+                    <div class="py-16 text-center rounded-2xl card-fade-border bg-[#FFFDF7] scroll-fade">
                         <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#E2D4C0]/50">
                             <i data-lucide="message-circle" class="h-7 w-7 text-[#C8A84B]"></i>
                         </div>
@@ -555,7 +555,7 @@
     {{-- Modal: Harus Login Dulu --}}
     @guest
     <div id="modal-login-required" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
-        <div class="w-full max-w-sm rounded-3xl bg-white border border-[#E2D4C0] shadow-2xl p-8 text-center">
+        <div class="w-full max-w-sm rounded-3xl bg-white card-fade-border shadow-2xl p-8 text-center">
             <div class="mb-4 flex justify-center">
                 <div class="flex h-14 w-14 items-center justify-center rounded-full bg-[#FAF3E0] border-2 border-[#C8A84B]/40">
                     <i data-lucide="lock" class="h-6 w-6 text-[#C8960C]"></i>
@@ -586,7 +586,7 @@
     @auth
     @if(Auth::user()->hasRole('admin'))
     <div id="modal-admin-only" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
-        <div class="w-full max-w-sm rounded-3xl bg-white border border-[#E2D4C0] shadow-2xl p-8 text-center">
+        <div class="w-full max-w-sm rounded-3xl bg-white card-fade-border shadow-2xl p-8 text-center">
             <div class="mb-4 flex justify-center">
                 <div class="flex h-14 w-14 items-center justify-center rounded-full bg-[#FAF3E0] border-2 border-[#C8A84B]/40">
                     <i data-lucide="shield-alert" class="h-6 w-6 text-[#C8960C]"></i>
