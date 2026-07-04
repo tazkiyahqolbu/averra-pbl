@@ -1,4 +1,4 @@
-@php
+﻿@php
     $routeUrl = fn($name, $params = []) => \Illuminate\Support\Facades\Route::has($name) ? route($name, $params) : '#';
 
     $active = fn($name) => request()->routeIs($name)
@@ -66,18 +66,14 @@
 
     {{-- Logo --}}
     <div class="shrink-0 border-b border-white/10 px-5 py-5 flex items-center justify-between">
-        <a href="{{ $routeUrl('admin.dashboard') }}" class="flex items-center gap-2.5 group">
+        <a href="{{ $routeUrl('admin.dashboard') }}" class="flex items-center gap-2.5 group min-w-0">
 
-            <div
-                class="flex h-9 w-9 items-center justify-center rounded-full border border-[#C8960C]/50 bg-white/5 group-hover:bg-white/10 transition overflow-hidden">
+            <img src="{{ asset('galeri/logo-rantiang-tagok.jpg') }}" alt="Logo Rantiang Tagok"
+                class="h-9 w-9 rounded-full object-cover shrink-0 border border-[#C8960C]/50">
 
-                <img src="{{ asset('galeri/logo-rantiang-tagok.jpg') }}" alt="Logo Rantiang Tagok"
-                    class="h-full w-full object-cover">
-
-            </div>
-
-            <div>
-                <span class="font-serif text-base font-bold tracking-[0.2em] text-[#FAF3E0]">SILART</span>
+            <div class="min-w-0">
+                <span class="block font-serif text-sm font-bold leading-tight text-[#FAF3E0] truncate">Sanggar Rantiang</span>
+                <span class="block font-serif text-sm font-bold leading-tight text-[#FAF3E0] truncate">Tagok</span>
                 <p class="text-[9px] font-semibold uppercase tracking-[0.25em] text-[#C8960C]/70 leading-none mt-0.5">
                     Admin Panel</p>
             </div>
@@ -113,7 +109,7 @@
     </div>
 
     {{-- Nav --}}
-    <nav class="flex-1 overflow-y-auto px-3 py-3 space-y-0.5 hide-scrollbar">
+    <nav id="sidebar-nav" class="flex-1 overflow-y-auto px-3 py-3 space-y-0.5 hide-scrollbar">
 
         @foreach ($nav as $n)
             <a href="{{ $routeUrl($n['route'], $n['params'] ?? []) }}"

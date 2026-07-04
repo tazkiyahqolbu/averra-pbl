@@ -28,7 +28,7 @@
                 <tr>
                     <td style="background-color:#800000;padding:32px 40px;text-align:center;">
                         <p style="margin:0 0 4px 0;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#D4AF37;font-weight:700;">SANGGAR RANTIANG TAGOK</p>
-                        <h1 style="margin:0;font-size:26px;font-weight:700;color:#ffffff;">SILART</h1>
+                        <h1 style="margin:0;font-size:26px;font-weight:700;color:#ffffff;">Sanggar Rantiang Tagok</h1>
                         <p style="margin:12px 0 0 0;font-size:13px;color:rgba(255,255,255,0.75);">Sistem Informasi Sanggar Rantiang Tagok</p>
                     </td>
                 </tr>
@@ -134,7 +134,7 @@
                 </tr>
                 <tr>
                     <td style="background-color:#f8f8f8;padding:20px 40px;border-top:1px solid #eeeeee;text-align:center;">
-                        <p style="margin:0 0 4px 0;font-size:12px;color:#999;">Email ini dikirim otomatis oleh sistem SILART.</p>
+                        <p style="margin:0 0 4px 0;font-size:12px;color:#999;">Email ini dikirim otomatis oleh sistem Sanggar Rantiang Tagok.</p>
                         <p style="margin:0;font-size:12px;color:#bbb;">Sanggar Rantiang Tagok &bull; Sistem Informasi Layanan Seni</p>
                     </td>
                 </tr>

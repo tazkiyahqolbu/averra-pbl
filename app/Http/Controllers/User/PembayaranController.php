@@ -142,8 +142,97 @@ class PembayaranController extends Controller
             return redirect()->route('user.pemesanan.index');
         }
 
+        // FALLBACK: Cek status langsung ke Midtrans jika webhook gagal di environment lokal
+        if ($pembayaran->status === 'menunggu') {
+            try {
+                $statusResponse = \Midtrans\Transaction::status($orderId);
+                $transactionStatus = $statusResponse->transaction_status ?? null;
+                $fraudStatus = $statusResponse->fraud_status ?? null;
+
+                if ($transactionStatus === 'settlement' || ($transactionStatus === 'capture' && $fraudStatus === 'accept')) {
+                    $pembayaran->update([
+                        'status'       => 'terverifikasi',
+                        'dibayar_pada' => now(),
+                        'gateway_status' => $transactionStatus,
+                    ]);
+
+                    $pesanan = $pembayaran->pemesanan;
+                    $pesanan->load('user');
+
+                    if ($pembayaran->tahap === 'pelunasan') {
+                        $pesanan->update(['status' => 'selesai']);
+                    } elseif ($pesanan->jenis === 'sewa_barang') {
+                        $pesanan->update(['status' => 'menunggu_diambil']);
+                    } else {
+                        $pesanan->update(['status' => 'berlangsung']);
+                    }
+
+                    \Illuminate\Support\Facades\Mail::to($pesanan->user->email)->queue(new \App\Mail\PembayaranBerhasilMail($pesanan, $pembayaran->tahap));
+                }
+            } catch (\Exception $e) {
+                // Abaikan jika tidak bisa menghubungi API
+            }
+        }
+
         return redirect()->route('user.pemesanan.show', $pembayaran->pemesanan_id)
-            ->with('info', 'Pembayaran sedang diproses. Status akan diperbarui otomatis.');
+            ->with('info', 'Pembayaran berhasil dikonfirmasi. Status pesanan Anda telah diperbarui!');
+    }
+
+    public function upload(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'pemesanan_id'     => 'required|exists:pemesanan,id',
+            'bukti_pembayaran' => 'required|image|mimes:jpeg,png|max:5120',
+        ]);
+
+        $pesanan = Pemesanan::where('user_id', Auth::id())
+            ->with('pembayarans')
+            ->findOrFail($request->pemesanan_id);
+
+        $isPelunasan = $pesanan->pembayarans
+            ->where('tahap', 'dp')
+            ->where('status', 'terverifikasi')
+            ->isNotEmpty();
+
+        if ($isPelunasan || $pesanan->isMenungguPelunasan()) {
+            $sudahBayar  = $pesanan->pembayarans->where('status', 'terverifikasi')->sum('jumlah_bayar');
+            $sisaSewa    = max(0, (float) $pesanan->total_harga - (float) $sudahBayar);
+
+            $totalDenda = 0;
+            if ($pesanan->jenis === 'sewa_barang') {
+                $pengembalian = PengembalianBarang::whereHas(
+                    'detailPemesanan',
+                    fn($q) => $q->where('pemesanan_id', $pesanan->id)
+                )->first();
+                $totalDenda = $pengembalian ? (float) $pengembalian->total_denda : 0;
+            }
+
+            $jumlahBayar = $sisaSewa + $totalDenda;
+            $tahap       = 'pelunasan';
+            $persenDp    = null;
+        } else {
+            $tahap       = 'dp';
+            $persenDp    = 50;
+            $jumlahBayar = round($pesanan->total_harga * 0.5);
+        }
+
+        $kodeTransaksi = 'MNL-' . strtoupper(Str::random(8));
+        
+        $path = $request->file('bukti_pembayaran')->store('bukti_pembayaran', 'public');
+
+        $pesanan->pembayarans()->create([
+            'kode_transaksi'        => $kodeTransaksi,
+            'tahap'                 => $tahap,
+            'persen_dp'             => $persenDp,
+            'jumlah_bayar'          => $jumlahBayar,
+            'metode_pembayaran'     => 'manual',
+            'status'                => 'menunggu',
+            'bukti_pembayaran_path' => $path,
+            'dibayar_pada'          => null,
+        ]);
+
+        return redirect()->route('user.pemesanan.show', $pesanan->id)
+            ->with('success', 'Bukti pembayaran berhasil diunggah dan sedang menunggu verifikasi admin.');
     }
 
     public function callback(Request $request): JsonResponse

@@ -34,7 +34,9 @@ class StoreBookingRequest extends FormRequest
         return [
             'katalog_id.required'          => 'Pilih item yang ingin dipesan.',
             'nama_pemesan.required'        => 'Nama pemesan wajib diisi.',
+            'nama_pemesan.max'             => 'Nama pemesan maksimal :max karakter.',
             'no_hp.required'               => 'Nomor HP wajib diisi.',
+            'no_hp.max'                    => 'Nomor HP maksimal :max karakter.',
 
             'tanggal_kembali.after_or_equal' => 'Tanggal kembali harus setelah tanggal ambil.',
             'zona_lokasi_id.exists'        => 'Zona lokasi tidak valid.',

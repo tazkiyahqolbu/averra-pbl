@@ -22,11 +22,16 @@ return new class extends Migration
             $table->text('catatan')->nullable();
             $table->decimal('total_harga', 15, 2);
             $table->enum('status', [
-                'menunggu',
-                'dikonfirmasi',
-                'berlangsung',
-                'selesai',
+                'menunggu', 
+                'dikonfirmasi', 
+                'berlangsung', 
+                'selesai', 
                 'dibatalkan',
+                'menunggu_dp',
+                'menunggu_diambil',
+                'sedang_disewa',
+                'menunggu_pengembalian',
+                'menunggu_pelunasan'
             ])->default('menunggu')->index();
             $table->timestamps();
         });

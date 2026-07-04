@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+﻿@extends('admin.layouts.app')
 
 @section('title', 'Detail Pemesanan')
 
@@ -223,8 +223,7 @@
                     @endif
 
                     @if($pemesanan->status === 'menunggu_pengembalian')
-                        <form action="{{ route('admin.pemesanan.dikembalikan', $pemesanan->id) }}" method="POST"
-                              onsubmit="return confirm('Tandai barang ini sudah dikembalikan? Kondisi barang & denda kerusakan akan diperiksa di halaman Pengembalian.')">
+                        <form action="{{ route('admin.pemesanan.dikembalikan', $pemesanan->id) }}" method="POST">
                             @csrf
                             <button type="submit" class="w-full btn bg-indigo-600 text-white py-2.5 rounded-xl hover:bg-indigo-700 font-semibold transition">
                                 Barang Sudah Dikembalikan
@@ -240,8 +239,22 @@
                         </form>
                     @endif
 
-                    @if(in_array($pemesanan->status, ['menunggu', 'dikonfirmasi', 'menunggu_dp', 'menunggu_diambil']))
-                        <form action="{{ route('admin.pemesanan.update-status', $pemesanan->id) }}" method="POST" onsubmit="return confirm('Apakah kamu yakin ingin membatalkan pesanan ini?')">
+                    @if($pemesanan->status === 'menunggu')
+                        <div x-data="{ showReject: false }" class="w-full">
+                            <button x-show="!showReject" type="button" @click="showReject = true" class="w-full btn bg-red-600 text-white py-2.5 rounded-xl hover:bg-red-700 font-semibold transition">Tolak Pesanan</button>
+                            
+                            <form x-cloak x-show="showReject" action="{{ route('admin.pemesanan.tolak', $pemesanan->id) }}" method="POST" class="mt-2 space-y-2 rounded-xl border border-red-200 bg-red-50 p-3">
+                                @csrf @method('PATCH')
+                                <label class="block text-xs font-semibold text-red-800">Alasan Penolakan <span class="text-red-500">*</span></label>
+                                <textarea name="alasan_penolakan" rows="2" minlength="10" required placeholder="Minimal 10 karakter..." class="w-full resize-none rounded-lg border-red-200 bg-white p-2 text-sm text-[#4A2E28] focus:border-red-400 focus:outline-none focus:ring-1 focus:ring-red-400"></textarea>
+                                <div class="flex gap-2">
+                                    <button type="button" @click="showReject = false" class="w-1/3 rounded-lg border border-red-200 bg-white py-2 text-xs font-semibold text-red-700 hover:bg-red-100 transition">Batal</button>
+                                    <button type="submit" class="w-2/3 rounded-lg bg-red-600 py-2 text-xs font-semibold text-white hover:bg-red-700 transition">Tolak Pesanan</button>
+                                </div>
+                            </form>
+                        </div>
+                    @elseif(in_array($pemesanan->status, ['dikonfirmasi', 'menunggu_dp', 'menunggu_diambil']))
+                        <form action="{{ route('admin.pemesanan.update-status', $pemesanan->id) }}" method="POST">
                             @csrf @method('PATCH')
                             <input type="hidden" name="status" value="dibatalkan">
                             <button type="submit" class="w-full btn bg-red-600 text-white py-2.5 rounded-xl hover:bg-red-700 font-semibold transition">Batalkan Pesanan</button>

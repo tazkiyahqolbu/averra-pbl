@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="utf-8">
@@ -87,7 +87,7 @@
             {{-- Mobile logo --}}
             <div class="mb-8 flex items-center justify-center gap-3 lg:hidden">
                 <div class="h-9 w-9 overflow-hidden rounded-full border border-[#decba5]">
-                    <img src="{{ asset('galeri/logo-rantiang-tagok.jpg') }}" alt="Logo" class="h-full w-full object-cover">
+                    <img src="{{ asset('galeri/logo-rantiang-tagok.jpg') }}" alt="Logo" class="h-full w-full rounded-full object-cover">
                 </div>
                 <span class="text-sm font-semibold text-[#4a0f1a]">Sanggar Rantiang Tagok</span>
             </div>
@@ -108,7 +108,7 @@
             </p>
 
             {{-- Info box --}}
-            <div class="mt-6 rounded-xl border border-[#e2d4c0] bg-[#faf7f2] p-4 text-left space-y-2">
+            <div class="mt-6 rounded-xl border border-[#E2D4C0] bg-[#faf7f2] p-4 text-left space-y-2">
                 <div class="flex items-start gap-2.5">
                     <span class="mt-0.5 text-green-500">
                         <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">

@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+﻿@extends('admin.layouts.app')
 
 @section('title', 'Detail Pembayaran')
 
@@ -165,10 +165,47 @@
                         <p class="text-sm font-semibold text-green-800">Pembayaran berhasil diproses</p>
                     </div>
                 @elseif($pembayaran->status === 'menunggu')
-                    <div class="flex items-center gap-2 bg-yellow-50 border border-yellow-200 rounded-2xl px-4 py-3">
-                        <i data-lucide="clock" class="h-5 w-5 text-yellow-600 shrink-0"></i>
-                        <p class="text-sm font-semibold text-yellow-800">Menunggu pembayaran dari pelanggan</p>
-                    </div>
+                    @if($pembayaran->metode_pembayaran === 'manual')
+                        <div class="flex items-center gap-2 bg-yellow-50 border border-yellow-200 rounded-2xl px-4 py-3">
+                            <i data-lucide="clock" class="h-5 w-5 text-yellow-600 shrink-0"></i>
+                            <p class="text-sm font-semibold text-yellow-800">Menunggu verifikasi Admin</p>
+                        </div>
+                        
+                        <div class="flex flex-col sm:flex-row gap-3 mt-4">
+                            <form action="{{ route('admin.pembayaran.verifikasi', $pembayaran->id) }}" method="POST" class="flex-1">
+                                @csrf
+                                @method('PATCH')
+                                <button type="submit" class="w-full btn bg-green-600 text-white py-2.5 rounded-xl hover:bg-green-700 font-semibold shadow-sm transition">Verifikasi Bukti</button>
+                            </form>
+                            
+                            <button type="button" x-data @click="document.getElementById('modalTolak').classList.remove('hidden')" class="w-full sm:w-auto btn bg-red-100 text-red-700 py-2.5 px-6 rounded-xl hover:bg-red-200 font-semibold transition border border-red-200">Tolak</button>
+                        </div>
+
+                        {{-- Modal Tolak --}}
+                        <div id="modalTolak" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+                            <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl border border-[#E2D4C0]">
+                                <h3 class="text-lg font-serif font-bold text-[#4A0F1A] mb-1">Tolak Pembayaran</h3>
+                                <p class="text-sm text-gray-500 mb-4">Berikan alasan mengapa bukti ini ditolak.</p>
+                                <form action="{{ route('admin.pembayaran.tolak', $pembayaran->id) }}" method="POST">
+                                    @csrf
+                                    @method('PATCH')
+                                    <div class="mb-4">
+                                        <textarea name="catatan_penolakan" class="w-full border-[#E2D4C0] rounded-xl p-3 focus:ring-[#C8960C] focus:border-[#C8960C] text-sm" rows="3" required placeholder="Contoh: Bukti transfer buram atau tidak valid"></textarea>
+                                    </div>
+                                    <div class="flex justify-end gap-2">
+                                        <button type="button" onclick="document.getElementById('modalTolak').classList.add('hidden')" class="px-5 py-2 rounded-xl text-gray-600 hover:bg-gray-100 font-medium transition">Batal</button>
+                                        <button type="submit" class="px-5 py-2 rounded-xl bg-red-600 text-white hover:bg-red-700 font-medium shadow transition">Tolak Pembayaran</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                    @else
+                        <div class="flex items-center gap-2 bg-yellow-50 border border-yellow-200 rounded-2xl px-4 py-3">
+                            <i data-lucide="clock" class="h-5 w-5 text-yellow-600 shrink-0"></i>
+                            <p class="text-sm font-semibold text-yellow-800">Menunggu pembayaran via Midtrans</p>
+                        </div>
+                    @endif
                 @elseif($pembayaran->status === 'ditolak')
                     <div class="flex items-center gap-2 bg-red-50 border border-red-200 rounded-2xl px-4 py-3">
                         <i data-lucide="x-circle" class="h-5 w-5 text-red-600 shrink-0"></i>

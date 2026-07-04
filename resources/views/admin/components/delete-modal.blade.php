@@ -1,4 +1,4 @@
-<div x-data="{ 
+﻿<div x-data="{ 
     showDeleteModal: false, 
     deleteMessage: '', 
     pendingTarget: null,

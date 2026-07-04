@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+﻿@extends('admin.layouts.app')
 
 @section('title', 'Pemeriksaan Pengembalian')
 
@@ -264,7 +264,7 @@
                                 </label>
 
                                 <input type="number" name="denda_kerusakan" min="0" step="1000"
-                                    class="admin-input" value="{{ old('denda_kerusakan', $return->denda_kerusakan) }}">
+                                    class="admin-input" value="{{ old('denda_kerusakan', $return->denda_kerusakan ?? 0) }}" required>
 
                                 @error('denda_kerusakan')
                                     <div class="text-red-500 text-sm mt-2">
