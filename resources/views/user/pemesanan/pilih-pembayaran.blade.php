@@ -1,4 +1,4 @@
-@extends('user.layouts.app')
+﻿@extends('user.layouts.app')
 
 @section('content')
 <div class="flex flex-col items-center justify-start min-h-[60vh] py-4">
@@ -73,6 +73,20 @@
             </button>
         </form>
     @endif
+
+    {{-- Opsi Transfer Manual --}}
+    <div class="mt-8 pt-6 border-t border-[#E2D4C0]">
+        <div class="rounded-2xl border border-gray-200 bg-gray-50 p-5">
+            <p class="font-semibold text-gray-800 mb-2">Atau Bayar via Transfer Manual</p>
+            <p class="text-sm text-gray-600 mb-3">Silakan transfer ke rekening berikut:</p>
+            <div class="bg-white border border-gray-200 rounded-lg p-3 mb-4">
+                <p class="font-bold text-gray-800">BCA: 1234567890</p>
+                <p class="text-sm text-gray-500">a.n. Sanggar Rantiang Tagok</p>
+            </div>
+            
+            @include('user.pemesanan.upload-form-pembayaran', ['pesanan' => $pesanan, 'sisaBayar' => $isPelunasan ? $sisaBayar : $pesanan->total_harga * 0.5])
+        </div>
+    </div>
 
     <a href="{{ route('user.pemesanan.show', $pesanan->id) }}"
        class="flex items-center justify-center gap-1.5 text-sm text-[#4A2E28]/60 hover:text-[#4A0F1A] transition mt-2">

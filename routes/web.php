@@ -97,6 +97,7 @@ Route::middleware(['auth', 'redirect_if_admin'])->name('user.')->group(function 
     // Pembayaran
     Route::get('/pembayaran/{id}/pilih',     [PembayaranController::class, 'pilih'])->name('pembayaran.pilih');
     Route::post('/pembayaran/{id}/initiate', [PembayaranController::class, 'initiate'])->name('pembayaran.initiate');
+    Route::post('/pembayaran/upload',        [PembayaranController::class, 'upload'])->name('pembayaran.upload');
     Route::get('/pembayaran/finish',         [PembayaranController::class, 'finish'])->name('pembayaran.finish');
 
     // Pembatalan

@@ -13,10 +13,10 @@ class PembatalanController extends Controller
     public function ajukan(Request $request, int $id): RedirectResponse
     {
         $request->validate([
-            'alasan' => 'required|string|min:20|max:1000',
+            'alasan' => 'required|string|min:10|max:1000',
         ], [
             'alasan.required' => 'Alasan pembatalan wajib diisi.',
-            'alasan.min'      => 'Alasan minimal 20 karakter.',
+            'alasan.min'      => 'Alasan minimal 10 karakter.',
         ]);
 
         $pesanan = Pemesanan::where('user_id', Auth::id())
@@ -24,7 +24,7 @@ class PembatalanController extends Controller
             ->findOrFail($id);
 
         $allowedStatuses = [
-            'dikonfirmasi', 'menunggu_dp', 'berlangsung',
+            'menunggu', 'dikonfirmasi', 'menunggu_dp', 'berlangsung',
             'menunggu_diambil', 'sedang_disewa',
         ];
 

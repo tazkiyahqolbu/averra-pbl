@@ -213,12 +213,12 @@ $sheet->getStyle("A4:F{$lastRow}")
 
     $filename = 'Laporan_Transaksi.xlsx';
 
-    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    header('Content-Disposition: attachment;filename="'.$filename.'"');
-    header('Cache-Control: max-age=0');
+    $tempFile = tempnam(sys_get_temp_dir(), 'laporan');
+    $writer->save($tempFile);
 
-    $writer->save('php://output');
-
-    exit;
+    return response()->download($tempFile, $filename, [
+        'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'Cache-Control' => 'max-age=0'
+    ])->deleteFileAfterSend(true);
 }
 }

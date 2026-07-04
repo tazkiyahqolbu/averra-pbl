@@ -1,4 +1,4 @@
-@extends('user.layouts.app')
+﻿@extends('user.layouts.app')
 
 @section('content')
 
@@ -521,7 +521,7 @@
 
     {{-- ─── AJUKAN PEMBATALAN ───────────────────────────────────────────────── --}}
     @php
-        $bisaBatal = in_array($pesanan->status, ['dikonfirmasi', 'menunggu_dp', 'berlangsung', 'menunggu_diambil', 'sedang_disewa']);
+        $bisaBatal = in_array($pesanan->status, ['menunggu', 'dikonfirmasi', 'menunggu_dp', 'berlangsung', 'menunggu_diambil', 'sedang_disewa']);
         $sudahAjukan = $pesanan->pembatalan && $pesanan->pembatalan->status === 'menunggu';
     @endphp
     @if($bisaBatal)
@@ -543,12 +543,11 @@
                     <div x-show="open" x-transition class="space-y-3 pt-1">
                         <div>
                             <label class="block text-xs font-semibold text-[#4A2E28] mb-1">Alasan Pembatalan <span class="text-red-500">*</span></label>
-                            <textarea name="alasan" rows="3" minlength="20" required
-                                      placeholder="Ceritakan alasan pembatalan (min. 20 karakter)..."
+                            <textarea name="alasan" rows="3" minlength="10" required
+                                      placeholder="Ceritakan alasan pembatalan (min. 10 karakter)..."
                                       class="w-full rounded-xl border border-[#E2D4C0] bg-[#FAF3E0] px-4 py-2.5 text-sm text-[#4A2E28] placeholder-[#4A2E28]/40 focus:border-red-300 focus:outline-none resize-none"></textarea>
                         </div>
                         <button type="submit"
-                                onclick="return confirm('Yakin ingin mengajukan pembatalan? Tindakan ini tidak bisa dibatalkan.')"
                                 class="w-full rounded-xl bg-red-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-red-700 transition">
                             Kirim Permintaan Pembatalan
                         </button>

@@ -35,6 +35,8 @@ class PemesananController extends Controller
 
         if ($status === 'pengembalian') {
             $query->where('jenis', 'sewa_barang')->where('status', 'berlangsung');
+        } elseif ($status === 'dikonfirmasi') {
+            $query->whereIn('status', ['dikonfirmasi', 'menunggu_dp']);
         } elseif ($status !== 'semua') {
             $query->where('status', $status);
         }
@@ -231,7 +233,6 @@ class PemesananController extends Controller
                 'metode_pengembalian'=> $jenis === 'sewa_barang' ? $request->metode_pengembalian : null,
                 'ongkos_lokasi'      => $ongkosLokasi,
                 'no_hp'              => $request->no_hp,
-                'nama_pemesan'       => $request->nama_pemesan,
                 'catatan'            => $request->keterangan_acara,
                 'total_harga'        => $totalHarga,
                 'status'             => 'menunggu',

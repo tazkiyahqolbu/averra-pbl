@@ -1,4 +1,4 @@
-@extends('user.layouts.app')
+﻿@extends('user.layouts.app')
 
 @section('content')
 <div class="flex flex-col items-center justify-start min-h-[60vh] py-4">

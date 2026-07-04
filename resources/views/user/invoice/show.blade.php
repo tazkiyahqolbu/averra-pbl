@@ -1,4 +1,4 @@
-@extends('user.layouts.app')
+﻿@extends('user.layouts.app')
 
 @section('content')
     <div class="max-w-3xl mx-auto space-y-5 print:max-w-none print:space-y-0">
@@ -13,11 +13,18 @@
             <div class="flex items-center gap-2">
                 @if ($pesanan->isMenungguPembayaran() || $pesanan->isMenungguDp() || $pesanan->isMenungguPelunasan())
                     @php
+                        $adaPembayaranMenunggu = $pesanan->pembayarans->where('status', 'menunggu')->isNotEmpty();
                         $pelunasanBelumBoleh = $pesanan->isMenungguPelunasan()
                             && $pesanan->tanggal_pakai
                             && now()->startOfDay()->lt($pesanan->tanggal_pakai->startOfDay());
                     @endphp
-                    @if ($pelunasanBelumBoleh)
+                    
+                    @if ($adaPembayaranMenunggu)
+                        <span class="inline-flex items-center gap-2 rounded-full bg-amber-100 px-5 py-2.5 text-sm font-semibold text-amber-700 cursor-not-allowed">
+                            <i data-lucide="clock" class="h-4 w-4"></i>
+                            Menunggu Verifikasi Admin
+                        </span>
+                    @elseif ($pelunasanBelumBoleh)
                         <span class="inline-flex items-center gap-2 rounded-full bg-gray-200 px-5 py-2.5 text-sm font-semibold text-gray-400 cursor-not-allowed" title="Pelunasan tersedia mulai {{ $pesanan->tanggal_pakai->format('d M Y') }}">
                             <i data-lucide="credit-card" class="h-4 w-4"></i>
                             Bayar Sekarang
@@ -67,7 +74,7 @@
                         </p>
                     </div>
                     <div class="text-left sm:text-right">
-                        <span class="font-serif text-2xl font-bold tracking-[0.15em] text-[#4A0F1A]">SILART</span>
+                        <span class="font-serif text-2xl font-bold tracking-[0.15em] text-[#4A0F1A]">Sanggar Rantiang Tagok</span>
                         <p class="text-xs text-[#4A2E28]/60 max-w-[220px] mt-1.5 leading-relaxed sm:ml-auto">
                             Gedung Serbaguna Politeknik Negeri Padang,<br>Kampus Limau Manis, Kota Padang.
                         </p>
@@ -259,7 +266,7 @@
 
                 {{-- Footer print --}}
                 <div class="hidden print:block border-t border-[#E2D4C0] pt-8 mt-12 text-center text-xs text-[#4A2E28]/50">
-                    <p>Terima kasih telah mempercayakan dekorasi dan perlengkapan event Anda bersama SILART.</p>
+                    <p>Terima kasih telah mempercayakan dekorasi dan perlengkapan event Anda bersama Sanggar Rantiang Tagok.</p>
                     <p class="mt-1 font-mono">Dokumen ini diterbitkan secara otomatis dan sah tanpa tanda tangan basah.</p>
                 </div>
 

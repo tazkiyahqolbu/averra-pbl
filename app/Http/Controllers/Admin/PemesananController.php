@@ -93,6 +93,11 @@ class PemesananController extends Controller
         }
 
         $detail              = $pemesanan->detailPemesanans->first();
+
+        if (\App\Models\PengembalianBarang::where('detail_pemesanan_id', $detail->id)->exists()) {
+            return back()->with('error', 'Data pengembalian untuk pesanan ini sudah tercatat sebelumnya.');
+        }
+
         $tanggalKembaliJadwal = $detail?->tanggal_kembali;
 
         $dendaKeterlambatan = 0;

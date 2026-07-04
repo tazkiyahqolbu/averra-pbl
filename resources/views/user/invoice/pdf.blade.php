@@ -208,7 +208,7 @@
             <div class="tanggal">Tanggal: {{ $pesanan->created_at->format('d M Y') }}</div>
         </div>
         <div class="header-right">
-            <div class="nama-sanggar">SILART</div>
+            <div class="nama-sanggar">Sanggar Rantiang Tagok</div>
             <div class="alamat">
                 Gedung Serbaguna Politeknik Negeri Padang<br>
                 Kampus Limau Manis, Kota Padang
@@ -319,7 +319,7 @@
 
     {{-- Footer --}}
     <div class="footer">
-        <p>Terima kasih telah mempercayakan dekorasi dan perlengkapan event Anda bersama SILART.</p>
+        <p>Terima kasih telah mempercayakan dekorasi dan perlengkapan event Anda bersama Sanggar Rantiang Tagok.</p>
         <p>Dokumen ini diterbitkan secara otomatis dan sah tanpa tanda tangan basah.</p>
     </div>
 
