@@ -1,7 +1,7 @@
 @php
     $routeUrl = fn($name, $params = []) => \Illuminate\Support\Facades\Route::has($name) ? route($name, $params) : '#';
 
-    $active = fn($name) => request()->routeIs($name)
+    $active = fn($name, $params = null) => (request()->routeIs($name) && (is_null($params) || request()->route('tipe') === $params))
         ? 'bg-[#C8960C]/20 text-[#C8960C] border border-[#C8960C]/25'
         : 'text-white/55 hover:text-white hover:bg-white/6';
 
@@ -56,7 +56,7 @@
     $badges = [
         'pemesanan' => \App\Models\Pemesanan::where('status', 'menunggu')->count(),
         'pembayaran' => \App\Models\Pembayaran::where('status', 'menunggu')->count(),
-        'pengembalian' => \App\Models\PengembalianBarang::where('status_pengembalian', 'belum_diperiksa')->count(),
+        'pengembalian' => \App\Models\PengembalianBarang::where('status_pengembalian', 'menunggu')->count(),
     ];
 @endphp
 
@@ -144,7 +144,7 @@
         <p class="px-3 pb-1 pt-4 text-[9px] font-semibold uppercase tracking-[0.25em] text-[#C8960C]/50">Katalog</p>
         @foreach ($katalog as $n)
             <a href="{{ $routeUrl($n['route'], $n['params'] ?? []) }}"
-                class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition duration-200 {{ $active($n['route']) }}">
+                class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition duration-200 {{ $active($n['route'], $n['params'] ?? null) }}">
                 <i data-lucide="{{ $n['icon'] }}" class="h-4 w-4 shrink-0"></i>
                 {{ $n['label'] }}
             </a>

@@ -59,11 +59,7 @@
     {{-- List pembayaran --}}
     @if($pembayarans->isEmpty())
         <div class="admin-card p-10 text-center">
-            <div class="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-[#FAF3E0] border border-[#E2D4C0] mb-3">
-                <i data-lucide="credit-card" class="h-6 w-6 text-[#C8960C]/60"></i>
-            </div>
-            <p class="font-semibold text-[#4A0F1A]">Belum ada bukti pembayaran</p>
-            <p class="admin-muted text-sm mt-1">Bukti akan muncul setelah customer mengupload.</p>
+            <p class="font-medium text-[#4A2E28]/60">Tidak ada pembayaran untuk filter ini.</p>
         </div>
     @else
         <div class="space-y-4">

@@ -25,8 +25,8 @@
 
                 @php
                     $statusClass = match ($return->status_pengembalian) {
-                        'belum_diperiksa' => 'badge-warning',
                         'selesai' => 'badge-active',
+                        'diperiksa' => 'badge-warning',
                         default => 'badge-inactive',
                     };
                 @endphp

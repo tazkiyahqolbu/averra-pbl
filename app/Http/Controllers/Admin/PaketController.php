@@ -26,7 +26,9 @@ class PaketController extends Controller
 
         $paketItems = $query->latest()->get();
 
-        return view('admin.paket.index', compact('paketItems'));
+        $kategoris = KategoriPaket::all();
+
+        return view('admin.paket.index', compact('paketItems', 'kategoris'));
     }
 
     /**

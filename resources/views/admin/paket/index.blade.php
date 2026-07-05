@@ -21,8 +21,25 @@
 
     <div class="admin-card p-5">
         <div class="grid gap-3 md:grid-cols-3">
-            <div><label class="admin-label">Cari Paket</label><input type="text" class="admin-input" placeholder="Cari nama paket..."></div>
-            <div><label class="admin-label">Kategori</label><select class="admin-select"><option>Semua</option></select></div>
+            <div>
+                <label class="admin-label">Cari Paket</label>
+                <div class="relative">
+                    <input type="text" id="filter-nama" class="admin-input pr-10" placeholder="Cari nama paket..." oninput="filterPaket()">
+                    <button type="button" onclick="filterPaket()"
+                            class="absolute right-2 top-1/2 -translate-y-1/2 text-[#4A2E28]/40 hover:text-[#C8960C]">
+                        <i data-lucide="search" class="h-4 w-4"></i>
+                    </button>
+                </div>
+            </div>
+            <div>
+                <label class="admin-label">Kategori</label>
+                <select id="filter-kategori" class="admin-select" onchange="filterPaket()">
+                    <option value="">Semua</option>
+                    @foreach($kategoris as $k)
+                        <option value="{{ $k->nama }}">{{ $k->nama }}</option>
+                    @endforeach
+                </select>
+            </div>
             <div><label class="admin-label">Status</label><select class="admin-select"><option>Semua</option><option>Aktif</option><option>Nonaktif</option></select></div>
         </div>
     </div>
@@ -45,7 +62,7 @@
 
                 <tbody class="divide-y divide-[#E2D4C0]">
                     @forelse ($paketItems as $index => $item)
-                        <tr class="hover:bg-[#FAF3E0]/50">
+                        <tr class="hover:bg-[#FAF3E0]/50 paket-row" data-nama="{{ strtolower($item->nama_paket) }}" data-kategori="{{ $item->kategori->nama ?? '' }}">
                             <td class="admin-table-td font-semibold text-[#4A2E28]">{{ $index + 1 }}</td>
 
                             <td class="hidden sm:table-cell admin-table-td">
@@ -100,4 +117,16 @@
         </div>
     </div>
 </div>
+
+<script>
+function filterPaket() {
+    const nama = document.getElementById('filter-nama').value.toLowerCase().trim();
+    const kategori = document.getElementById('filter-kategori').value;
+    document.querySelectorAll('.paket-row').forEach(el => {
+        const cocokNama = !nama || el.dataset.nama.includes(nama);
+        const cocokKategori = !kategori || el.dataset.kategori === kategori;
+        el.style.display = (cocokNama && cocokKategori) ? '' : 'none';
+    });
+}
+</script>
 @endsection

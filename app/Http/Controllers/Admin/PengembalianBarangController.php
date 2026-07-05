@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Storage;
 
 class PengembalianBarangController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $status = request('status', 'semua');
 

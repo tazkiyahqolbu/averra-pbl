@@ -20,7 +20,9 @@ class JasaController extends Controller
         ->latest()
         ->get();
 
-    return view('admin.jasa.index', compact('jasaItems'));
+        $kategoris = KategoriJasa::all();
+
+    return view('admin.jasa.index', compact('jasaItems', 'kategoris'));
     }
 
     /**
