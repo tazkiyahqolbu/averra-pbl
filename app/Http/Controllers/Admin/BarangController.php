@@ -15,7 +15,9 @@ class BarangController extends Controller
     {
         $barangs = Barang::with('kategori')->latest()->get();
 
-        return view('admin.barang.index', compact('barangs'));
+        $kategoriBarangs = KategoriBarang::all();
+
+        return view('admin.barang.index', compact('barangs', 'kategoriBarangs'));
     }
 
     public function create()

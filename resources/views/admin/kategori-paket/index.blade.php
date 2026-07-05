@@ -32,10 +32,10 @@
                                 <td class="admin-table-td text-sm text-[#4A2E28]">{{ $kategori->deskripsi }}</td>
                                 <td class="admin-table-td text-right">
                                     <div class="flex justify-end gap-2">
-                                        <a href="{{ route('admin.kategori.edit', ['tipe' => 'paket', 'id' => $item->id]) }}"
+                                        <a href="{{ route('admin.kategori.edit', ['tipe' => 'paket', 'id' => $kategori->id]) }}"
                                             class="admin-btn-secondary px-4 py-2">Edit</a>
                                         <form
-                                            action="{{ route('admin.kategori.destroy', ['tipe' => 'paket', 'id' => $item->id]) }}"
+                                            action="{{ route('admin.kategori.destroy', ['tipe' => 'paket', 'id' => $kategori->id]) }}"
                                             method="POST"
                                             onsubmit="return confirmDelete(event, 'Apakah Anda yakin ingin menghapus kategori ini?')">
                                             @csrf

@@ -3,6 +3,15 @@
 @section('title', 'Pengembalian Barang')
 
 @section('content')
+@php
+    $tabs = [
+        'semua'     => 'Semua',
+        'menunggu'  => 'Belum Diperiksa',
+        'diperiksa' => 'Sedang Diperiksa',
+        'selesai'   => 'Selesai',
+    ];
+    $activeTab = $status;
+@endphp
 
 <div class="admin-section">
     <div>
@@ -38,7 +47,7 @@
     </div>
 
     <div class="space-y-4">
-        @foreach ($returns as $return)
+        @forelse ($returns as $return)
             <div class="admin-card p-5">
                 <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     <div class="space-y-2">
@@ -50,15 +59,14 @@
                                     'diperiksa' => 'badge-warning',
                                     default => 'badge-inactive',
                                 };
-                                @endphp
+                            @endphp
 
-                                <span class="{{ $statusClass }}">
-                                    {{ ucfirst(str_replace('_',' ', $return->status_pengembalian)) }}
-                                </span>
-
+                            <span class="{{ $statusClass }}">
+                                {{ ucfirst(str_replace('_',' ', $return->status_pengembalian)) }}
+                            </span>
                         </div>
 
-                        <p class="text-sm text-[#4A2E28] flex items-center gap-1.5">Pesanan: ##{{ $return->detailPemesanan->pemesanan->kode_pemesanan }} <span class="text-[#E2D4C0] mx-1">|</span> <i data-lucide="user" class="h-3.5 w-3.5 text-[#4A2E28]/50 shrink-0"></i> {{ $return->detailPemesanan->pemesanan->nama_pemesan }}</p>
+                        <p class="text-sm text-[#4A2E28] flex items-center gap-1.5">Pesanan: #{{ $return->detailPemesanan->pemesanan->kode_pemesanan }} <span class="text-[#E2D4C0] mx-1">|</span> <i data-lucide="user" class="h-3.5 w-3.5 text-[#4A2E28]/50 shrink-0"></i> {{ $return->detailPemesanan->pemesanan->nama_pemesan }}</p>
                         <p class="text-sm text-[#4A2E28]">
                             Item:
 
@@ -82,7 +90,11 @@
                     </a>
                 </div>
             </div>
-        @endforeach
+        @empty
+            <div class="admin-card p-10 text-center">
+                <p class="font-medium text-[#4A2E28]/60">Tidak ada pengembalian untuk filter ini.</p>
+            </div>
+        @endforelse
     </div>
 </div>
 @endsection

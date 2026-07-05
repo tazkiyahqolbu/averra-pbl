@@ -80,5 +80,11 @@
             </div>
         @endforeach
     </div>
+
+    @if ($galeri->isEmpty())
+        <div class="admin-card p-10 text-center">
+            <p class="font-medium text-[#4A2E28]/60">Belum ada foto/video di galeri.</p>
+        </div>
+    @endif
 </div>
 @endsection
