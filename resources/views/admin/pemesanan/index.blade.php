@@ -1,21 +1,26 @@
-﻿@extends('admin.layouts.app')
+@extends('admin.layouts.app')
 
 @section('title', 'Pemesanan')
 
 @section('content')
 @php
     $statusMap = [
-        'menunggu'     => ['label' => 'Menunggu Konfirmasi', 'class' => 'badge-warning'],
-        'dikonfirmasi' => ['label' => 'Menunggu Pembayaran', 'class' => 'badge-warning'],
-        'berlangsung'  => ['label' => 'Berlangsung',         'class' => 'badge-active'],
-        'selesai'      => ['label' => 'Selesai',             'class' => 'badge-neutral'],
-        'dibatalkan'   => ['label' => 'Dibatalkan',          'class' => 'badge-inactive'],
+        'menunggu'              => ['label' => 'Menunggu Konfirmasi',   'class' => 'badge-warning'],
+        'dikonfirmasi'          => ['label' => 'Menunggu Pembayaran',   'class' => 'badge-warning'],
+        'berlangsung'           => ['label' => 'Berlangsung',            'class' => 'badge-active'],
+        'selesai'               => ['label' => 'Selesai',               'class' => 'badge-neutral'],
+        'dibatalkan'            => ['label' => 'Dibatalkan',            'class' => 'badge-inactive'],
+        'menunggu_dp'           => ['label' => 'Menunggu DP',           'class' => 'badge-warning'],
+        'menunggu_diambil'      => ['label' => 'Menunggu Diambil',      'class' => 'badge-warning'],
+        'sedang_disewa'         => ['label' => 'Sedang Disewa',         'class' => 'badge-active'],
+        'menunggu_pengembalian' => ['label' => 'Menunggu Pengembalian', 'class' => 'badge-active'],
+        'menunggu_pelunasan'    => ['label' => 'Menunggu Pelunasan',    'class' => 'badge-warning'],
     ];
 
     $tabs = [
         'semua'        => 'Semua',
         'menunggu'     => 'Menunggu Konfirmasi',
-        'dikonfirmasi' => 'Menunggu Pembayaran',
+        'dikonfirmasi' => 'Menunggu DP / Bayar',
         'berlangsung'  => 'Berlangsung',
         'pengembalian' => 'Pengembalian',
         'selesai'      => 'Selesai',

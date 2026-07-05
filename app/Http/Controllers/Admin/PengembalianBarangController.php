@@ -11,14 +11,23 @@ class PengembalianBarangController extends Controller
 {
     public function index()
     {
-        $returns = PengembalianBarang::with([
+        $status = request('status', 'semua');
+
+        $query = PengembalianBarang::with([
             'detailPemesanan.barang',
             'detailPemesanan.jasa',
             'detailPemesanan.paket',
             'detailPemesanan.pemesanan',
-        ])->latest()->get();
+        ])->latest();
 
-        return view('admin.pengembalian.index', compact('returns'));
+        if ($status !== 'semua') {
+            $query->where('status_pengembalian', $status);
+        }
+
+        $returns = $query->get();
+        $countMenunggu = PengembalianBarang::where('status_pengembalian', 'menunggu')->count();
+
+        return view('admin.pengembalian.index', compact('returns', 'countMenunggu', 'status'));
     }
 
     public function show($id)

@@ -28,11 +28,17 @@ class PemesananController extends Controller
             'pembayarans',
         ])->latest();
 
-        if ($status === 'pengembalian') {
-            $query->where('jenis', 'sewa_barang')
-                  ->whereIn('status', ['sedang_disewa', 'menunggu_pengembalian']);
-        } elseif ($status !== 'semua') {
-            $query->where('status', $status);
+        $statusGroups = [
+            'menunggu'     => ['menunggu'],
+            'dikonfirmasi' => ['dikonfirmasi', 'menunggu_dp'],
+            'berlangsung'  => ['berlangsung', 'menunggu_diambil'],
+            'pengembalian' => ['sedang_disewa', 'menunggu_pengembalian', 'menunggu_pelunasan'],
+            'selesai'      => ['selesai'],
+            'dibatalkan'   => ['dibatalkan'],
+        ];
+
+        if ($status !== 'semua' && isset($statusGroups[$status])) {
+            $query->whereIn('status', $statusGroups[$status]);
         }
 
         $pemesanans = $query->get();
