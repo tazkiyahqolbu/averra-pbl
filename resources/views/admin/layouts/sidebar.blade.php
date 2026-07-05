@@ -1,4 +1,4 @@
-﻿@php
+@php
     $routeUrl = fn($name, $params = []) => \Illuminate\Support\Facades\Route::has($name) ? route($name, $params) : '#';
 
     $active = fn($name) => request()->routeIs($name)
@@ -19,6 +19,12 @@
             'route' => 'admin.pembayaran.index',
             'icon' => 'credit-card',
             'badge_key' => 'pembayaran',
+        ],
+        [
+            'label' => 'Pembatalan',
+            'route' => 'admin.pembatalan.index',
+            'icon' => 'x-circle',
+            'badge_key' => 'pembatalan',
         ],
         [
             'label' => 'Pengembalian',

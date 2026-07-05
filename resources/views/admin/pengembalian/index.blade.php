@@ -1,4 +1,4 @@
-﻿@extends('admin.layouts.app')
+@extends('admin.layouts.app')
 
 @section('title', 'Pengembalian Barang')
 
@@ -12,12 +12,27 @@
         </p>
     </div>
 
+    @php
+        $statusMap = [
+            'semua'    => 'Semua',
+            'menunggu' => 'Belum Diperiksa',
+            'selesai'  => 'Selesai',
+        ];
+    @endphp
+
     <div class="admin-card p-4">
         <div class="flex flex-wrap gap-2 text-sm">
-            @foreach (['Semua', 'Belum Diperiksa (1)', 'Sedang Diperiksa', 'Selesai'] as $tab)
-                <button class="rounded-full border border-[#E2D4C0] px-4 py-2 font-semibold text-[#4A0F1A] hover:bg-[#FAF3E0]">
-                    {{ $tab }}
-                </button>
+            @foreach ($statusMap as $key => $label)
+                <a href="{{ route('admin.pengembalian.index', ['status' => $key]) }}"
+                   class="rounded-full border px-4 py-2 font-semibold transition
+                   {{ $status === $key
+                        ? 'border-transparent bg-gradient-to-br from-[#6B1625] to-[#3A0A12] text-white shadow-[0_3px_10px_rgba(74,15,26,0.3)]'
+                        : 'border-[#E2D4C0] text-[#4A0F1A] hover:bg-[#FAF3E0]' }}">
+                    {{ $label }}
+                    @if($key === 'menunggu' && $countMenunggu > 0)
+                        <span class="ml-1 bg-red-500 text-white rounded-full px-1.5 py-0.5 text-xs">{{ $countMenunggu }}</span>
+                    @endif
+                </a>
             @endforeach
         </div>
     </div>
@@ -28,9 +43,7 @@
                 <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     <div class="space-y-2">
                         <div class="flex flex-wrap items-center gap-2">
-                            <h2 class="font-heading text-xl font-bold text-[#4A0F1A]">#{{ $return['kode'] }}</h2>
-                            <span class="badge-warning">{{ $return['status'] }}</span>
-                            <h2 class="font-heading text-xl font-bold text-[#4A0F1A]">#{{ $return->kode_pengembalian }}</h2>
+                            <h2 class="font-heading text-xl font-bold text-[#4A0F1A]">#RTR-{{ str_pad($return->id, 4, '0', STR_PAD_LEFT) }}</h2>
                             @php
                                 $statusClass = match($return->status_pengembalian) {
                                     'selesai' => 'badge-active',

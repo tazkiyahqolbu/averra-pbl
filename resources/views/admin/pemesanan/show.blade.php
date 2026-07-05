@@ -1,4 +1,4 @@
-﻿@extends('admin.layouts.app')
+@extends('admin.layouts.app')
 
 @section('title', 'Detail Pemesanan')
 
@@ -55,6 +55,21 @@
     @if(session('error'))
         <div class="rounded-2xl bg-red-50 border border-red-200 px-5 py-3 text-sm font-semibold text-red-800">
             {{ session('error') }}
+        </div>
+    @endif
+
+    @if($pemesanan->pembatalan && $pemesanan->pembatalan->status === 'menunggu')
+        <div class="mb-5 rounded-2xl bg-orange-50 border border-orange-200 p-5 shadow-sm">
+            <div class="flex items-center gap-3">
+                <i data-lucide="alert-triangle" class="h-6 w-6 text-orange-500 shrink-0"></i>
+                <div class="flex-1">
+                    <h3 class="font-bold text-orange-800">Menunggu Persetujuan Pembatalan</h3>
+                    <p class="text-sm text-orange-700 mt-1">Pelanggan telah mengajukan pembatalan untuk pesanan ini. Harap tinjau permintaan pembatalan sebelum melanjutkan proses pesanan.</p>
+                </div>
+                <a href="{{ route('admin.pembatalan.show', $pemesanan->pembatalan->id) }}" class="btn bg-orange-600 text-white hover:bg-orange-700 py-2 px-4 rounded-xl text-sm font-semibold whitespace-nowrap shrink-0 transition">
+                    Tinjau Pembatalan
+                </a>
+            </div>
         </div>
     @endif
 
@@ -188,7 +203,14 @@
             <div class="admin-card p-5">
                 <h2 class="admin-title mb-4 text-xl">Aksi Admin</h2>
                 <div class="flex flex-col gap-3">
-                    @if($pemesanan->status === 'menunggu')
+                    @if($pemesanan->pembatalan && $pemesanan->pembatalan->status === 'menunggu')
+                        <div class="rounded-xl border border-orange-200 bg-orange-50 p-4 text-center">
+                            <i data-lucide="alert-circle" class="mx-auto h-6 w-6 text-orange-500 mb-2"></i>
+                            <p class="text-sm text-orange-800 font-medium mb-3">Terdapat pengajuan pembatalan yang belum diproses.</p>
+                            <a href="{{ route('admin.pembatalan.show', $pemesanan->pembatalan->id) }}" class="block w-full rounded-lg bg-orange-600 py-2.5 text-sm font-semibold text-white hover:bg-orange-700 transition">Proses Pembatalan</a>
+                        </div>
+                    @else
+                        @if($pemesanan->status === 'menunggu')
                         <form action="{{ route('admin.pemesanan.update-status', $pemesanan->id) }}" method="POST">
                             @csrf @method('PATCH')
                             <input type="hidden" name="status" value="menunggu_dp">
@@ -259,6 +281,7 @@
                             <input type="hidden" name="status" value="dibatalkan">
                             <button type="submit" class="w-full btn bg-red-600 text-white py-2.5 rounded-xl hover:bg-red-700 font-semibold transition">Batalkan Pesanan</button>
                         </form>
+                    @endif
                     @endif
 
                     <a href="{{ route('admin.pemesanan.index') }}" class="w-full text-center text-sm text-[#4A2E28] hover:underline mt-2">Kembali ke Daftar</a>

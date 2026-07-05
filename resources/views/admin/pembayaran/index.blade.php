@@ -1,4 +1,4 @@
-﻿@extends('admin.layouts.app')
+@extends('admin.layouts.app')
 
 @section('title', 'Pembayaran')
 
@@ -71,7 +71,7 @@
                 @php
                     $badge = $badgeMap[$pembayaran->status] ?? 'badge-neutral';
                     $statusLabel = match($pembayaran->status) {
-                        'menunggu'      => 'Menunggu Pembayaran',
+                        'menunggu'      => 'Menunggu (' . ($tahapLabel[$pembayaran->tahap] ?? $pembayaran->tahap) . ')',
                         'terverifikasi' => 'Berhasil',
                         'ditolak'       => 'Dibatalkan / Gagal',
                         default         => ucfirst($pembayaran->status),
