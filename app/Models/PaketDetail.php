@@ -11,7 +11,7 @@ class PaketDetail extends Model
     protected $table = 'paket_detail';
 
     protected $fillable = [
-        'paket_id', 'jasa_id', 'nama_item',
+        'paket_id', 'jasa_id', 'barang_id', 'nama_item',
         'jumlah', 'tipe', 'harga_tambahan', 'keterangan',
     ];
 
@@ -29,6 +29,11 @@ class PaketDetail extends Model
     public function jasa()
     {
         return $this->belongsTo(Jasa::class); // ← withDefault() dihapus
+    }
+
+    public function barang()
+    {
+        return $this->belongsTo(Barang::class);
     }
 
     public function opsionalPemesanans()

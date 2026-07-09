@@ -21,9 +21,15 @@ class TestimoniController extends Controller
             ->with('testimoni')
             ->findOrFail($pemesanan_id);
 
+        // Jaga-jaga kalau status 'selesai' ke-set tanpa pelunasan benar-benar terverifikasi
+        if (!$pesanan->isLunas()) {
+            return redirect()->route('user.pemesanan.show', $pemesanan_id)
+                ->with('error', 'Pesanan belum lunas. Selesaikan pelunasan terlebih dahulu sebelum memberi ulasan.');
+        }
+
         // Kalau pesanan ini sudah punya testimoni, tidak perlu tampilkan form lagi
         if ($pesanan->testimoni) {
-            return redirect()->route('user.pemesanan.invoice', $pemesanan_id)
+            return redirect()->route('user.pemesanan.show', $pemesanan_id)
                 ->with('info', 'Kamu sudah memberikan ulasan untuk pesanan ini.');
         }
 
@@ -40,9 +46,14 @@ class TestimoniController extends Controller
             ->with('testimoni')
             ->findOrFail($pemesanan_id);
 
+        if (!$pesanan->isLunas()) {
+            return redirect()->route('user.pemesanan.show', $pemesanan_id)
+                ->with('error', 'Pesanan belum lunas. Selesaikan pelunasan terlebih dahulu sebelum memberi ulasan.');
+        }
+
         // Cegah duplikat ulasan untuk pesanan yang sama
         if ($pesanan->testimoni) {
-            return redirect()->route('user.pemesanan.invoice', $pemesanan_id)
+            return redirect()->route('user.pemesanan.show', $pemesanan_id)
                 ->with('info', 'Kamu sudah memberikan ulasan untuk pesanan ini.');
         }
 
@@ -78,8 +89,8 @@ class TestimoniController extends Controller
             }
         }
 
-        // Redirect ke invoice dengan pesan sukses
-        return redirect()->route('user.pemesanan.invoice', $pemesanan_id)
+        // Redirect ke detail pesanan (bukan invoice) dengan pesan sukses
+        return redirect()->route('user.pemesanan.show', $pemesanan_id)
             ->with('success', 'Terima kasih! Ulasan kamu berhasil dikirim.');
     }
 }

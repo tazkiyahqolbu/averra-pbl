@@ -3,7 +3,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 
 class Pembayaran extends Model
 {
@@ -14,10 +13,11 @@ class Pembayaran extends Model
     protected $fillable = [
         'kode_transaksi', 'pemesanan_id', 'tahap',
         'persen_dp', 'jumlah_bayar', 'dibayar_pada',
-        'metode_pembayaran', 'bukti_pembayaran_path',
+        'metode_pembayaran',
         'status', 'diverifikasi_oleh', 'diverifikasi_pada',
         'catatan_penolakan',
         'snap_token', 'gateway_transaction_id', 'gateway_status',
+        'payment_type', 'bank', 'va_number',
     ];
 
     protected $casts = [
@@ -35,12 +35,5 @@ class Pembayaran extends Model
     public function diverifikasiOleh()
     {
         return $this->belongsTo(User::class, 'diverifikasi_oleh');
-    }
-
-    public function getBuktiUrlAttribute(): ?string
-    {
-        return $this->bukti_pembayaran_path
-            ? Storage::url($this->bukti_pembayaran_path)
-            : null;
     }
 }

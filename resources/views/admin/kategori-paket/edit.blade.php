@@ -19,13 +19,13 @@
 
                 <div>
                     <label class="admin-label">Nama Kategori *</label>
-                    <input name="nama" type="text" class="admin-input" value="{{ old('nama', $kategoriPaket->nama) }}"
+                    <input name="nama" type="text" class="admin-input" value="{{ old('nama', $kategori->nama) }}"
                         required>
                 </div>
 
                 <div>
                     <label class="admin-label">Deskripsi</label>
-                    <textarea name="deskripsi" rows="3" class="admin-textarea">{{ old('deskripsi', $kategoriPaket->deskripsi) }}</textarea>
+                    <textarea name="deskripsi" rows="3" class="admin-textarea">{{ old('deskripsi', $kategori->deskripsi) }}</textarea>
                 </div>
 
                 <div class="flex justify-end gap-3 pt-2">

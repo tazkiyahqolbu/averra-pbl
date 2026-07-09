@@ -341,7 +341,12 @@
 
         {{-- Testimoni --}}
         <div class="rounded-2xl border border-[#E2D4C0] bg-white shadow-[0_2px_8px_rgba(74,15,26,0.06)] p-6 mt-4">
-            @if(!$pesanan->testimoni)
+            @if(!$pesanan->isLunas())
+                <div class="flex items-center gap-3 text-sm text-[#4A2E28]">
+                    <i data-lucide="info" class="h-4 w-4 shrink-0 text-[#C8960C]"></i>
+                    Selesaikan pelunasan terlebih dahulu untuk bisa memberi ulasan.
+                </div>
+            @elseif(!$pesanan->testimoni)
                 <div class="text-center mb-6">
                     <h3 class="font-serif text-2xl font-light text-[#4A0F1A]">Bagaimana pengalaman Anda?</h3>
                     <p class="text-sm text-[#4A2E28]/60 mt-1">Bantu kami menjadi lebih baik dengan ulasan Anda.</p>

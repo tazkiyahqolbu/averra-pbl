@@ -88,7 +88,7 @@ $costumes = [
     </section>
 
     {{-- ══ LAYANAN KAMI ══ --}}
-    <section id="layanan" class="relative isolate py-24 bg-[#FFFDF7] section-fade-y">
+    <section id="layanan" class="relative isolate py-24 bg-[#FFFDF7]">
         <div class="pointer-events-none absolute inset-x-0 top-0 h-24 -z-10 bg-gradient-to-b from-[#FAF3E0] to-transparent"></div>
 
         <div class="mx-auto max-w-6xl px-6 text-center scroll-fade">
@@ -192,7 +192,7 @@ $costumes = [
     </section>
 
     {{-- ══ PAKET UNGGULAN ══ --}}
-    <section id="paket" class="relative isolate py-24 bg-[#FFFDF7] section-fade-y">
+    <section id="paket" class="relative isolate py-24 bg-[#FFFDF7]">
         <div class="pointer-events-none absolute inset-x-0 top-0 h-24 -z-10 bg-gradient-to-b from-[#FAF3E0] to-transparent"></div>
 
         <div class="mx-auto max-w-6xl px-6 text-center scroll-fade">
@@ -279,7 +279,7 @@ $costumes = [
     </section>
 
     {{-- ══ GALERI ══ --}}
-    <section id="galeri" class="relative isolate py-20 bg-[#FFFDF7] section-fade-y">
+    <section id="galeri" class="relative isolate py-20 bg-[#FFFDF7]">
         <div class="pointer-events-none absolute inset-x-0 top-0 h-24 -z-10 bg-gradient-to-b from-[#FAF3E0] to-transparent"></div>
         <div class="mx-auto max-w-7xl px-6">
             <div class="mb-10 text-center scroll-fade">

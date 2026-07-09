@@ -97,7 +97,6 @@ Route::middleware(['auth', 'redirect_if_admin'])->name('user.')->group(function 
     // Pembayaran
     Route::get('/pembayaran/{id}/pilih',     [PembayaranController::class, 'pilih'])->name('pembayaran.pilih');
     Route::post('/pembayaran/{id}/initiate', [PembayaranController::class, 'initiate'])->name('pembayaran.initiate');
-    Route::post('/pembayaran/upload',        [PembayaranController::class, 'upload'])->name('pembayaran.upload');
     Route::get('/pembayaran/finish',         [PembayaranController::class, 'finish'])->name('pembayaran.finish');
 
     // Pembatalan
@@ -161,8 +160,6 @@ Route::middleware(['auth', 'role:admin'])
         // Pembayaran
         Route::get('/pembayaran',                          [AdminPembayaranController::class, 'index'])->name('pembayaran.index');
         Route::get('/pembayaran/{id}',                     [AdminPembayaranController::class, 'show'])->name('pembayaran.show');
-        Route::patch('/pembayaran/{id}/verifikasi',        [AdminPembayaranController::class, 'verifikasi'])->name('pembayaran.verifikasi');
-        Route::patch('/pembayaran/{id}/tolak',             [AdminPembayaranController::class, 'tolak'])->name('pembayaran.tolak');
 
         // Barang
         Route::get('/barang', [BarangController::class, 'index'])

@@ -87,17 +87,31 @@ class PembayaranController extends Controller
             $jumlahBayar = round($pesanan->total_harga * 0.5);
         }
 
-        $kodeTransaksi = 'TRX-' . strtoupper(Str::random(8));
+        $pembayaran = $pesanan->pembayarans()
+            ->where('tahap', $tahap)
+            ->where('status', 'menunggu')
+            ->latest()
+            ->first();
 
-        $pembayaran = $pesanan->pembayarans()->create([
-            'kode_transaksi'    => $kodeTransaksi,
-            'tahap'             => $tahap,
-            'persen_dp'         => $persenDp,
-            'jumlah_bayar'      => $jumlahBayar,
-            'metode_pembayaran' => 'midtrans',
-            'status'            => 'menunggu',
-            'dibayar_pada'      => null,
-        ]);
+        if ($pembayaran) {
+            $pembayaran->update([
+                'persen_dp'    => $persenDp,
+                'jumlah_bayar' => $jumlahBayar,
+            ]);
+            $kodeTransaksi = $pembayaran->kode_transaksi;
+        } else {
+            $kodeTransaksi = 'TRX-' . strtoupper(Str::random(8));
+
+            $pembayaran = $pesanan->pembayarans()->create([
+                'kode_transaksi'    => $kodeTransaksi,
+                'tahap'             => $tahap,
+                'persen_dp'         => $persenDp,
+                'jumlah_bayar'      => $jumlahBayar,
+                'metode_pembayaran' => 'midtrans',
+                'status'            => 'menunggu',
+                'dibayar_pada'      => null,
+            ]);
+        }
 
         $user      = $pesanan->user;
         $namaParts = explode(' ', $user->name, 2);
@@ -150,10 +164,15 @@ class PembayaranController extends Controller
                 $fraudStatus = $statusResponse->fraud_status ?? null;
 
                 if ($transactionStatus === 'settlement' || ($transactionStatus === 'capture' && $fraudStatus === 'accept')) {
+                    $channel = $this->extractPaymentChannel($statusResponse);
+
                     $pembayaran->update([
-                        'status'       => 'terverifikasi',
-                        'dibayar_pada' => now(),
+                        'status'         => 'terverifikasi',
+                        'dibayar_pada'   => now(),
                         'gateway_status' => $transactionStatus,
+                        'payment_type'   => $channel['payment_type'],
+                        'bank'           => $channel['bank'],
+                        'va_number'      => $channel['va_number'],
                     ]);
 
                     $pesanan = $pembayaran->pemesanan;
@@ -178,63 +197,6 @@ class PembayaranController extends Controller
             ->with('info', 'Pembayaran berhasil dikonfirmasi. Status pesanan Anda telah diperbarui!');
     }
 
-    public function upload(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'pemesanan_id'     => 'required|exists:pemesanan,id',
-            'bukti_pembayaran' => 'required|image|mimes:jpeg,png|max:5120',
-        ]);
-
-        $pesanan = Pemesanan::where('user_id', Auth::id())
-            ->with('pembayarans')
-            ->findOrFail($request->pemesanan_id);
-
-        $isPelunasan = $pesanan->pembayarans
-            ->where('tahap', 'dp')
-            ->where('status', 'terverifikasi')
-            ->isNotEmpty();
-
-        if ($isPelunasan || $pesanan->isMenungguPelunasan()) {
-            $sudahBayar  = $pesanan->pembayarans->where('status', 'terverifikasi')->sum('jumlah_bayar');
-            $sisaSewa    = max(0, (float) $pesanan->total_harga - (float) $sudahBayar);
-
-            $totalDenda = 0;
-            if ($pesanan->jenis === 'sewa_barang') {
-                $pengembalian = PengembalianBarang::whereHas(
-                    'detailPemesanan',
-                    fn($q) => $q->where('pemesanan_id', $pesanan->id)
-                )->first();
-                $totalDenda = $pengembalian ? (float) $pengembalian->total_denda : 0;
-            }
-
-            $jumlahBayar = $sisaSewa + $totalDenda;
-            $tahap       = 'pelunasan';
-            $persenDp    = null;
-        } else {
-            $tahap       = 'dp';
-            $persenDp    = 50;
-            $jumlahBayar = round($pesanan->total_harga * 0.5);
-        }
-
-        $kodeTransaksi = 'MNL-' . strtoupper(Str::random(8));
-        
-        $path = $request->file('bukti_pembayaran')->store('bukti_pembayaran', 'public');
-
-        $pesanan->pembayarans()->create([
-            'kode_transaksi'        => $kodeTransaksi,
-            'tahap'                 => $tahap,
-            'persen_dp'             => $persenDp,
-            'jumlah_bayar'          => $jumlahBayar,
-            'metode_pembayaran'     => 'manual',
-            'status'                => 'menunggu',
-            'bukti_pembayaran_path' => $path,
-            'dibayar_pada'          => null,
-        ]);
-
-        return redirect()->route('user.pemesanan.show', $pesanan->id)
-            ->with('success', 'Bukti pembayaran berhasil diunggah dan sedang menunggu verifikasi admin.');
-    }
-
     public function callback(Request $request): JsonResponse
     {
         $notification = $this->midtrans->getNotification();
@@ -251,9 +213,14 @@ class PembayaranController extends Controller
             return response()->json(['message' => 'not found'], 404);
         }
 
+        $channel = $this->extractPaymentChannel($notification);
+
         $pembayaran->update([
             'gateway_transaction_id' => $notification->transaction_id,
             'gateway_status'         => $transactionStatus,
+            'payment_type'           => $channel['payment_type'],
+            'bank'                   => $channel['bank'],
+            'va_number'              => $channel['va_number'],
         ]);
 
         if ($transactionStatus === 'settlement' || ($transactionStatus === 'capture' && $fraudStatus === 'accept')) {
@@ -281,5 +248,36 @@ class PembayaranController extends Controller
         }
 
         return response()->json(['message' => 'ok']);
+    }
+
+    /**
+     * @return array{payment_type: ?string, bank: ?string, va_number: ?string}
+     */
+    private function extractPaymentChannel(object|array $data): array
+    {
+        $data = is_array($data) ? json_decode(json_encode($data)) : $data;
+
+        $bank     = null;
+        $vaNumber = null;
+
+        if (!empty($data->va_numbers)) {
+            $bank     = $data->va_numbers[0]->bank ?? null;
+            $vaNumber = $data->va_numbers[0]->va_number ?? null;
+        } elseif (!empty($data->permata_va_number)) {
+            $bank     = 'permata';
+            $vaNumber = $data->permata_va_number;
+        } elseif (!empty($data->bill_key)) {
+            $bank     = 'mandiri';
+            $vaNumber = $data->bill_key;
+        } elseif (!empty($data->payment_code)) {
+            $bank     = $data->store ?? null;
+            $vaNumber = $data->payment_code;
+        }
+
+        return [
+            'payment_type' => $data->payment_type ?? null,
+            'bank'         => $bank,
+            'va_number'    => $vaNumber,
+        ];
     }
 }

@@ -16,6 +16,12 @@
         'pelunasan' => 'Pelunasan',
         'langsung'  => 'Lunas',
     ];
+
+    $totalHarga    = $pembayaran->pemesanan?->total_harga ?? 0;
+    $totalDibayar  = $pembayaran->pemesanan
+        ? $pembayaran->pemesanan->pembayarans()->where('status', 'terverifikasi')->sum('jumlah_bayar')
+        : 0;
+    $sisaPelunasan = max(0, $totalHarga - $totalDibayar);
 @endphp
 
 <div class="admin-section">
@@ -40,52 +46,45 @@
             <h2 class="admin-title text-xl">Informasi Transaksi</h2>
 
             @if($pembayaran->metode_pembayaran === 'midtrans')
+                @php
+                    $paymentTypeLabels = [
+                        'bank_transfer' => 'Transfer Bank (Virtual Account)',
+                        'echannel'      => 'Mandiri Bill Payment',
+                        'gopay'         => 'GoPay',
+                        'qris'          => 'QRIS',
+                        'credit_card'   => 'Kartu Kredit/Debit',
+                        'cstore'        => 'Convenience Store',
+                        'shopeepay'     => 'ShopeePay',
+                        'akulaku'       => 'Akulaku PayLater',
+                    ];
+                    $paymentTypeLabel = $paymentTypeLabels[$pembayaran->payment_type] ?? ($pembayaran->payment_type ? ucwords(str_replace('_', ' ', $pembayaran->payment_type)) : null);
+                @endphp
                 <div class="flex min-h-[280px] items-center justify-center rounded-3xl border border-dashed border-blue-200 bg-blue-50">
                     <div class="text-center space-y-2 p-6">
                         <div class="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white border border-blue-200 mb-3">
                             <i data-lucide="credit-card" class="h-7 w-7 text-blue-500"></i>
                         </div>
                         <p class="font-semibold text-blue-800">Pembayaran via Midtrans</p>
-                        <p class="text-sm text-blue-600">Pembayaran ini diproses otomatis melalui Midtrans.<br>Tidak ada bukti upload manual.</p>
+
+                        @if($paymentTypeLabel)
+                            <p class="text-sm text-blue-700">
+                                Metode: <strong>{{ $paymentTypeLabel }}</strong>
+                                @if($pembayaran->bank)
+                                    ({{ strtoupper($pembayaran->bank) }})
+                                @endif
+                            </p>
+                            @if($pembayaran->va_number)
+                                <p class="text-sm text-blue-700">No. Virtual Account: <strong>{{ $pembayaran->va_number }}</strong></p>
+                            @endif
+                        @else
+                            <p class="text-sm text-blue-600">Menunggu pembayaran diproses oleh Midtrans.</p>
+                        @endif
+
                         @if($pembayaran->gateway_transaction_id)
                             <p class="text-xs text-blue-500 mt-2">Transaction ID: <strong>{{ $pembayaran->gateway_transaction_id }}</strong></p>
                         @endif
                     </div>
                 </div>
-            @elseif($pembayaran->buktiUrl)
-                @if(str_ends_with(strtolower($pembayaran->bukti_pembayaran_path ?? ''), '.pdf'))
-                    <div class="flex items-center justify-center rounded-3xl border border-dashed border-[#E2D4C0] bg-[#FAF3E0] p-10">
-                        <div class="text-center">
-                            <div class="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-white border border-[#E2D4C0] shadow-sm mb-4">
-                                <i data-lucide="file-text" class="h-8 w-8 text-[#C8960C]"></i>
-                            </div>
-                            <p class="font-semibold text-[#4A2E28] mb-3">Bukti pembayaran berformat PDF</p>
-                            <a href="{{ $pembayaran->buktiUrl }}" target="_blank"
-                               class="admin-btn-primary inline-block">Buka PDF</a>
-                        </div>
-                    </div>
-                @else
-                    <div x-data="{ open: false }">
-                        <div class="rounded-3xl overflow-hidden border border-[#E2D4C0] bg-[#FAF3E0] cursor-zoom-in"
-                             @click="open = true" title="Klik untuk perbesar">
-                            <img src="{{ $pembayaran->buktiUrl }}" alt="Bukti Transfer"
-                                 class="w-full object-contain max-h-[420px]">
-                        </div>
-                        <p class="text-xs text-[#4A2E28]/60 mt-2 text-center">Klik gambar untuk memperbesar</p>
-
-                        <div x-show="open" x-cloak
-                             class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
-                             @click.self="open = false"
-                             x-transition>
-                            <div class="relative max-w-4xl w-full">
-                                <button @click="open = false"
-                                        class="absolute -top-10 right-0 text-white text-3xl font-bold leading-none hover:text-gray-300">&times;</button>
-                                <img src="{{ $pembayaran->buktiUrl }}" alt="Bukti Transfer"
-                                     class="w-full rounded-2xl object-contain max-h-[85vh]">
-                            </div>
-                        </div>
-                    </div>
-                @endif
             @else
                 <div class="flex min-h-[280px] items-center justify-center rounded-3xl border border-dashed border-[#E2D4C0] bg-[#FAF3E0]">
                     <div class="text-center">
@@ -130,6 +129,12 @@
                         <span class="admin-muted">Jumlah</span><br>
                         <strong class="text-[#4A0F1A] text-base">Rp {{ number_format($pembayaran->jumlah_bayar, 0, ',', '.') }}</strong>
                     </p>
+                    @if($sisaPelunasan > 0)
+                        <p>
+                            <span class="admin-muted">Sisa Pelunasan</span><br>
+                            <strong class="text-amber-600 text-base">Rp {{ number_format($sisaPelunasan, 0, ',', '.') }}</strong>
+                        </p>
+                    @endif
                     <p>
                         <span class="admin-muted">Dikirim pada</span><br>
                         <strong>{{ $pembayaran->dibayar_pada?->format('d M Y, H.i') ?? '-' }}</strong>
@@ -165,47 +170,10 @@
                         <p class="text-sm font-semibold text-green-800">Pembayaran berhasil diproses</p>
                     </div>
                 @elseif($pembayaran->status === 'menunggu')
-                    @if($pembayaran->metode_pembayaran === 'manual')
-                        <div class="flex items-center gap-2 bg-yellow-50 border border-yellow-200 rounded-2xl px-4 py-3">
-                            <i data-lucide="clock" class="h-5 w-5 text-yellow-600 shrink-0"></i>
-                            <p class="text-sm font-semibold text-yellow-800">Menunggu verifikasi Admin</p>
-                        </div>
-                        
-                        <div class="flex flex-col sm:flex-row gap-3 mt-4">
-                            <form action="{{ route('admin.pembayaran.verifikasi', $pembayaran->id) }}" method="POST" class="flex-1">
-                                @csrf
-                                @method('PATCH')
-                                <button type="submit" class="w-full btn bg-green-600 text-white py-2.5 rounded-xl hover:bg-green-700 font-semibold shadow-sm transition">Verifikasi Bukti</button>
-                            </form>
-                            
-                            <button type="button" x-data @click="document.getElementById('modalTolak').classList.remove('hidden')" class="w-full sm:w-auto btn bg-red-100 text-red-700 py-2.5 px-6 rounded-xl hover:bg-red-200 font-semibold transition border border-red-200">Tolak</button>
-                        </div>
-
-                        {{-- Modal Tolak --}}
-                        <div id="modalTolak" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-                            <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl border border-[#E2D4C0]">
-                                <h3 class="text-lg font-serif font-bold text-[#4A0F1A] mb-1">Tolak Pembayaran</h3>
-                                <p class="text-sm text-gray-500 mb-4">Berikan alasan mengapa bukti ini ditolak.</p>
-                                <form action="{{ route('admin.pembayaran.tolak', $pembayaran->id) }}" method="POST">
-                                    @csrf
-                                    @method('PATCH')
-                                    <div class="mb-4">
-                                        <textarea name="catatan_penolakan" class="w-full border-[#E2D4C0] rounded-xl p-3 focus:ring-[#C8960C] focus:border-[#C8960C] text-sm" rows="3" required placeholder="Contoh: Bukti transfer buram atau tidak valid"></textarea>
-                                    </div>
-                                    <div class="flex justify-end gap-2">
-                                        <button type="button" onclick="document.getElementById('modalTolak').classList.add('hidden')" class="px-5 py-2 rounded-xl text-gray-600 hover:bg-gray-100 font-medium transition">Batal</button>
-                                        <button type="submit" class="px-5 py-2 rounded-xl bg-red-600 text-white hover:bg-red-700 font-medium shadow transition">Tolak Pembayaran</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-
-                    @else
-                        <div class="flex items-center gap-2 bg-yellow-50 border border-yellow-200 rounded-2xl px-4 py-3">
-                            <i data-lucide="clock" class="h-5 w-5 text-yellow-600 shrink-0"></i>
-                            <p class="text-sm font-semibold text-yellow-800">Menunggu pembayaran via Midtrans</p>
-                        </div>
-                    @endif
+                    <div class="flex items-center gap-2 bg-yellow-50 border border-yellow-200 rounded-2xl px-4 py-3">
+                        <i data-lucide="clock" class="h-5 w-5 text-yellow-600 shrink-0"></i>
+                        <p class="text-sm font-semibold text-yellow-800">Menunggu pembayaran via Midtrans</p>
+                    </div>
                 @elseif($pembayaran->status === 'ditolak')
                     <div class="flex items-center gap-2 bg-red-50 border border-red-200 rounded-2xl px-4 py-3">
                         <i data-lucide="x-circle" class="h-5 w-5 text-red-600 shrink-0"></i>

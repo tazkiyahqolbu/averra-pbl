@@ -18,7 +18,6 @@ class PembayaranFactory extends Factory
             'jumlah_bayar'         => fake()->numberBetween(100000, 10000000),
             'dibayar_pada'         => fake()->dateTimeBetween('-1 month', 'now'),
             'metode_pembayaran'    => fake()->randomElement(['transfer', 'tunai', 'qris']),
-            'bukti_pembayaran_path'=> null,
             'status'               => 'menunggu',
             'diverifikasi_oleh'    => null,
             'diverifikasi_pada'    => null,

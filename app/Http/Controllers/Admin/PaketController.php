@@ -8,6 +8,7 @@ use App\Models\KategoriPaket;
 use App\Models\PaketDetail;
 use App\Models\FotoPaket;
 use App\Models\Jasa;
+use App\Models\Barang;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
@@ -36,10 +37,11 @@ class PaketController extends Controller
      */
     public function create()
     {
-        $kategoris = KategoriPaket::all();
-        $jasaList  = Jasa::where('aktif', true)->get(['id', 'nama_jasa']);
+        $kategoris  = KategoriPaket::all();
+        $jasaList   = Jasa::where('aktif', true)->get(['id', 'nama_jasa']);
+        $barangList = Barang::where('aktif', true)->get(['id', 'nama_barang']);
 
-        return view('admin.paket.create', compact('kategoris', 'jasaList'));
+        return view('admin.paket.create', compact('kategoris', 'jasaList', 'barangList'));
     }
 
     /**
@@ -80,13 +82,16 @@ class PaketController extends Controller
 
                 if (!empty($item)) {
 
+                    $tipe = $request->tipe[$index] ?? 'wajib';
+
                     PaketDetail::create([
                         'paket_id'       => $paket->id,
                         'jasa_id'        => !empty($request->jasa_id[$index]) ? $request->jasa_id[$index] : null,
+                        'barang_id'      => !empty($request->barang_id[$index]) ? $request->barang_id[$index] : null,
                         'nama_item'      => $item,
                         'jumlah'         => $request->jumlah[$index] ?? 1,
-                        'tipe'           => $request->tipe[$index] ?? 'wajib',
-                        'harga_tambahan' => $request->harga_tambahan[$index] ?? 0,
+                        'tipe'           => $tipe,
+                        'harga_tambahan' => $tipe === 'wajib' ? 0 : ($request->harga_tambahan[$index] ?? 0),
                         'keterangan'     => $request->keterangan[$index] ?? null,
                     ]);
                 }
@@ -131,12 +136,13 @@ class PaketController extends Controller
             'paketDetails'
         ])->findOrFail($id);
 
-        $kategoris = KategoriPaket::all();
-        $jasaList  = Jasa::where('aktif', true)->get(['id', 'nama_jasa']);
+        $kategoris  = KategoriPaket::all();
+        $jasaList   = Jasa::where('aktif', true)->get(['id', 'nama_jasa']);
+        $barangList = Barang::where('aktif', true)->get(['id', 'nama_barang']);
 
         return view(
             'admin.paket.edit',
-            compact('paket', 'kategoris', 'jasaList')
+            compact('paket', 'kategoris', 'jasaList', 'barangList')
         );
     }
 
@@ -153,7 +159,7 @@ class PaketController extends Controller
             'foto_paket.*'      => 'nullable|image',
         ]);
 
-        $paket = Paket::findOrFail($id);
+        $paket = Paket::with('paketDetails')->findOrFail($id);
 
         $thumbnailPath = $paket->thumbnail_path;
 
@@ -184,6 +190,49 @@ class PaketController extends Controller
             'thumbnail_path' => $thumbnailPath,
             'aktif' => $request->input('aktif', 1) == 1,
         ]);
+
+        $submittedDetailIds = [];
+
+        if ($request->nama_item) {
+            foreach ($request->nama_item as $index => $item) {
+                if (empty($item)) {
+                    continue;
+                }
+
+                $tipe = $request->tipe[$index] ?? 'wajib';
+
+                $data = [
+                    'jasa_id'        => !empty($request->jasa_id[$index]) ? $request->jasa_id[$index] : null,
+                    'barang_id'      => !empty($request->barang_id[$index]) ? $request->barang_id[$index] : null,
+                    'nama_item'      => $item,
+                    'jumlah'         => $request->jumlah[$index] ?? 1,
+                    'tipe'           => $tipe,
+                    'harga_tambahan' => $tipe === 'wajib' ? 0 : ($request->harga_tambahan[$index] ?? 0),
+                    'keterangan'     => $request->keterangan[$index] ?? null,
+                ];
+
+                $detailId = $request->detail_id[$index] ?? null;
+                $detail   = $detailId ? $paket->paketDetails->firstWhere('id', (int) $detailId) : null;
+
+                if ($detail) {
+                    $detail->update($data);
+                    $submittedDetailIds[] = $detail->id;
+                } else {
+                    $newDetail = $paket->paketDetails()->create($data);
+                    $submittedDetailIds[] = $newDetail->id;
+                }
+            }
+        }
+
+        foreach ($paket->paketDetails as $existingDetail) {
+            if (!in_array($existingDetail->id, $submittedDetailIds, true)) {
+                try {
+                    $existingDetail->delete();
+                } catch (\Illuminate\Database\QueryException $e) {
+                    // Item sudah dipakai pada pemesanan sebelumnya, tidak bisa dihapus.
+                }
+            }
+        }
 
         if ($request->foto_id) {
 

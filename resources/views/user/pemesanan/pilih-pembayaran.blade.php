@@ -48,7 +48,8 @@
                 Bayar Pelunasan via Midtrans
             </button>
         @else
-            <form action="{{ route('user.pembayaran.initiate', $pesanan->id) }}" method="POST">
+            <form action="{{ route('user.pembayaran.initiate', $pesanan->id) }}" method="POST"
+                onsubmit="setTimeout(() => this.querySelector('button[type=submit]').disabled = true)">
                 @csrf
                 <button type="submit"
                     class="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-[#6B1625] to-[#3A0A12] px-6 py-3.5 text-sm font-semibold text-[#FAF3E0] shadow-[0_4px_14px_rgba(74,15,26,0.3)] hover:shadow-[0_6px_18px_rgba(74,15,26,0.4)] hover:from-[#7B1C2E] transition-all duration-200">
@@ -64,7 +65,8 @@
             <p class="text-sm text-[#4A2E28]/60 mt-0.5">Bayar setengah dari total sekarang</p>
             <p class="font-serif font-bold text-[#C8960C] mt-1 text-xl">Rp {{ number_format($pesanan->total_harga * 0.5, 0, ',', '.') }}</p>
         </div>
-        <form action="{{ route('user.pembayaran.initiate', $pesanan->id) }}" method="POST">
+        <form action="{{ route('user.pembayaran.initiate', $pesanan->id) }}" method="POST"
+            onsubmit="setTimeout(() => this.querySelector('button[type=submit]').disabled = true)">
             @csrf
             <button type="submit"
                 class="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-[#6B1625] to-[#3A0A12] px-6 py-3.5 text-sm font-semibold text-[#FAF3E0] shadow-[0_4px_14px_rgba(74,15,26,0.3)] hover:shadow-[0_6px_18px_rgba(74,15,26,0.4)] hover:from-[#7B1C2E] transition-all duration-200">
@@ -73,20 +75,6 @@
             </button>
         </form>
     @endif
-
-    {{-- Opsi Transfer Manual --}}
-    <div class="mt-8 pt-6 border-t border-[#E2D4C0]">
-        <div class="rounded-2xl border border-gray-200 bg-gray-50 p-5">
-            <p class="font-semibold text-gray-800 mb-2">Atau Bayar via Transfer Manual</p>
-            <p class="text-sm text-gray-600 mb-3">Silakan transfer ke rekening berikut:</p>
-            <div class="bg-white border border-gray-200 rounded-lg p-3 mb-4">
-                <p class="font-bold text-gray-800">BCA: 1234567890</p>
-                <p class="text-sm text-gray-500">a.n. Sanggar Rantiang Tagok</p>
-            </div>
-            
-            @include('user.pemesanan.upload-form-pembayaran', ['pesanan' => $pesanan, 'sisaBayar' => $isPelunasan ? $sisaBayar : $pesanan->total_harga * 0.5])
-        </div>
-    </div>
 
     <a href="{{ route('user.pemesanan.show', $pesanan->id) }}"
        class="flex items-center justify-center gap-1.5 text-sm text-[#4A2E28]/60 hover:text-[#4A0F1A] transition mt-2">

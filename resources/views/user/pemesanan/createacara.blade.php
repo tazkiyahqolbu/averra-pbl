@@ -127,6 +127,24 @@
                             </div>
                         @endif
 
+                        <div x-show="currentOptionalItems.length > 0" x-cloak>
+                            <label class="mb-2 block text-[10px] font-semibold uppercase tracking-[0.25em] text-[#4A0F1A]">
+                                Tambahan Opsional
+                            </label>
+                            <div class="space-y-2">
+                                <template x-for="opt in currentOptionalItems" :key="opt.id">
+                                    <label class="flex items-center justify-between gap-3 rounded-xl border border-[#E2D4C0] bg-white px-4 py-3 text-sm cursor-pointer hover:border-[#C8960C]/50 transition">
+                                        <span class="flex items-center gap-2">
+                                            <input type="checkbox" name="opsional_ids[]" :value="opt.id" x-model="selectedOpsionalIds"
+                                                   class="rounded border-[#E2D4C0] text-[#C8960C] focus:ring-[#C8960C]">
+                                            <span x-text="opt.nama_item" class="text-[#4A0F1A]"></span>
+                                        </span>
+                                        <span class="font-semibold text-[#C8960C]" x-text="'+ Rp' + formatRupiah(opt.harga_tambahan)"></span>
+                                    </label>
+                                </template>
+                            </div>
+                        </div>
+
                         <div>
                             <label class="mb-2 block text-[10px] font-semibold uppercase tracking-[0.25em] text-[#4A0F1A]">
                                 Tanggal Pelaksanaan <span class="text-red-400">*</span>
@@ -184,46 +202,26 @@
 
                         <div>
                             <p class="mb-3 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#4A0F1A]">Lokasi Pelaksanaan</p>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                <label class="flex cursor-pointer items-start gap-3 rounded-2xl border p-4 transition"
-                                       :class="eventLocation === 'di_tempat_kami'
-                                           ? 'border-[#C8960C] bg-[#C8960C]/6'
-                                           : 'border-[#E2D4C0] hover:border-[#C8960C]/50'">
-                                    <input type="radio" name="lokasi_pelaksanaan" value="di_tempat_kami"
-                                           x-model="eventLocation" class="mt-0.5 shrink-0 accent-[#C8960C]">
-                                    <div>
-                                        <p class="text-sm font-semibold text-[#4A0F1A]">Di Sanggar</p>
-                                        <p class="mt-0.5 text-xs text-[#4A2E28]">Gratis biaya transport</p>
-                                    </div>
-                                </label>
-                                <label class="flex cursor-pointer items-start gap-3 rounded-2xl border p-4 transition"
-                                       :class="eventLocation === 'di_luar'
-                                           ? 'border-[#C8960C] bg-[#C8960C]/6'
-                                           : 'border-[#E2D4C0] hover:border-[#C8960C]/50'">
-                                    <input type="radio" name="lokasi_pelaksanaan" value="di_luar"
-                                           x-model="eventLocation" class="mt-0.5 shrink-0 accent-[#C8960C]">
-                                    <div>
-                                        <p class="text-sm font-semibold text-[#4A0F1A]">Di Luar Sanggar</p>
-                                        <p class="mt-0.5 text-xs text-[#4A2E28]">Sesuai zona pengiriman</p>
-                                    </div>
-                                </label>
+                            <div class="space-y-3 rounded-2xl border border-[#E2D4C0] bg-[#FAF3E0] p-4">
+                                <div>
+                                    <label class="mb-2 block text-[10px] font-semibold uppercase tracking-[0.25em] text-[#4A0F1A]">
+                                        Zona Lokasi <span class="text-red-400">*</span>
+                                    </label>
+                                    <select name="zona_lokasi_id" x-model="selectedZonaId" required
+                                            class="w-full rounded-xl border border-[#E2D4C0] bg-white px-4 py-3 text-sm text-[#4A0F1A] focus:border-[#C8960C] focus:outline-none transition">
+                                        <option value="" disabled selected>Pilih zona lokasi acara…</option>
+                                        <template x-for="z in zonaLokasis" x-bind:key="z.id">
+                                            <option
+                                            x-bind:value="z.id"
+                                            x-text="z.nama_zona + ' (' + z.persentase + '%)'">
+                                        </option>
+                                        </template>
+                                    </select>
+                                </div>
+                                <textarea name="alamat_lengkap" rows="3" required
+                                          class="w-full resize-none rounded-xl border border-[#E2D4C0] bg-white px-4 py-3 text-sm text-[#4A0F1A] placeholder-[#4A2E28]/30 focus:border-[#C8960C] focus:outline-none transition"
+                                          placeholder="Alamat lengkap lokasi pelaksanaan…"></textarea>
                             </div>
-                        </div>
-
-                        <div x-show="eventLocation === 'di_luar'" class="space-y-3 rounded-2xl border border-[#E2D4C0] bg-[#FAF3E0] p-4">
-                            <select name="zona_lokasi_id" x-model="selectedZonaId"
-                                    class="w-full rounded-xl border border-[#E2D4C0] bg-white px-4 py-3 text-sm text-[#4A0F1A] focus:border-[#C8960C] focus:outline-none transition">
-                                <option value="">Pilih zona lokasi…</option>
-                                <template x-for="z in zonaLokasis" x-bind:key="z.id">
-                                    <option
-                                    x-bind:value="z.id"
-                                    x-text="z.nama_zona + ' (' + z.persentase + '%)'">
-                                </option>
-                                </template>
-                            </select>
-                            <textarea name="alamat_lengkap" rows="3"
-                                      class="w-full resize-none rounded-xl border border-[#E2D4C0] bg-white px-4 py-3 text-sm text-[#4A0F1A] placeholder-[#4A2E28]/30 focus:border-[#C8960C] focus:outline-none transition"
-                                      placeholder="Alamat lengkap lokasi pelaksanaan…"></textarea>
                         </div>
                     </div>
 
@@ -252,6 +250,11 @@
                             <div class="flex items-center justify-between px-5 py-3.5 text-sm">
                                 <span class="text-[#4A2E28]">Subtotal Layanan</span>
                                 <span class="font-semibold text-[#4A0F1A]">Rp <span x-text="formatRupiah(katalogPrice)"></span></span>
+                            </div>
+                            <div class="flex items-center justify-between border-t border-[#E2D4C0] px-5 py-3.5 text-sm"
+                                 x-show="opsionalTotal > 0">
+                                <span class="text-[#4A2E28]">Tambahan Opsional</span>
+                                <span class="font-semibold text-[#4A0F1A]">Rp <span x-text="formatRupiah(opsionalTotal)"></span></span>
                             </div>
                             <div class="flex items-center justify-between border-t border-[#E2D4C0] px-5 py-3.5 text-sm"
                                  x-show="ongkosKirim > 0">
@@ -301,7 +304,6 @@
             Alpine.data('orderForm', () => ({
                 step: 1,
                 blockedDates: [],
-                eventLocation: 'di_tempat_kami',
                 paymentMethod: 'dp',
                 katalogList:       rawKatalogs || [],
                 zonaLokasis:       rawZonaLokasis || [],
@@ -309,6 +311,7 @@
                 katalogPrice:      rawSelectedItem ? parseFloat(rawSelectedItem.price) : 0,
                 katalogCategory:   rawSelectedItem ? rawSelectedItem.category : '',
                 selectedZonaId:    '',
+                selectedOpsionalIds: [],
 
                 async initForm() {
                     if (this.selectedKatalogId)
@@ -320,12 +323,20 @@
                 updateKatalog() {
                     const k = this.katalogList.find(x => x.id == this.selectedKatalogId);
                     if (k) { this.katalogPrice = parseFloat(k.price); this.katalogCategory = k.category; }
+                    this.selectedOpsionalIds = [];
                 },
 
+                get currentOptionalItems() {
+                    const k = this.katalogList.find(x => x.id === this.selectedKatalogId);
+                    return (k && k.optionalItems) ? k.optionalItems : [];
+                },
+                get opsionalTotal() {
+                    return this.selectedOpsionalIds.reduce((sum, id) => {
+                        const opt = this.currentOptionalItems.find(o => o.id == id);
+                        return sum + (opt ? parseFloat(opt.harga_tambahan) : 0);
+                    }, 0);
+                },
                 get ongkosKirim() {
-                if (this.eventLocation !== 'di_luar')
-                    return 0;
-
                 const zona = this.zonaLokasis.find(
                     z => z.id == this.selectedZonaId
                 );
@@ -333,9 +344,9 @@
                 if (!zona)
                     return 0;
 
-                return this.katalogPrice * (zona.persentase / 100);
+                return (this.katalogPrice + this.opsionalTotal) * (zona.persentase / 100);
             },
-                get grandTotal() { return this.katalogPrice + this.ongkosKirim; },
+                get grandTotal() { return this.katalogPrice + this.opsionalTotal + this.ongkosKirim; },
 
                 formatRupiah(n) { return new Intl.NumberFormat('id-ID').format(n || 0); },
 

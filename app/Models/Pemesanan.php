@@ -61,6 +61,11 @@ class Pemesanan extends Model
         return (float) $this->pembayarans()->where('status', 'terverifikasi')->sum('jumlah_bayar');
     }
 
+    public function isLunas(): bool
+    {
+        return $this->totalDibayar() >= (float) $this->total_harga;
+    }
+
     // ── Relations ──────────────────────────────────────────────────────────────
     public function user()
     {

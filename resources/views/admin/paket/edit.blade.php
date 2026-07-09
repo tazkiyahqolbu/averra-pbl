@@ -115,11 +115,35 @@
 
             <div class="space-y-5">
                 @foreach ($paket->paketDetails as $detail)
-                    <div class="rounded-2xl border border-[#E2D4C0] bg-[#ffffff] p-5">
+                    <div class="existing-item-row rounded-2xl border border-[#E2D4C0] bg-[#ffffff] p-5 space-y-4">
+                        <input type="hidden" name="detail_id[]" value="{{ $detail->id }}">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-semibold text-[#4A0F1A]">Item #{{ $loop->iteration }}</span>
+                            <button type="button" onclick="this.closest('.existing-item-row').remove()" class="text-sm font-semibold text-red-500 hover:text-red-700">Hapus</button>
+                        </div>
                         <div class="grid gap-5 md:grid-cols-2">
-                            <div>
+                            <div class="md:col-span-2">
+                                <label class="admin-label">Pilih dari Jasa/Barang <span class="admin-muted text-xs">(opsional)</span></label>
+                                <select onchange="isiNamaDariSumber(this, 'existing_{{ $detail->id }}')" class="admin-select focus:admin-input-focus">
+                                    <option value="">-- Pilih jasa atau barang --</option>
+                                    <optgroup label="Jasa">
+                                        @foreach($jasaList as $jasa)
+                                            <option value="jasa:{{ $jasa->id }}" data-nama="{{ $jasa->nama_jasa }}" @selected($detail->jasa_id == $jasa->id)>{{ $jasa->nama_jasa }}</option>
+                                        @endforeach
+                                    </optgroup>
+                                    <optgroup label="Barang">
+                                        @foreach($barangList as $barang)
+                                            <option value="barang:{{ $barang->id }}" data-nama="{{ $barang->nama_barang }}" @selected($detail->barang_id == $barang->id)>{{ $barang->nama_barang }}</option>
+                                        @endforeach
+                                    </optgroup>
+                                </select>
+                                <input type="hidden" name="jasa_id[]" id="jasa_id_existing_{{ $detail->id }}" value="{{ $detail->jasa_id }}">
+                                <input type="hidden" name="barang_id[]" id="barang_id_existing_{{ $detail->id }}" value="{{ $detail->barang_id }}">
+                            </div>
+
+                            <div class="md:col-span-2">
                                 <label class="admin-label">Nama Item</label>
-                                <input name="nama_item[]" type="text" value="{{ $detail->nama_item }}" class="admin-input focus:admin-input-focus">
+                                <input id="nama_item_existing_{{ $detail->id }}" name="nama_item[]" type="text" value="{{ $detail->nama_item }}" class="admin-input focus:admin-input-focus">
                             </div>
 
                             <div>
@@ -129,7 +153,7 @@
 
                             <div>
                                 <label class="admin-label">Tipe</label>
-                                <select name="tipe[]" class="admin-select focus:admin-input-focus">
+                                <select name="tipe[]" class="admin-select focus:admin-input-focus" onchange="toggleHargaTambahan(this, 'existing_{{ $detail->id }}')">
                                     <option value="wajib" @selected($detail->tipe == 'wajib')>Wajib</option>
                                     <option value="opsional" @selected($detail->tipe == 'opsional')>Opsional</option>
                                 </select>
@@ -137,7 +161,10 @@
 
                             <div>
                                 <label class="admin-label">Harga Tambahan</label>
-                                <input name="harga_tambahan[]" type="number" min="0" value="{{ $detail->harga_tambahan }}" class="admin-input focus:admin-input-focus">
+                                <input id="harga_tambahan_existing_{{ $detail->id }}" name="harga_tambahan[]" type="number" min="0"
+                                    value="{{ $detail->tipe == 'wajib' ? 0 : $detail->harga_tambahan }}"
+                                    class="admin-input focus:admin-input-focus {{ $detail->tipe == 'wajib' ? 'bg-gray-100 text-gray-400' : '' }}"
+                                    @if($detail->tipe == 'wajib') readonly @endif>
                             </div>
 
                             <div class="md:col-span-2">
@@ -219,14 +246,18 @@
 
 let itemBaruCount = 0;
 const jasaList = @json($jasaList ?? []);
+const barangList = @json($barangList ?? []);
 
 function tambahItemBaru() {
     const i = itemBaruCount++;
     const container = document.getElementById('item-baru-container');
 
     const jasaOptions = jasaList.length
-        ? jasaList.map(j => `<option value="${j.id}" data-nama="${j.nama_jasa}">${j.nama_jasa}</option>`).join('')
-        : '<option disabled>Belum ada data jasa (hubungi backend)</option>';
+        ? jasaList.map(j => `<option value="jasa:${j.id}" data-nama="${j.nama_jasa}">${j.nama_jasa}</option>`).join('')
+        : '<option disabled>Belum ada data jasa</option>';
+    const barangOptions = barangList.length
+        ? barangList.map(b => `<option value="barang:${b.id}" data-nama="${b.nama_barang}">${b.nama_barang}</option>`).join('')
+        : '<option disabled>Belum ada data barang</option>';
 
     container.insertAdjacentHTML('beforeend', `
         <div class="item-row rounded-2xl border border-[#E2D4C0] bg-white p-5 space-y-4">
@@ -236,12 +267,14 @@ function tambahItemBaru() {
             </div>
             <div class="grid gap-4 md:grid-cols-2">
                 <div class="md:col-span-2">
-                    <label class="admin-label">Pilih dari Jasa <span class="admin-muted text-xs">(opsional)</span></label>
-                    <select onchange="isiNamaDariJasa(this, 'new_${i}')" class="admin-select">
-                        <option value="">-- Pilih jasa --</option>
-                        ${jasaOptions}
+                    <label class="admin-label">Pilih dari Jasa/Barang <span class="admin-muted text-xs">(opsional)</span></label>
+                    <select onchange="isiNamaDariSumber(this, 'new_${i}')" class="admin-select">
+                        <option value="">-- Pilih jasa atau barang --</option>
+                        <optgroup label="Jasa">${jasaOptions}</optgroup>
+                        <optgroup label="Barang">${barangOptions}</optgroup>
                     </select>
                     <input type="hidden" name="jasa_id[]" id="jasa_id_new_${i}" value="">
+                    <input type="hidden" name="barang_id[]" id="barang_id_new_${i}" value="">
                 </div>
                 <div class="md:col-span-2">
                     <label class="admin-label">Nama Item <span class="text-red-600">*</span></label>
@@ -253,14 +286,14 @@ function tambahItemBaru() {
                 </div>
                 <div>
                     <label class="admin-label">Tipe</label>
-                    <select name="tipe[]" class="admin-select">
+                    <select name="tipe[]" class="admin-select" onchange="toggleHargaTambahan(this, 'new_${i}')">
                         <option value="wajib">Wajib</option>
                         <option value="opsional">Opsional (+biaya tambahan)</option>
                     </select>
                 </div>
                 <div>
                     <label class="admin-label">Harga Tambahan</label>
-                    <input name="harga_tambahan[]" type="number" min="0" value="0" class="admin-input">
+                    <input id="harga_tambahan_new_${i}" name="harga_tambahan[]" type="number" min="0" value="0" class="admin-input bg-gray-100 text-gray-400" readonly>
                 </div>
                 <div>
                     <label class="admin-label">Keterangan</label>
@@ -271,10 +304,25 @@ function tambahItemBaru() {
     `);
 }
 
-function isiNamaDariJasa(select, key) {
+function isiNamaDariSumber(select, key) {
     const selected = select.options[select.selectedIndex];
+    const [sumber, sumberId] = (selected.value || '').split(':');
+
     document.getElementById('nama_item_' + key).value = selected.dataset.nama ?? '';
-    document.getElementById('jasa_id_' + key).value = selected.value;
+    document.getElementById('jasa_id_' + key).value = sumber === 'jasa' ? sumberId : '';
+    document.getElementById('barang_id_' + key).value = sumber === 'barang' ? sumberId : '';
+}
+
+function toggleHargaTambahan(selectTipe, key) {
+    const input = document.getElementById('harga_tambahan_' + key);
+    const isWajib = selectTipe.value === 'wajib';
+
+    input.readOnly = isWajib;
+    input.classList.toggle('bg-gray-100', isWajib);
+    input.classList.toggle('text-gray-400', isWajib);
+    if (isWajib) {
+        input.value = 0;
+    }
 }
 </script>
 @endsection

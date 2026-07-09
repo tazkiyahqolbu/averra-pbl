@@ -180,6 +180,10 @@ class PemesananController extends Controller
             return back()->with('error', 'Transisi status tidak valid.');
         }
 
+        if ($newStatus === 'selesai' && !$pemesanan->isLunas()) {
+            return back()->with('error', 'Pesanan belum bisa ditandai selesai — pelunasan belum terverifikasi.');
+        }
+
         $pemesanan->update(['status' => $newStatus]);
 
         if ($newStatus === 'menunggu_dp') {

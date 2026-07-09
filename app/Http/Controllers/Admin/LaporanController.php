@@ -143,7 +143,7 @@ class LaporanController extends Controller
 
     // Judul laporan
     $sheet->mergeCells('A1:F1');
-    $sheet->setCellValue('A1','LAPORAN TRANSAKSI AVERRA');
+    $sheet->setCellValue('A1','LAPORAN TRANSAKSI SILART');
 
     $sheet->getStyle('A1')->getAlignment()->setHorizontal(
     Alignment::HORIZONTAL_CENTER

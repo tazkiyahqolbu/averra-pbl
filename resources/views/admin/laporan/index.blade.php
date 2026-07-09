@@ -38,6 +38,7 @@ $summary = [
         </div>
 
         <a href="{{ route('admin.laporan.export') }}"
+        download
         class="admin-btn-primary">
             Export Excel
         </a>
