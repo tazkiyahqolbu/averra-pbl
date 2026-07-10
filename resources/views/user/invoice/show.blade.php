@@ -13,18 +13,12 @@
             <div class="flex items-center gap-2">
                 @if ($pesanan->isMenungguPembayaran() || $pesanan->isMenungguDp() || $pesanan->isMenungguPelunasan())
                     @php
-                        $adaPembayaranMenunggu = $pesanan->pembayarans->where('status', 'menunggu')->isNotEmpty();
                         $pelunasanBelumBoleh = $pesanan->isMenungguPelunasan()
                             && $pesanan->tanggal_pakai
                             && now()->startOfDay()->lt($pesanan->tanggal_pakai->startOfDay());
                     @endphp
-                    
-                    @if ($adaPembayaranMenunggu)
-                        <span class="inline-flex items-center gap-2 rounded-full bg-amber-100 px-5 py-2.5 text-sm font-semibold text-amber-700 cursor-not-allowed">
-                            <i data-lucide="clock" class="h-4 w-4"></i>
-                            Menunggu Verifikasi Admin
-                        </span>
-                    @elseif ($pelunasanBelumBoleh)
+
+                    @if ($pelunasanBelumBoleh)
                         <span class="inline-flex items-center gap-2 rounded-full bg-gray-200 px-5 py-2.5 text-sm font-semibold text-gray-400 cursor-not-allowed" title="Pelunasan tersedia mulai {{ $pesanan->tanggal_pakai->format('d M Y') }}">
                             <i data-lucide="credit-card" class="h-4 w-4"></i>
                             Bayar Sekarang
@@ -38,6 +32,7 @@
                     @endif
                 @endif
                 <a href="{{ route('user.pemesanan.invoice.pdf', $pesanan->id) }}"
+                    download="invoice-{{ $pesanan->kode_pemesanan }}.pdf"
                     class="inline-flex items-center gap-2 rounded-full border border-[#4A0F1A]/20 bg-white px-5 py-2.5 text-sm font-semibold text-[#4A0F1A] shadow-sm hover:border-[#4A0F1A] hover:bg-[#4A0F1A] hover:text-white transition-all duration-200">
                     <i data-lucide="download" class="h-4 w-4"></i>
                     Download PDF
@@ -274,7 +269,7 @@
         </div>
 
         {{-- Tombol Ulasan --}}
-        @if ($pesanan->status === 'selesai' && !$pesanan->testimoni)
+        @if ($pesanan->status === 'selesai' && $pesanan->isLunas() && !$pesanan->testimoni)
             <div class="flex justify-end print:hidden">
                 <a href="{{ route('testimoni.create', $pesanan->id) }}"
                     class="inline-flex items-center gap-2 rounded-full border border-[#4A0F1A]/25 bg-white px-6 py-2.5 text-sm font-semibold text-[#4A0F1A] shadow-sm hover:border-[#4A0F1A] hover:bg-[#4A0F1A] hover:text-[#FAF3E0] transition-all duration-200">

@@ -92,7 +92,7 @@
                         @foreach($wajib as $detail)
                         <li class="flex items-center justify-between rounded-xl bg-[#FAF3E0] px-4 py-2.5 text-sm">
                             <span class="font-medium text-[#4A0F1A]">
-                                {{ $detail->nama_item ?? $detail->jasa?->nama_jasa ?? '-' }}
+                                {{ $detail->nama_item ?? $detail->jasa?->nama_jasa ?? $detail->barang?->nama_barang ?? '-' }}
                                 @if($detail->jumlah > 1)
                                     <span class="text-[#4A2E28]/60">× {{ $detail->jumlah }}</span>
                                 @endif
@@ -110,7 +110,7 @@
                         @foreach($opsional as $detail)
                         <li class="flex items-center justify-between rounded-xl bg-[#FAF3E0] px-4 py-2.5 text-sm">
                             <span class="font-medium text-[#4A0F1A]">
-                                {{ $detail->nama_item ?? $detail->jasa?->nama_jasa ?? '-' }}
+                                {{ $detail->nama_item ?? $detail->jasa?->nama_jasa ?? $detail->barang?->nama_barang ?? '-' }}
                                 @if($detail->jumlah > 1)
                                     <span class="text-[#4A2E28]/60">× {{ $detail->jumlah }}</span>
                                 @endif

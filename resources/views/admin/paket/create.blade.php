@@ -124,4 +124,91 @@
     </form>
 </div>
 
+<script>
+
+let itemCount = 0;
+const jasaList = @json($jasaList ?? []);
+const barangList = @json($barangList ?? []);
+
+function tambahItem() {
+    const i = itemCount++;
+    const container = document.getElementById('item-container');
+    const emptyNotice = document.getElementById('empty-notice');
+    if (emptyNotice) {
+        emptyNotice.remove();
+    }
+
+    const jasaOptions = jasaList.length
+        ? jasaList.map(j => `<option value="jasa:${j.id}" data-nama="${j.nama_jasa}">${j.nama_jasa}</option>`).join('')
+        : '<option disabled>Belum ada data jasa</option>';
+    const barangOptions = barangList.length
+        ? barangList.map(b => `<option value="barang:${b.id}" data-nama="${b.nama_barang}">${b.nama_barang}</option>`).join('')
+        : '<option disabled>Belum ada data barang</option>';
+
+    container.insertAdjacentHTML('beforeend', `
+        <div class="item-row rounded-2xl border border-[#E2D4C0] bg-white p-5 space-y-4">
+            <div class="flex items-center justify-between">
+                <span class="text-sm font-semibold text-[#4A0F1A]">Item ${i + 1}</span>
+                <button type="button" onclick="this.closest('.item-row').remove()" class="text-sm font-semibold text-red-500 hover:text-red-700">Hapus</button>
+            </div>
+            <div class="grid gap-4 md:grid-cols-2">
+                <div class="md:col-span-2">
+                    <label class="admin-label">Pilih dari Jasa/Barang <span class="admin-muted text-xs">(opsional)</span></label>
+                    <select onchange="isiNamaDariSumber(this, 'new_${i}')" class="admin-select">
+                        <option value="">-- Pilih jasa atau barang --</option>
+                        <optgroup label="Jasa">${jasaOptions}</optgroup>
+                        <optgroup label="Barang">${barangOptions}</optgroup>
+                    </select>
+                    <input type="hidden" name="jasa_id[]" id="jasa_id_new_${i}" value="">
+                    <input type="hidden" name="barang_id[]" id="barang_id_new_${i}" value="">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="admin-label">Nama Item <span class="text-red-600">*</span></label>
+                    <input id="nama_item_new_${i}" name="nama_item[]" type="text" class="admin-input" placeholder="Nama item">
+                </div>
+                <div>
+                    <label class="admin-label">Jumlah</label>
+                    <input name="jumlah[]" type="number" min="1" value="1" class="admin-input">
+                </div>
+                <div>
+                    <label class="admin-label">Tipe</label>
+                    <select name="tipe[]" class="admin-select" onchange="toggleHargaTambahan(this, 'new_${i}')">
+                        <option value="wajib">Wajib</option>
+                        <option value="opsional">Opsional (+biaya tambahan)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="admin-label">Harga Tambahan</label>
+                    <input id="harga_tambahan_new_${i}" name="harga_tambahan[]" type="number" min="0" value="0" class="admin-input bg-gray-100 text-gray-400" readonly>
+                </div>
+                <div>
+                    <label class="admin-label">Keterangan</label>
+                    <input name="keterangan[]" type="text" class="admin-input" placeholder="Opsional">
+                </div>
+            </div>
+        </div>
+    `);
+}
+
+function isiNamaDariSumber(select, key) {
+    const selected = select.options[select.selectedIndex];
+    const [sumber, sumberId] = (selected.value || '').split(':');
+
+    document.getElementById('nama_item_' + key).value = selected.dataset.nama ?? '';
+    document.getElementById('jasa_id_' + key).value = sumber === 'jasa' ? sumberId : '';
+    document.getElementById('barang_id_' + key).value = sumber === 'barang' ? sumberId : '';
+}
+
+function toggleHargaTambahan(selectTipe, key) {
+    const input = document.getElementById('harga_tambahan_' + key);
+    const isWajib = selectTipe.value === 'wajib';
+
+    input.readOnly = isWajib;
+    input.classList.toggle('bg-gray-100', isWajib);
+    input.classList.toggle('text-gray-400', isWajib);
+    if (isWajib) {
+        input.value = 0;
+    }
+}
+</script>
 @endsection

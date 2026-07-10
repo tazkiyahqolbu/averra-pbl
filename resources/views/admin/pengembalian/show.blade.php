@@ -252,7 +252,8 @@
                                     Denda Keterlambatan
                                 </label>
 
-                                <input type="text" class="admin-input" readonly
+                                <input type="text" id="denda_keterlambatan_display" class="admin-input" readonly
+                                    data-value="{{ $return->denda_keterlambatan }}"
                                     value="Rp {{ number_format($return->denda_keterlambatan, 0, ',', '.') }}">
 
                             </div>
@@ -263,7 +264,7 @@
                                     Denda Kerusakan
                                 </label>
 
-                                <input type="number" name="denda_kerusakan" min="0" step="1000"
+                                <input type="number" id="denda_kerusakan_input" name="denda_kerusakan" min="0" step="1000"
                                     class="admin-input" value="{{ old('denda_kerusakan', $return->denda_kerusakan ?? 0) }}" required>
 
                                 @error('denda_kerusakan')
@@ -282,7 +283,7 @@
                                     Total Denda
                                 </label>
 
-                                <input type="text" readonly class="admin-input font-bold"
+                                <input type="text" id="total_denda_display" readonly class="admin-input font-bold"
                                     value="Rp {{ number_format($return->total_denda, 0, ',', '.') }}">
 
                             </div>
@@ -314,5 +315,27 @@
         </div>
 
     </form>
+
+    @push('scripts')
+        <script>
+            (function () {
+                const dendaKerusakanInput = document.getElementById('denda_kerusakan_input');
+                const dendaKeterlambatanDisplay = document.getElementById('denda_keterlambatan_display');
+                const totalDendaDisplay = document.getElementById('total_denda_display');
+
+                function formatRupiah(angka) {
+                    return 'Rp ' + Number(angka).toLocaleString('id-ID');
+                }
+
+                function hitungTotal() {
+                    const keterlambatan = parseInt(dendaKeterlambatanDisplay.dataset.value, 10) || 0;
+                    const kerusakan = parseInt(dendaKerusakanInput.value, 10) || 0;
+                    totalDendaDisplay.value = formatRupiah(keterlambatan + kerusakan);
+                }
+
+                dendaKerusakanInput.addEventListener('input', hitungTotal);
+            })();
+        </script>
+    @endpush
 
 @endsection

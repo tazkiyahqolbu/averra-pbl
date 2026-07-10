@@ -4,6 +4,7 @@ namespace Tests\Feature\User;
 
 use App\Models\User;
 use App\Models\Pemesanan;
+use App\Models\Pembayaran;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -35,6 +36,16 @@ class UserTestimoniTest extends TestCase
             'status' => 'selesai',
         ]);
 
+        Pembayaran::create([
+            'kode_transaksi' => 'TRX-LUNAS01',
+            'pemesanan_id' => $pesanan->id,
+            'tahap' => 'langsung',
+            'jumlah_bayar' => 100000,
+            'metode_pembayaran' => 'midtrans',
+            'status' => 'terverifikasi',
+            'dibayar_pada' => now(),
+        ]);
+
         $response = $this->actingAs($this->user)->get(route('testimoni.create', $pesanan->id));
         $response->assertStatus(200);
         $response->assertViewIs('user.testimoni.create');
@@ -53,12 +64,22 @@ class UserTestimoniTest extends TestCase
             'status' => 'selesai',
         ]);
 
+        Pembayaran::create([
+            'kode_transaksi' => 'TRX-LUNAS02',
+            'pemesanan_id' => $pesanan->id,
+            'tahap' => 'langsung',
+            'jumlah_bayar' => 100000,
+            'metode_pembayaran' => 'midtrans',
+            'status' => 'terverifikasi',
+            'dibayar_pada' => now(),
+        ]);
+
         $response = $this->actingAs($this->user)->post(route('testimoni.store', $pesanan->id), [
             'rating' => 5,
             'isi_testimoni' => 'Pelayanan sangat bagus dan memuaskan.',
         ]);
 
-        $response->assertRedirect(route('user.pemesanan.invoice', $pesanan->id));
+        $response->assertRedirect(route('user.pemesanan.show', $pesanan->id));
         $this->assertDatabaseHas('testimoni', [
             'pemesanan_id' => $pesanan->id,
             'rating' => 5,

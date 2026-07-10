@@ -19,7 +19,7 @@
 @include('public.layouts.navbar')
 
 {{-- HERO --}}
-<section class="relative isolate py-20 px-6 text-center overflow-hidden">
+<section class="relative isolate py-12 md:py-20 px-6 text-center overflow-hidden">
 
     <div class="absolute inset-0 -z-10 bg-gradient-to-br from-[#FBF6EC] via-[#F5EBD0] to-[#FAF3E0]"></div>
 
@@ -67,7 +67,7 @@
 
 {{-- GALERI --}}
 <section
-    class="py-24 px-6 sm:px-12 lg:px-24 bg-[#FFFDF7] relative isolate section-fade-y"
+    class="py-14 sm:py-20 lg:py-24 px-4 sm:px-12 lg:px-24 bg-[#FFFDF7] relative isolate section-fade-y"
     x-data="{
         items: {{ $galeriJson->toJson() }},
         open: false,
@@ -81,12 +81,12 @@
     @keydown.arrow-left.window="if(open) prev()"
     @keydown.arrow-right.window="if(open) next()">
 
-    <div class="text-center mb-16">
+    <div class="text-center mb-10 sm:mb-16">
         <p class="text-xs tracking-[0.4em] text-[#C8A84B] uppercase font-semibold">
             — MOMEN INDAH —
         </p>
 
-        <h2 class="mt-2 text-4xl font-serif font-light text-[#4A0F1A]">
+        <h2 class="mt-2 text-2xl sm:text-3xl lg:text-4xl font-serif font-light text-[#4A0F1A]">
             Koleksi Momen
         </h2>
 
@@ -98,9 +98,9 @@
             Belum ada dokumentasi.
         </p>
     @else
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 lg:gap-8">
             @foreach($galeris as $i => $item)
-                <div class="relative rounded-2xl overflow-hidden group cursor-pointer shadow-lg h-[400px] card-fade-border animate-fade-in-up"
+                <div class="relative rounded-xl sm:rounded-2xl overflow-hidden group cursor-pointer shadow-lg aspect-[3/4] card-fade-border animate-fade-in-up"
                      style="animation-delay: {{ $i * 0.1 }}s"
                      @click="show({{ $i }})">
 
@@ -110,7 +110,7 @@
                         </video>
 
                         <div class="absolute inset-0 flex items-center justify-center bg-black/30">
-                            <i data-lucide="play-circle" class="w-16 h-16 text-white"></i>
+                            <i data-lucide="play-circle" class="w-10 h-10 sm:w-16 sm:h-16 text-white"></i>
                         </div>
                     @else
                         <img src="{{ $item->media_url }}"
@@ -118,14 +118,14 @@
                              class="w-full h-full object-cover transition duration-700 group-hover:scale-105">
                     @endif
 
-                    <div class="absolute inset-0 bg-gradient-to-t from-[#4A0F1A]/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-500 flex flex-col justify-end p-8">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#4A0F1A]/90 via-transparent to-transparent opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition duration-500 flex flex-col justify-end p-3 sm:p-6 lg:p-8">
                         @if($item->kategori)
-                            <span class="inline-block px-3 py-1 mb-2 text-[10px] tracking-[0.2em] text-[#4A0F1A] bg-[#C8A84B] uppercase font-bold rounded-full w-max">
+                            <span class="inline-block px-2 py-0.5 sm:px-3 sm:py-1 mb-1 sm:mb-2 text-[9px] sm:text-[10px] tracking-[0.2em] text-[#4A0F1A] bg-[#C8A84B] uppercase font-bold rounded-full w-max">
                                 {{ $item->kategori }}
                             </span>
                         @endif
 
-                        <h3 class="text-2xl font-serif text-white">
+                        <h3 class="text-sm sm:text-lg lg:text-2xl font-serif text-white">
                             {{ $item->judul }}
                         </h3>
                     </div>
@@ -135,46 +135,49 @@
     @endif
 
     {{-- LIGHTBOX --}}
-    <div x-show="open"
-         x-cloak
-         class="fixed inset-0 z-50 flex items-center justify-center bg-[#4A0F1A]/95 backdrop-blur-sm">
+    <template x-teleport="body">
+        <div x-show="open"
+             x-cloak
+             x-effect="document.body.style.overflow = open ? 'hidden' : ''"
+             class="fixed inset-0 z-50 flex items-center justify-center bg-[#4A0F1A]/95 backdrop-blur-sm">
 
-        <button @click="open=false"
-                class="absolute top-6 right-6 text-white hover:text-[#C8A84B]">
-            <i data-lucide="x" class="w-8 h-8"></i>
-        </button>
+            <button @click="open=false"
+                    class="absolute top-3 right-3 sm:top-6 sm:right-6 text-white hover:text-[#C8A84B] z-10">
+                <i data-lucide="x" class="w-6 h-6 sm:w-8 sm:h-8"></i>
+            </button>
 
-        <button @click.stop="prev()"
-                class="absolute left-4 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center">
-            <i data-lucide="chevron-left"></i>
-        </button>
+            <button @click.stop="prev()"
+                    class="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 h-9 w-9 sm:h-12 sm:w-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center z-10">
+                <i data-lucide="chevron-left" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+            </button>
 
-        <button @click.stop="next()"
-                class="absolute right-4 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center">
-            <i data-lucide="chevron-right"></i>
-        </button>
+            <button @click.stop="next()"
+                    class="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 h-9 w-9 sm:h-12 sm:w-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center z-10">
+                <i data-lucide="chevron-right" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+            </button>
 
-        <div class="w-full max-w-5xl px-20 flex flex-col items-center">
-            <template x-if="active.type === 'video'">
-                <video :src="active.media"
-                       controls autoplay
-                       class="max-h-[70vh] rounded-xl"></video>
-            </template>
+            <div class="w-full max-w-5xl px-12 sm:px-16 md:px-20 flex flex-col items-center">
+                <template x-if="active.type === 'video'">
+                    <video :src="active.media"
+                           controls autoplay
+                           class="max-h-[50vh] sm:max-h-[60vh] md:max-h-[70vh] rounded-xl"></video>
+                </template>
 
-            <template x-if="active.type !== 'video'">
-                <img :src="active.media"
-                     class="max-h-[70vh] rounded-xl object-contain">
-            </template>
+                <template x-if="active.type !== 'video'">
+                    <img :src="active.media"
+                         class="max-h-[50vh] sm:max-h-[60vh] md:max-h-[70vh] rounded-xl object-contain">
+                </template>
 
-            <div class="mt-6 text-center">
-                <span class="text-xs uppercase tracking-[0.2em] text-[#C8A84B]"
-                      x-text="active.cat"></span>
+                <div class="mt-3 sm:mt-4 md:mt-6 text-center">
+                    <span class="text-[10px] sm:text-xs uppercase tracking-[0.2em] text-[#C8A84B]"
+                          x-text="active.cat"></span>
 
-                <h3 class="text-3xl font-serif text-white mt-2"
-                    x-text="active.label"></h3>
+                    <h3 class="text-lg sm:text-2xl md:text-3xl font-serif text-white mt-1 sm:mt-2"
+                        x-text="active.label"></h3>
+                </div>
             </div>
         </div>
-    </div>
+    </template>
 </section>
 
 
