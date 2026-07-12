@@ -43,7 +43,7 @@ Node 21: Return ID pesanan dan akhiri fungsi.
 ## 3. Perhitungan Statement Coverage
 **Statement Coverage** menghitung sejauh mana seluruh baris kode (atau Node) tereksekusi selama pengujian otomatis (*Automated Testing*).
 
-Dari Automated Test yang telah kita bangun (terdapat di file `tests/Feature/PemesananTest.php`), kita memiliki skenario:
+Dari Automated Test yang telah kita bangun (terdapat di file `tests/Feature/Booking/BookingCreateTest.php`), kita memiliki skenario:
 1. Pesan sewa barang dengan stok cukup (Melewati Node: 1, 2, 3, 5, 10, 11, 14, 15, 16, 17, 18, 19, 20, 21)
 2. Pesan sewa barang stok kurang (Melewati Node: 1, 2, 3, 4)
 3. Pesan Jasa dengan zona kosong (Melewati Node: 1, 6, 7, 10, 12, 13, 14, 16, 18, 19, 21)
@@ -84,7 +84,7 @@ Daftar Percabangan (Branches) pada fungsi `store()`:
 
 **Perhitungan Branch Coverage:**
 - Total *Branches* yang mungkin (T/F) = 7 kondisi * 2 (True/False) = **14 Branch Edges**
-- Berdasarkan skenario di `tests/Feature/PemesananTest.php`, seluruh 14 sisi *True/False* telah tersentuh (*Asserted*).
+- Berdasarkan skenario di `tests/Feature/Booking/BookingCreateTest.php`, seluruh 14 sisi *True/False* telah tersentuh (*Asserted*).
 - **Branch Coverage = (14 / 14) * 100% = 100%**
 
 *Kesimpulan: Modul utama telah diuji dengan tingkat penguasaan kode (Coverage) yang komprehensif, menandakan logika percabangan kuat dan aman dari error tak terduga.*
