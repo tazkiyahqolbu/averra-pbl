@@ -56,6 +56,7 @@
     $badges = [
         'pemesanan' => \App\Models\Pemesanan::where('status', 'menunggu')->count(),
         'pembayaran' => \App\Models\Pembayaran::where('status', 'menunggu')->count(),
+        'pembatalan' => \App\Models\Pembatalan::where('status', 'menunggu')->count(),
         'pengembalian' => \App\Models\PengembalianBarang::where('status_pengembalian', 'menunggu')->count(),
     ];
 @endphp

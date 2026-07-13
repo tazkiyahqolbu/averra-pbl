@@ -187,14 +187,29 @@ class PembayaranController extends Controller
                     }
 
                     \Illuminate\Support\Facades\Mail::to($pesanan->user->email)->queue(new \App\Mail\PembayaranBerhasilMail($pesanan, $pembayaran->tahap));
+                } elseif (in_array($transactionStatus, ['cancel', 'deny', 'expire'])) {
+                    $pembayaran->update([
+                        'status'         => 'ditolak',
+                        'gateway_status' => $transactionStatus,
+                    ]);
                 }
             } catch (\Exception $e) {
                 // Abaikan jika tidak bisa menghubungi API
             }
         }
 
+        $pembayaran->refresh();
+
+        if ($pembayaran->status === 'terverifikasi') {
+            $flash = ['info', 'Pembayaran berhasil dikonfirmasi. Status pesanan Anda telah diperbarui!'];
+        } elseif ($pembayaran->status === 'ditolak') {
+            $flash = ['error', 'Pembayaran dibatalkan atau ditolak. Silakan coba lagi.'];
+        } else {
+            $flash = ['info', 'Pembayaran sedang diproses. Status akan diperbarui begitu konfirmasi diterima.'];
+        }
+
         return redirect()->route('user.pemesanan.show', $pembayaran->pemesanan_id)
-            ->with('info', 'Pembayaran berhasil dikonfirmasi. Status pesanan Anda telah diperbarui!');
+            ->with(...$flash);
     }
 
     public function callback(Request $request): JsonResponse

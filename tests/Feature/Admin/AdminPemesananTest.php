@@ -65,9 +65,11 @@ class AdminPemesananTest extends TestCase
             'status' => 'menunggu',
         ]);
 
-        $response = $this->actingAs($this->admin)->patch(route('admin.pemesanan.konfirmasi', $pesanan->id));
-        $response->assertRedirect(route('admin.pemesanan.index'));
-        $this->assertDatabaseHas('pemesanan', ['id' => $pesanan->id, 'status' => 'dikonfirmasi']);
+        $response = $this->actingAs($this->admin)->patch(route('admin.pemesanan.update-status', $pesanan->id), [
+            'status' => 'menunggu_dp',
+        ]);
+        $response->assertRedirect(route('admin.pemesanan.show', $pesanan->id));
+        $this->assertDatabaseHas('pemesanan', ['id' => $pesanan->id, 'status' => 'menunggu_dp']);
     }
 
     public function test_admin_can_tolak_pemesanan()

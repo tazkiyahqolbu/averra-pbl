@@ -61,18 +61,6 @@ class PemesananController extends Controller
         return view('admin.pemesanan.show', compact('pemesanan'));
     }
 
-    public function konfirmasi($id): RedirectResponse
-    {
-        $pemesanan = Pemesanan::with(['user', 'detailPemesanans'])->findOrFail($id);
-
-        $newStatus = $pemesanan->jenis === 'sewa_barang' ? 'menunggu_dp' : 'dikonfirmasi';
-        $pemesanan->update(['status' => $newStatus]);
-        Mail::to($pemesanan->user->email)->queue(new InvoiceMail($pemesanan));
-
-        return redirect()->route('admin.pemesanan.index')
-            ->with('success', "Pesanan #{$pemesanan->kode_pemesanan} berhasil dikonfirmasi.");
-    }
-
     public function tandaiDiambil($id): RedirectResponse
     {
         $pemesanan = Pemesanan::findOrFail($id);
