@@ -1,11 +1,219 @@
-@import 'tailwindcss';
+﻿@import 'tailwindcss';
+@import './auth.css';
+@import './admin.css';
+
+[x-cloak] { display: none !important; }
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
+/* =========================================================
+   THEME — warna & font kustom
+   ========================================================= */
+
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-serif: 'Cormorant Garamond', Georgia, serif;
+
+    --color-primary: var(--color-rose-600);
+    --color-primary-foreground: var(--color-white);
+    --color-card: var(--color-white);
+    --color-border: var(--color-gray-200);
+    --color-muted-foreground: var(--color-gray-500);
+    --color-accent: var(--color-gray-100);
+
+    --color-maroon: #7B1C2E;
+    --color-maroon-deep: #4A0F1A;
+    --color-gold: #C8960C;
+    --color-gold-soft: #D4A820;
+    --color-cream: #FAF3E0;
+}
+
+/* =========================================================
+   UTILITIES UMUM
+   ========================================================= */
+
+@utility bg-gradient-rose {
+  background-image: linear-gradient(135deg, var(--color-rose-400) 0%, var(--color-rose-600) 100%);
+}
+
+@utility bg-gradient-warm {
+  background-image: linear-gradient(135deg, var(--color-amber-50) 0%, var(--color-rose-50) 100%);
+}
+
+@utility shadow-petal {
+  box-shadow: 0 10px 30px -5px rgba(225, 29, 72, 0.15), 0 4px 12px -2px rgba(225, 29, 72, 0.08);
+}
+
+@utility shadow-soft {
+  box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.05), 0 2px 6px -2px rgba(0, 0, 0, 0.03);
+}
+
+@utility animate-scale-in {
+  animation: scale-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@utility animate-fade-in {
+  animation: fade-in 0.2s ease-out forwards;
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* =========================================================
+   SHARED COMPONENTS
+   ========================================================= */
+
+@utility font-dashboard {
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.sidebar-fade {
+    mask-image: linear-gradient(to bottom, black 0%, black 92%, transparent 100%);
+}
+
+/* ── Card border: kabur / faded edge (tidak terlihat keras) ── */
+/*
+   Gunakan .card-border-soft pada card & panel untuk border memudar alami.
+   Ini menggantikan border solid keras dengan soft layered shadow.
+   ATAU gunakan Tailwind class: border-[#E2D4C0]/30 (opacity 30%)
+*/
+.card-border-soft {
+    border: 1px solid rgba(226, 212, 192, 0.28);
+    box-shadow:
+        0 0 0 1px rgba(200, 160, 75, 0.05),
+        0 4px 24px rgba(74, 15, 26, 0.05),
+        0 1px 4px rgba(74, 15, 26, 0.03);
+}
+
+/* ── Section fade edge — tepi section memudar, tidak terpotong tajam ── */
+/*
+   Apply pada section/div yang memiliki background berbeda dari page body.
+   Membuat tepi atas, bawah, kiri, kanan section "melt" ke background secara alami.
+*/
+.section-fade-edge {
+    -webkit-mask-image: radial-gradient(
+        ellipse 96% 90% at 50% 50%,
+        black 50%,
+        transparent 100%
+    );
+    mask-image: radial-gradient(
+        ellipse 96% 90% at 50% 50%,
+        black 50%,
+        transparent 100%
+    );
+}
+
+/* Versi fade hanya atas-bawah (untuk section full-width) */
+.section-fade-y {
+    -webkit-mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        black 72px,
+        black calc(100% - 72px),
+        transparent 100%
+    );
+    mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        black 72px,
+        black calc(100% - 72px),
+        transparent 100%
+    );
+}
+
+/* ── No border card — shadow-only approach ── */
+/*
+   Untuk card yang tidak perlu border sama sekali.
+   Gunakan shadow halus sebagai pengganti border.
+*/
+.card-shadow-only {
+    border: none !important;
+    box-shadow:
+        0 2px 16px rgba(74, 15, 26, 0.06),
+        0 1px 4px rgba(74, 15, 26, 0.04);
+}
+
+/* ── Scroll reveal ── */
+.scroll-fade {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.65s ease, transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.scroll-fade.in-view {
+    opacity: 1;
+    transform: translateY(0);
+}
+.scroll-delay-1 { transition-delay: 0.08s; }
+.scroll-delay-2 { transition-delay: 0.16s; }
+.scroll-delay-3 { transition-delay: 0.24s; }
+.scroll-delay-4 { transition-delay: 0.32s; }
+.scroll-delay-5 { transition-delay: 0.40s; }
+.scroll-delay-6 { transition-delay: 0.48s; }
+
+/* Galeri / card fade-in-up */
+.animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out both;
+}
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* Cegah scrollbar horizontal muncul/hilang saat animasi */
+html {
+    overflow-x: hidden;
+    scrollbar-gutter: stable;
+}
+body {
+    overflow-x: hidden;
+}
+
+/* =========================================================
+   PAGE TRANSITION — pure opacity fade (no translateY to prevent gap)
+   Target: #main-content only, sidebar stays fixed
+   ========================================================= */
+
+@keyframes content-fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes content-fade-out {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+}
+
+.page-content-enter {
+    animation: content-fade-in 0.26s ease-out both;
+}
+
+.page-content-leave {
+    animation: content-fade-out 0.18s ease-in both;
+    pointer-events: none;
+}
+
+/* ── Card Fade Border (Batas Kabur) ── */
+.card-fade-border {
+    border: none !important;
+    box-shadow: 0 0 15px 4px rgba(226, 212, 192, 0.4), 0 4px 12px rgba(74, 15, 26, 0.03) !important;
 }

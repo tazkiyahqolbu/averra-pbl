@@ -1,0 +1,224 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Masuk — Sanggar Rantiang Tagok</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+
+<body class="auth-split-page font-body antialiased">
+    <div id="auth-veil" style="position:fixed;inset:0;z-index:9999;pointer-events:none;background:#fffdf7;opacity:1;"></div>
+    <script>
+    (function () {
+        var v = document.getElementById('auth-veil');
+        v.style.transition = 'opacity 0.22s ease';
+        requestAnimationFrame(function () { requestAnimationFrame(function () { v.style.opacity = '0'; }); });
+        window.authGo = function (href) {
+            v.style.transition = 'none';
+            v.style.opacity = '1';
+            v.style.pointerEvents = 'auto';
+            setTimeout(function () { window.location.href = href; }, 30);
+        };
+    })();
+    </script>
+
+    {{-- ── KIRI: Brand Panel ── --}}
+    <aside id="auth-brand" class="auth-brand-panel hidden lg:flex">
+
+        {{-- Motif geometri diamond --}}
+        <div class="absolute inset-0 opacity-[0.06]" aria-hidden="true">
+            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <pattern id="geo" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+                        <path d="M40 3 L77 40 L40 77 L3 40 Z" fill="none" stroke="white" stroke-width="1"/>
+                        <path d="M40 16 L64 40 L40 64 L16 40 Z" fill="none" stroke="white" stroke-width="0.7"/>
+                        <path d="M40 28 L52 40 L40 52 L28 40 Z" fill="none" stroke="white" stroke-width="0.5"/>
+                        <circle cx="40" cy="40" r="1.5" fill="white"/>
+                        <circle cx="40" cy="3"  r="1"   fill="white"/>
+                        <circle cx="77" cy="40" r="1"   fill="white"/>
+                        <circle cx="40" cy="77" r="1"   fill="white"/>
+                        <circle cx="3"  cy="40" r="1"   fill="white"/>
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#geo)"/>
+            </svg>
+        </div>
+
+        {{-- Radial glow pojok kanan bawah --}}
+        <div class="absolute bottom-0 right-0 h-80 w-80 rounded-full opacity-20"
+             style="background: radial-gradient(circle, #e8b96a 0%, transparent 70%)"
+             aria-hidden="true"></div>
+
+        {{-- Konten --}}
+        <div class="relative z-10 flex h-full flex-col justify-between p-12">
+            <div class="flex items-center gap-3">
+                <div class="h-12 w-12 shrink-0 overflow-hidden rounded-full border border-white/20 bg-white/10 p-0.5">
+                    <img src="{{ asset('galeri/logo-rantiang-tagok.jpg') }}" alt="Logo" class="h-full w-full rounded-full object-cover">
+                </div>
+                <span class="text-sm font-semibold tracking-wide text-white/80">Sanggar Rantiang Tagok</span>
+            </div>
+
+            <div>
+                <p class="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-[#e8b96a]/70">
+                    Layanan Digital Sanggar
+                </p>
+                <h2 class="font-heading text-4xl font-bold leading-snug text-white xl:text-5xl">
+                    Melestarikan<br>
+                    Seni & Budaya<br>
+                    <em class="not-italic text-[#e8b96a]">Minangkabau</em>
+                </h2>
+                <p class="mt-5 max-w-xs text-sm leading-relaxed text-white/50">
+                    Pesan kostum, daftar acara, atau kelola layanan sanggar — semua tersedia dalam satu platform.
+                </p>
+            </div>
+
+            <p class="text-xs text-white/25">© 2025 Sanggar Rantiang Tagok</p>
+        </div>
+    </aside>
+
+    {{-- ── KANAN: Form Panel ── --}}
+    <main id="auth-form" class="auth-form-panel">
+        <div class="w-full max-w-sm">
+
+            {{-- Mobile logo --}}
+            <div class="mb-8 flex items-center gap-3 lg:hidden">
+                <div class="h-9 w-9 overflow-hidden rounded-full border border-[#decba5]">
+                    <img src="{{ asset('galeri/logo-rantiang-tagok.jpg') }}" alt="Logo" class="h-full w-full rounded-full object-cover">
+                </div>
+                <span class="text-sm font-semibold text-[#4a0f1a]">Sanggar Rantiang Tagok</span>
+            </div>
+
+            <div class="mb-7">
+                <h1 class="font-heading text-3xl font-bold text-[#4A0F1A]">Selamat Datang</h1>
+                <p class="mt-1.5 text-sm text-[#7a5d58]">Masuk ke akun Anda untuk melanjutkan.</p>
+            </div>
+
+            @if (session('success'))
+                <div class="mb-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if ($errors->any())
+                <div class="mb-5 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800">
+                    @foreach ($errors->all() as $error)
+                        <p>{{ $error }}</p>
+                    @endforeach
+                </div>
+            @endif
+
+            <form action="{{ url('/login') }}" method="POST" class="space-y-4">
+                @csrf
+
+                <div>
+                    <label for="email" class="auth-label">Email</label>
+                    <div class="relative">
+                        <svg class="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#a08070]"
+                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect width="20" height="16" x="2" y="4" rx="2"/>
+                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                        </svg>
+                        <input id="email" name="email" type="email" required
+                            value="{{ old('email') }}" placeholder="nama@email.com"
+                            class="auth-input pl-10 pr-4 focus:border-[#7b1c2e] focus:ring-2 focus:ring-[#7b1c2e]/10">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="password" class="auth-label">Password</label>
+                    <div class="relative">
+                        <svg class="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#a08070]"
+                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect width="18" height="11" x="3" y="11" rx="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                        <input id="password" name="password" type="password" required
+                            placeholder="Masukkan password"
+                            class="auth-input pl-10 pr-11 focus:border-[#7b1c2e] focus:ring-2 focus:ring-[#7b1c2e]/10">
+                        <button type="button"
+                            class="absolute right-3 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-lg text-[#a08070] transition hover:bg-[#f3eadc] hover:text-[#5A0B1A]"
+                            aria-label="Tampilkan password"
+                            onclick="
+                                const input = document.getElementById('password');
+                                const eye = document.getElementById('eye-icon');
+                                const eyeOff = document.getElementById('eye-off-icon');
+                                if (input.type === 'password') {
+                                    input.type = 'text';
+                                    eye.classList.add('hidden');
+                                    eyeOff.classList.remove('hidden');
+                                    this.setAttribute('aria-label', 'Sembunyikan password');
+                                } else {
+                                    input.type = 'password';
+                                    eye.classList.remove('hidden');
+                                    eyeOff.classList.add('hidden');
+                                    this.setAttribute('aria-label', 'Tampilkan password');
+                                }
+                            ">
+                            <svg id="eye-icon" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            <svg id="eye-off-icon" class="hidden h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 3l18 18"/>
+                                <path d="M10.6 10.6A2 2 0 0 0 12 14a2 2 0 0 0 1.4-3.4"/>
+                                <path d="M9.9 5.2A9.3 9.3 0 0 1 12 5c6.5 0 10 7 10 7a17.8 17.8 0 0 1-3.1 4.2"/>
+                                <path d="M6.2 6.2C3.5 8 2 12 2 12s3.5 7 10 7a9.4 9.4 0 0 0 4-.9"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex justify-end">
+                    <a href="{{ route('password.request') }}" id="go-forgot" class="text-xs font-medium text-[#7b1c2e] hover:underline">
+                        Lupa password?
+                    </a>
+                </div>
+
+                <button type="submit" class="auth-btn-primary hover:opacity-90 hover:shadow-lg active:scale-[0.98]">
+                    Masuk
+                </button>
+            </form>
+
+            <p class="mt-5 text-center text-sm text-[#7a5d58]">
+                Belum punya akun?
+                <a href="{{ route('register') }}" id="go-register" class="font-semibold text-[#7b1c2e] hover:underline">
+                    Daftar di sini
+                </a>
+            </p>
+
+            <div class="mt-6 rounded-xl border border-[#E2D4C0] bg-[#faf7f2] p-4">
+                <p class="mb-2.5 text-xs font-semibold text-[#5A0B1A]">Demo Akun</p>
+                <div class="space-y-1.5">
+                    <div class="flex items-center justify-between rounded-lg border border-[#ead8b8] bg-white px-3 py-2 text-xs">
+                        <span class="font-semibold text-[#4a0f1a]">Admin</span>
+                        <span class="text-[#7a5d58]">admin@rantiang.com / password</span>
+                    </div>
+                    <div class="flex items-center justify-between rounded-lg border border-[#ead8b8] bg-white px-3 py-2 text-xs">
+                        <span class="font-semibold text-[#4a0f1a]">User</span>
+                        <span class="text-[#7a5d58]">user@rantiang.com / password</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        document.getElementById('go-register')?.addEventListener('click', function (e) {
+            e.preventDefault();
+            authGo(this.href);
+        });
+        document.getElementById('go-forgot')?.addEventListener('click', function (e) {
+            e.preventDefault();
+            authGo(this.href);
+        });
+    </script>
+
+</body>
+</html>

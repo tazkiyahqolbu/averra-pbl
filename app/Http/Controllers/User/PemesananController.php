@@ -1,0 +1,424 @@
+<?php
+
+namespace App\Http\Controllers\User;
+
+use App\Http\Controllers\Controller;
+use App\Models\Barang;
+use App\Models\DetailPemesanan;
+use App\Models\Jasa;
+use App\Models\Paket;
+use App\Models\PaketDetail;
+use App\Models\Pemesanan;
+use App\Models\ZonaLokasi;
+use App\Models\BlokirTanggal;
+use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
+use App\Http\Requests\StoreBookingRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Illuminate\View\View;
+use Barryvdh\DomPDF\Facade\Pdf;
+
+
+class PemesananController extends Controller
+{
+    public function index(): View
+    {
+        $status = request('status', 'semua');
+        $userId = Auth::id();
+
+        $query = Pemesanan::with([
+            'detailPemesanans.barang',
+            'detailPemesanans.jasa',
+            'detailPemesanans.paket',
+        ])->where('user_id', $userId)->latest();
+
+        if ($status === 'pengembalian') {
+            $query->where('jenis', 'sewa_barang')->where('status', 'berlangsung');
+        } elseif ($status === 'dikonfirmasi') {
+            $query->whereIn('status', ['dikonfirmasi', 'menunggu_dp']);
+        } elseif ($status !== 'semua') {
+            $query->where('status', $status);
+        }
+
+        $pesanans = $query->get();
+
+        return view('user.pemesanan.index', compact('pesanans'));
+    }
+
+    public function show($id): View|RedirectResponse
+    {
+        $pesanan = Pemesanan::where('user_id', Auth::id())
+            ->with([
+                'detailPemesanans.barang',
+                'detailPemesanans.jasa',
+                'detailPemesanans.paket',
+                'detailPemesanans.pengembalianBarang',
+                'pembayarans',
+                'testimoni.fotos',
+                'pembatalan',
+            ])
+            ->findOrFail($id);
+
+        if ($pesanan->isMenungguPembayaran() || $pesanan->isMenungguDp() || $pesanan->isMenungguPelunasan()) {
+            return redirect()->route('user.pemesanan.invoice', $id);
+        }
+
+        return view('user.pemesanan.show', compact('pesanan'));
+    }
+
+    public function createAcara(Request $request): View
+    {
+        $katalogs = collect()
+            ->merge(Jasa::all()->map(fn($j) => [
+                'id'       => 'jasa-' . $j->id,
+                'name'     => $j->nama_jasa,
+                'price'    => (float) $j->harga,
+                'category' => 'Jasa',
+            ]))
+            ->merge(Paket::with(['paketDetails' => fn($q) => $q->where('tipe', 'opsional')])->get()->map(fn($p) => [
+                'id'            => 'paket-' . $p->id,
+                'name'          => $p->nama_paket,
+                'price'         => (float) $p->harga,
+                'category'      => 'Paket',
+                'optionalItems' => $p->paketDetails->map(fn($d) => [
+                    'id'             => $d->id,
+                    'nama_item'      => $d->nama_item,
+                    'harga_tambahan' => (float) $d->harga_tambahan,
+                ])->values(),
+            ]));
+        $zonaLokasis = ZonaLokasi::all()->map(fn($z) => [
+            'id' => $z->id,
+            'nama_zona' => $z->nama_zona,
+            'persentase' => (float) $z->persentase,
+        ]);
+
+        $item = $this->resolveItemFromQuery($request->query('item'), ['jasa', 'paket']);
+
+        return view('user.pemesanan.createacara', compact('katalogs', 'item', 'zonaLokasis'));
+    }
+
+    public function createSewa(Request $request): View
+    {
+        $katalogs = Barang::where('stok', '>', 0)->where('aktif', true)->get()->map(fn($b) => [
+            'id'       => 'barang-' . $b->id,
+            'name'     => $b->nama_barang,
+            'price'    => (float) $b->harga,
+            'category' => 'Sewa Barang',
+        ]);
+
+        $zonaLokasis = ZonaLokasi::all()->map(fn($z) => [
+            'id'        => $z->id,
+            'nama_zona' => $z->nama_zona,
+            'persentase'     => (float) $z->persentase,
+        ]);
+
+        $item = $this->resolveItemFromQuery($request->query('item'), ['barang']);
+
+        return view('user.pemesanan.createsewa', compact('katalogs', 'item', 'zonaLokasis'));
+    }
+
+    public function unavailableDates()
+    {
+        $dates = BlokirTanggal::pluck('tanggal')
+            ->map(function ($tanggal) {
+                return Carbon::parse($tanggal)->format('Y-m-d');
+            });
+
+        return response()->json($dates);
+    }
+
+    private function resolveItemFromQuery(?string $slug, array $allowedTypes): ?array
+    {
+        if (!$slug) return null;
+
+        $parts  = explode('-', $slug, 2);
+        $type   = $parts[0] ?? null;
+        $typeId = $parts[1] ?? null;
+
+        if (!$typeId || !in_array($type, $allowedTypes)) return null;
+
+        try {
+            if ($type === 'jasa') {
+                $model = Jasa::findOrFail($typeId);
+                return ['id' => $slug, 'name' => $model->nama_jasa, 'price' => (float) $model->harga, 'category' => 'Jasa'];
+            }
+            if ($type === 'paket') {
+                $model = Paket::findOrFail($typeId);
+                return ['id' => $slug, 'name' => $model->nama_paket, 'price' => (float) $model->harga, 'category' => 'Paket'];
+            }
+            if ($type === 'barang') {
+                $model = Barang::findOrFail($typeId);
+                return ['id' => $slug, 'name' => $model->nama_barang, 'price' => (float) $model->harga, 'category' => 'Sewa Barang'];
+            }
+        } catch (\Exception $e) {
+            return null;
+        }
+
+        return null;
+    }
+
+    public function store(StoreBookingRequest $request): RedirectResponse
+    {
+        // Bungkus seluruh proses dalam transaksi — kalau ada yang gagal di tengah,
+        // semua perubahan sebelumnya otomatis dibatalkan (rollback)
+        $pemesanan = DB::transaction(function () use ($request) {
+
+            // Parse "barang-3" → ['barang', '3']
+            [$jenisItem, $itemId] = explode('-', $request->katalog_id, 2);
+
+            $harga    = 0;
+            $barangId = $jasaId = $paketId = null;
+            $jenis    = 'acara';
+
+            if ($jenisItem === 'barang') {
+                $model    = Barang::where('id', $itemId)->lockForUpdate()->firstOrFail();
+                $jumlahDiminta = max(1, (int) ($request->jumlah_unit ?? 1));
+
+                // Cek stok sebelum menyimpan apapun — tolak lebih awal agar tidak ada
+                // data setengah masuk jika stok ternyata tidak mencukupi
+                if ($model->stok < $jumlahDiminta) {
+                    throw \Illuminate\Validation\ValidationException::withMessages([
+                        'katalog_id' => "Stok {$model->nama_barang} tidak mencukupi. Tersisa: {$model->stok}.",
+                    ]);
+                }
+
+                $harga    = (float) $model->harga;
+                $barangId = $itemId;
+                $jenis    = 'sewa_barang';
+            } elseif ($jenisItem === 'jasa') {
+                $model  = Jasa::findOrFail($itemId);
+                $harga  = (float) $model->harga;
+                $jasaId = $itemId;
+            } else {
+                $model   = Paket::findOrFail($itemId);
+                $harga   = (float) $model->harga;
+                $paketId = $itemId;
+            }
+
+            // Zona & ongkos
+            $zonaId = $request->filled('zona_lokasi_id')
+                ? $request->zona_lokasi_id
+                : null;
+
+            $zona = $zonaId
+                ? ZonaLokasi::find($zonaId)
+                : null;
+
+            // Tanggal pakai
+            $tanggalPakai = $request->tanggal_pelaksanaan ?? $request->tanggal_ambil;
+
+            // Cek ketersediaan jasa (mandiri maupun yang wajib ada di dalam paket)
+            // dan stok barang wajib di dalam paket, sebelum menyimpan apapun.
+            $barangWajibPaket = collect();
+
+            if ($jasaId) {
+                $this->checkJasaAvailability((int) $jasaId, $tanggalPakai);
+            }
+
+            if ($paketId) {
+                $itemWajib = PaketDetail::where('paket_id', $paketId)
+                    ->where('tipe', 'wajib')
+                    ->get();
+
+                foreach ($itemWajib->whereNotNull('jasa_id') as $itemJasa) {
+                    $this->checkJasaAvailability((int) $itemJasa->jasa_id, $tanggalPakai);
+                }
+
+                foreach ($itemWajib->whereNotNull('barang_id') as $itemBarang) {
+                    $barang = Barang::where('id', $itemBarang->barang_id)->lockForUpdate()->first();
+
+                    if (!$barang || $barang->stok < $itemBarang->jumlah) {
+                        throw \Illuminate\Validation\ValidationException::withMessages([
+                            'katalog_id' => "Stok " . ($barang->nama_barang ?? 'barang dalam paket') . " tidak mencukupi untuk paket ini.",
+                        ]);
+                    }
+
+                    $barangWajibPaket->push(['barang' => $barang, 'jumlah' => $itemBarang->jumlah]);
+                }
+            }
+            // Cek & siapkan item opsional yang dipilih customer (hanya berlaku untuk paket)
+            $opsionalDipilih = collect();
+            $totalOpsional   = 0;
+
+            if ($paketId && $request->filled('opsional_ids')) {
+                $itemOpsional = PaketDetail::where('paket_id', $paketId)
+                    ->where('tipe', 'opsional')
+                    ->whereIn('id', $request->opsional_ids)
+                    ->get();
+
+                foreach ($itemOpsional as $itemDetail) {
+                    if ($itemDetail->jasa_id) {
+                        $this->checkJasaAvailability((int) $itemDetail->jasa_id, $tanggalPakai);
+                    }
+
+                    $barangOpsional = null;
+                    if ($itemDetail->barang_id) {
+                        $barangOpsional = Barang::where('id', $itemDetail->barang_id)->lockForUpdate()->first();
+
+                        if (!$barangOpsional || $barangOpsional->stok < $itemDetail->jumlah) {
+                            throw \Illuminate\Validation\ValidationException::withMessages([
+                                'katalog_id' => "Stok " . ($barangOpsional->nama_barang ?? $itemDetail->nama_item) . " tidak mencukupi.",
+                            ]);
+                        }
+                    }
+
+                    $opsionalDipilih->push(['detail' => $itemDetail, 'barang' => $barangOpsional]);
+                    $totalOpsional += (float) $itemDetail->harga_tambahan;
+                }
+            }
+
+            // Durasi & subtotal
+            $jumlah = max(1, (int) ($request->jumlah_unit ?? 1));
+            $durasi = 1;
+            if ($jenis === 'sewa_barang' && $request->tanggal_ambil && $request->tanggal_kembali) {
+                $durasi = max(1, Carbon::parse($request->tanggal_ambil)
+                    ->diffInDays(Carbon::parse($request->tanggal_kembali)) + 1);
+            }
+            $subtotal = $harga * $jumlah * $durasi + $totalOpsional;
+
+
+            // Hitung total di server — nilai dari form tidak dipercaya karena bisa dimanipulasi
+            $ongkosLokasi = 0;
+            if ($zona) {
+                $ongkosLokasi = $subtotal * ($zona->persentase / 100);
+            }
+            $totalHarga = $subtotal + $ongkosLokasi;
+
+            // Buat Pemesanan
+            $pemesanan = Pemesanan::create([
+                'kode_pemesanan'     => 'PMB-' . strtoupper(Str::random(8)),
+                'user_id'            => Auth::id(),
+                'zona_id'            => $zonaId,
+                'tanggal_pemesanan'  => now()->toDateString(),
+                'tanggal_pakai'      => $tanggalPakai,
+                'jenis'              => $jenis,
+                'lokasi'             => $request->alamat_lengkap,
+                'metode_pengambilan' => $jenis === 'sewa_barang' ? $request->metode_pengambilan : null,
+                'metode_pengembalian' => $jenis === 'sewa_barang' ? $request->metode_pengembalian : null,
+                'ongkos_lokasi'      => $ongkosLokasi,
+                'no_hp'              => $request->no_hp,
+                'catatan'            => $request->keterangan_acara,
+                'total_harga'        => $totalHarga,
+                'status'             => 'menunggu',
+            ]);
+
+            // Buat DetailPemesanan
+            $pemesanan->detailPemesanans()->create([
+                'jenis_item'      => $jenisItem,
+                'barang_id'       => $barangId,
+                'jasa_id'         => $jasaId,
+                'paket_id'        => $paketId,
+                'jumlah'          => $jumlah,
+                'harga'           => $harga,
+                'subtotal'        => $subtotal,
+                'tanggal_ambil'   => $request->tanggal_ambil,
+                'tanggal_kembali' => $request->tanggal_kembali,
+            ]);
+
+            // Kurangi stok barang wajib yang ada di dalam paket
+            foreach ($barangWajibPaket as $item) {
+                $item['barang']->decrement('stok', $item['jumlah']);
+            }
+
+            // Kurangi stok barang — dilakukan di dalam transaksi agar stok tidak
+            // berkurang kalau ada bagian lain yang gagal disimpan
+            if ($jenis === 'sewa_barang') {
+                $model->decrement('stok', $jumlah);
+            }
+
+            // Simpan pilihan opsional & kurangi stok barang opsional yang dipilih
+            foreach ($opsionalDipilih as $item) {
+                $pemesanan->opsionalPemesanans()->create([
+                    'paket_detail_id' => $item['detail']->id,
+                    'harga_tambahan'  => $item['detail']->harga_tambahan,
+                ]);
+
+                if ($item['barang']) {
+                    $item['barang']->decrement('stok', $item['detail']->jumlah);
+                }
+            }
+
+            return $pemesanan;
+        });
+
+        return redirect()->route('user.pemesanan.submitted', $pemesanan->id);
+    }
+
+    public function submitted($id): View
+    {
+        $pesanan = Pemesanan::where('user_id', Auth::id())
+            ->with(['detailPemesanans.barang', 'detailPemesanans.jasa', 'detailPemesanans.paket', 'pembayarans'])
+            ->findOrFail($id);
+
+        return view('user.pemesanan.submitted', compact('pesanan'));
+    }
+
+    public function update($id): RedirectResponse
+    {
+        return redirect()->route('user.pemesanan.show', $id);
+    }
+
+    public function invoice($id): View
+    {
+        $pesanan = Pemesanan::with([
+            'detailPemesanans.barang',
+            'detailPemesanans.jasa',
+            'detailPemesanans.paket',
+            'zonaLokasi',
+            'pembayarans',
+            'testimoni',
+        ])->where('user_id', Auth::id())->findOrFail($id);
+
+        return view('user.invoice.show', compact('pesanan'));
+    }
+
+    public function cetakInvoice($id)
+    {
+        $pesanan = Pemesanan::with([
+            'detailPemesanans.barang',
+            'detailPemesanans.jasa',
+            'detailPemesanans.paket',
+            'zonaLokasi',
+            'pembayarans',
+        ])->where('user_id', Auth::id())->findOrFail($id);
+
+        $pdf = Pdf::loadView('user.invoice.pdf', compact('pesanan'));
+        return $pdf->download('invoice-' . $pesanan->kode_pemesanan . '.pdf');
+    }
+
+    /**
+     * Tolak booking jika jasa (mandiri atau yang wajib ada di dalam sebuah paket)
+     * sudah mencapai batas maksimal booking harian pada tanggal yang diminta.
+     */
+    private function checkJasaAvailability(int $jasaId, ?string $tanggalPakai): void
+    {
+        $jasa = Jasa::find($jasaId);
+
+        if (!$jasa || !$jasa->maks_booking_harian || !$tanggalPakai) {
+            return;
+        }
+
+        $paketIdsDenganJasaIni = PaketDetail::where('jasa_id', $jasaId)
+            ->where('tipe', 'wajib')
+            ->pluck('paket_id');
+
+        $terpakai = DetailPemesanan::where(function ($query) use ($jasaId, $paketIdsDenganJasaIni) {
+            $query->where('jasa_id', $jasaId)
+                ->orWhereIn('paket_id', $paketIdsDenganJasaIni);
+        })
+            ->whereHas('pemesanan', function ($query) use ($tanggalPakai) {
+                $query->whereDate('tanggal_pakai', $tanggalPakai)
+                    ->where('status', '!=', 'dibatalkan');
+            })
+            ->count();
+
+        if ($terpakai >= $jasa->maks_booking_harian) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'katalog_id' => "Jasa {$jasa->nama_jasa} sudah mencapai batas maksimal booking ({$jasa->maks_booking_harian}) pada tanggal tersebut. Silakan pilih tanggal lain.",
+            ]);
+        }
+    }
+}
