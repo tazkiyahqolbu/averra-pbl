@@ -326,11 +326,25 @@ class PaketController extends Controller
             $foto->delete();
         }
 
-        // hapus detail paket
-        $paket->paketDetails()->delete();
+        // hapus detail paket (kecuali yang sudah dipakai pada pemesanan sebelumnya,
+        // tidak bisa dihapus karena dibatasi foreign key)
+        foreach ($paket->paketDetails as $detail) {
+            try {
+                $detail->delete();
+            } catch (\Illuminate\Database\QueryException $e) {
+                // Item sudah dipakai pada pemesanan sebelumnya, tidak bisa dihapus.
+            }
+        }
 
         // hapus paket
-        $paket->delete();
+        try {
+            $paket->delete();
+        } catch (\Illuminate\Database\QueryException $e) {
+            return back()->with(
+                'error',
+                'Paket tidak bisa dihapus karena masih memiliki item yang pernah dipesan pelanggan.'
+            );
+        }
 
         return redirect()
             ->route('admin.paket.index')

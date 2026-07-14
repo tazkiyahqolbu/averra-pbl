@@ -95,6 +95,7 @@ $search     = request('search', '');
                         <option value="terbaru"  {{ ($sort ?? 'terbaru') === 'terbaru'  ? 'selected' : '' }}>Terbaru</option>
                         <option value="termurah" {{ ($sort ?? '') === 'termurah' ? 'selected' : '' }}>Termurah</option>
                         <option value="termahal" {{ ($sort ?? '') === 'termahal' ? 'selected' : '' }}>Termahal</option>
+                        <option value="testimoni_terbanyak" {{ ($sort ?? '') === 'testimoni_terbanyak' ? 'selected' : '' }}>Testimoni Terbanyak</option>
                     </select>
                 </form>
             </div>
@@ -162,12 +163,17 @@ $search     = request('search', '');
                                 </a>
 
                                 {{-- Rating --}}
-                                @php $rating = $item->rating ?? 4.5; $ulasan = $item->ulasan ?? 0; @endphp
+                                @php $rating = $item->rating ?? 0; $ulasan = $item->ulasan ?? 0; @endphp
                                 <div class="mt-1.5 flex items-center gap-1 text-[#C8A84B]">
-                                    @for ($s = 1; $s <= 5; $s++)
-                                        <i data-lucide="star" class="h-3 w-3 {{ $s <= floor($rating) ? 'fill-current' : 'opacity-25' }}"></i>
-                                    @endfor
-                                    <span class="ml-1 text-[10px] text-[#4A2E28]">{{ number_format($rating, 1) }} ({{ $ulasan }})</span>
+                                    @if($ulasan > 0)
+                                        @for ($s = 1; $s <= 5; $s++)
+                                            <i data-lucide="star" class="h-3 w-3 {{ $s <= floor($rating) ? 'fill-current' : 'opacity-25' }}"></i>
+                                        @endfor
+                                        <span class="ml-1 text-[10px] text-[#4A2E28]">{{ number_format($rating, 1) }} ({{ $ulasan }})</span>
+                                    @else
+                                        <i data-lucide="star" class="h-3 w-3 opacity-25"></i>
+                                        <span class="ml-1 text-[10px] text-[#4A2E28]/60 italic">Belum ada ulasan</span>
+                                    @endif
                                 </div>
 
                                 <p class="mt-2 text-xs leading-relaxed text-[#4A2E28] line-clamp-2 flex-1">{{ $item->desc }}</p>

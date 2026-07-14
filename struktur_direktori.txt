@@ -1,0 +1,462 @@
+﻿+---.claude
+|   +---settings.local.json
++---.github
+|   +---workflows
+|       +---laravel.yml
++---app
+|   +---Console
+|   |   +---Commands
+|   |       +---AutoCancelPemesanan.php
+|   |       +---AutoUpdateStatusSewa.php
+|   |       +---KirimReminderPengembalian.php
+|   +---Http
+|   |   +---Controllers
+|   |   |   +---Admin
+|   |   |   |   +---BarangController.php
+|   |   |   |   +---BlokirTanggalController.php
+|   |   |   |   +---DashboardController.php
+|   |   |   |   +---GaleriController.php
+|   |   |   |   +---JasaController.php
+|   |   |   |   +---KategoriController.php
+|   |   |   |   +---LaporanController.php
+|   |   |   |   +---PaketController.php
+|   |   |   |   +---PelangganController.php
+|   |   |   |   +---PembatalanController.php
+|   |   |   |   +---PembayaranController.php
+|   |   |   |   +---PemesananController.php
+|   |   |   |   +---PengembalianBarangController.php
+|   |   |   |   +---ProfileController.php
+|   |   |   |   +---TestimoniController.php
+|   |   |   |   +---ZonaLokasiController.php
+|   |   |   +---Frontend
+|   |   |   |   +---KatalogController.php
+|   |   |   +---User
+|   |   |   |   +---DashboardController.php
+|   |   |   |   +---PembatalanController.php
+|   |   |   |   +---PembayaranController.php
+|   |   |   |   +---PemesananController.php
+|   |   |   |   +---ProfileController.php
+|   |   |   |   +---TestimoniController.php
+|   |   |   +---AuthController.php
+|   |   |   +---Controller.php
+|   |   |   +---ForgotPasswordController.php
+|   |   +---Middleware
+|   |   |   +---RedirectIfAdmin.php
+|   |   +---Requests
+|   |       +---LoginRequest.php
+|   |       +---RegisterRequest.php
+|   |       +---StoreBookingRequest.php
+|   +---Mail
+|   |   +---InvoiceMail.php
+|   |   +---OtpMail.php
+|   |   +---PembatalanDisetujuiMail.php
+|   |   +---PembatalanDitolakMail.php
+|   |   +---PembayaranBerhasilMail.php
+|   |   +---ReminderPengembalian.php
+|   |   +---TagihanPelunasanMail.php
+|   +---Models
+|   |   +---Barang.php
+|   |   +---BlokirTanggal.php
+|   |   +---DetailPemesanan.php
+|   |   +---FotoBarang.php
+|   |   +---FotoJasa.php
+|   |   +---FotoPaket.php
+|   |   +---FotoTestimoni.php
+|   |   +---Galeri.php
+|   |   +---Jasa.php
+|   |   +---KategoriBarang.php
+|   |   +---KategoriJasa.php
+|   |   +---KategoriPaket.php
+|   |   +---OpsionalPemesanan.php
+|   |   +---Paket.php
+|   |   +---PaketDetail.php
+|   |   +---PasswordResetOtp.php
+|   |   +---Pembatalan.php
+|   |   +---Pembayaran.php
+|   |   +---Pemesanan.php
+|   |   +---PengembalianBarang.php
+|   |   +---Testimoni.php
+|   |   +---User.php
+|   |   +---ZonaLokasi.php
+|   +---Providers
+|   |   +---AppServiceProvider.php
+|   +---Services
+|       +---MidtransService.php
++---bootstrap
+|   +---cache
+|   |   +---.gitignore
+|   |   +---pacD8F2.tmp
+|   |   +---packages.php
+|   |   +---services.php
+|   +---app.php
+|   +---providers.php
++---config
+|   +---app.php
+|   +---auth.php
+|   +---cache.php
+|   +---database.php
+|   +---filesystems.php
+|   +---logging.php
+|   +---mail.php
+|   +---permission.php
+|   +---queue.php
+|   +---services.php
+|   +---session.php
++---database
+|   +---factories
+|   |   +---BarangFactory.php
+|   |   +---DetailPemesananFactory.php
+|   |   +---GaleriFactory.php
+|   |   +---JasaFactory.php
+|   |   +---PaketFactory.php
+|   |   +---PembayaranFactory.php
+|   |   +---PemesananFactory.php
+|   |   +---PengembalianBarangFactory.php
+|   |   +---TestimoniFactory.php
+|   |   +---UserFactory.php
+|   +---migrations
+|   |   +---0001_01_01_000000_create_users_table.php
+|   |   +---0001_01_01_000001_create_cache_table.php
+|   |   +---0001_01_01_000002_create_jobs_table.php
+|   |   +---2026_05_19_141838_create_kategori_jasa_table.php
+|   |   +---2026_05_19_141857_create_kategori_paket_table.php
+|   |   +---2026_05_19_141911_create_kategori_barang_table.php
+|   |   +---2026_05_19_141918_create_zona_lokasi_table.php
+|   |   +---2026_05_19_141934_create_jasa_table.php
+|   |   +---2026_05_19_141934_create_paket_table.php
+|   |   +---2026_05_19_141948_create_barang_table.php
+|   |   +---2026_05_19_141953_create_foto_jasa_table.php
+|   |   +---2026_05_19_141953_create_paket_detail_table.php
+|   |   +---2026_05_19_141954_create_foto_paket_table.php
+|   |   +---2026_05_19_142000_create_foto_barang_table.php
+|   |   +---2026_05_19_142010_create_blokir_tanggal_table.php
+|   |   +---2026_05_19_142010_create_pemesanan_table.php
+|   |   +---2026_05_19_142011_create_detail_pemesanan_table.php
+|   |   +---2026_05_19_142015_create_opsional_pemesanan_table.php
+|   |   +---2026_05_19_142027_create_pembayaran_table.php
+|   |   +---2026_05_19_142027_create_pengembalian_barang_table.php
+|   |   +---2026_05_19_142028_create_testimoni_table.php
+|   |   +---2026_05_19_142029_create_foto_testimoni_table.php
+|   |   +---2026_05_19_142032_create_galeri_table.php
+|   |   +---2026_05_27_151349_create_permission_tables.php
+|   |   +---2026_06_03_000000_create_sessions_table.php
+|   |   +---2026_06_17_231933_make_dibayar_pada_nullable_in_pembayaran_table.php
+|   |   +---2026_06_25_123430_add_alasan_penolakan_to_pemesanan_table.php
+|   |   +---2026_06_26_125611_add_foto_profil_to_users_table.php
+|   |   +---2026_06_26_135306_create_password_reset_otps_table.php
+|   |   +---2026_06_28_150613_add_persentase_to_zona_lokasi_table.php
+|   |   +---2026_06_30_000000_remove_ikon_path_from_kategori_tables.php
+|   |   +---2026_06_30_000001_add_sewa_barang_statuses_to_pemesanan.php
+|   |   +---2026_06_30_000002_add_tarif_denda_to_barang_table.php
+|   |   +---2026_06_30_000003_create_pembatalan_table.php
+|   |   +---2026_06_30_214619_add_metode_sewa_to_pemesanan_table.php
+|   |   +---2026_07_01_235438_make_kondisi_nullable_in_pengembalian_barang_table.php
+|   |   +---2026_07_08_000000_add_midtrans_payment_details_to_pembayaran_table.php
+|   |   +---2026_07_08_000001_add_barang_id_to_paket_detail_table.php
+|   +---seeders
+|   |   +---DatabaseSeeder.php
+|   |   +---KategoriBarangSeeder.php
+|   |   +---KategoriJasaSeeder.php
+|   |   +---KategoriPaketSeeder.php
+|   |   +---RoleSeeder.php
+|   |   +---ZonaLokasiSeeder.php
+|   +---.gitignore
+|   +---database.sqlite
++---docs
+|   +---qa
+|   |   +---BLACKBOX_CHECKLIST.md
+|   |   +---BUG_REPORT.md
+|   |   +---QA_ANALYSIS_RECOMMENDATIONS.md
+|   |   +---QA_RESULTS.md
+|   |   +---WHITEBOX_COVERAGE_REPORT.md
+|   +---dependency.md
+|   +---features.md
+|   +---github-actions.md
+|   +---installation.md
+|   +---refactoring.md
+|   +---TESTING_GUIDE.md
++---image
+|   +---Akad & resepsi.jpeg
+|   +---background.png
+|   +---Baju adat.jpeg
+|   +---Busana tari.jpeg
+|   +---Mc.jpeg
+|   +---Resepsi.jpeg
+|   +---Stage & MC.jpeg
+|   +---Tari Pasambahan.jpeg
+|   +---Tari piring.jpeg
++---lang
+|   +---en
+|   |   +---auth.php
+|   |   +---pagination.php
+|   |   +---passwords.php
+|   |   +---validation.php
+|   +---id
+|       +---auth.php
+|       +---pagination.php
+|       +---passwords.php
+|       +---validation.php
++---public
+|   +---build
+|   |   +---assets
+|   |   |   +---app-CWCdBDwg.css
+|   |   |   +---app-DO2nEFzp.js
+|   |   +---manifest.json
+|   +---foto
+|   |   +---Akad & resepsi.jpeg
+|   |   +---background.png
+|   |   +---Baju adat.jpeg
+|   |   +---Busana tari.jpeg
+|   |   +---Mc.jpeg
+|   |   +---Resepsi.jpeg
+|   |   +---Stage & MC.jpeg
+|   |   +---Tari Pasambahan.jpeg
+|   |   +---Tari piring.jpeg
+|   +---galeri
+|   |   +---icon-email.png
+|   |   +---icon-password.png
+|   |   +---logo-rantiang-tagok.jpg
+|   |   +---motif-minang.svg
+|   |   +---rumah-gadang-bg.png
+|   +---image
+|   |   +---Akad & resepsi.jpeg
+|   |   +---background.png
+|   |   +---Baju adat.jpeg
+|   |   +---Busana tari.jpeg
+|   |   +---MC.jpeg
+|   |   +---Resepsi.jpeg
+|   |   +---Stage & MC.jpeg
+|   |   +---Tari Pasambahan.jpeg
+|   |   +---Tari piring.jpeg
+|   +---.htaccess
+|   +---favicon.ico
+|   +---index.php
+|   +---robots.txt
++---resources
+|   +---css
+|   |   +---admin.css
+|   |   +---app.css
+|   |   +---auth.css
+|   +---js
+|   |   +---app.js
+|   +---views
+|       +---admin
+|       |   +---akun
+|       |   |   +---.gitkeep
+|       |   |   +---index.blade.php
+|       |   +---barang
+|       |   |   +---.gitkeep
+|       |   |   +---create.blade.php
+|       |   |   +---edit.blade.php
+|       |   |   +---index.blade.php
+|       |   |   +---show.blade.php
+|       |   +---blokir-tanggal
+|       |   |   +---.gitkeep
+|       |   |   +---index.blade.php
+|       |   +---components
+|       |   |   +---delete-modal.blade.php
+|       |   +---dashboard
+|       |   |   +---.gitkeep
+|       |   |   +---index.blade.php
+|       |   +---galeri
+|       |   |   +---.gitkeep
+|       |   |   +---create.blade.php
+|       |   |   +---edit.blade.php
+|       |   |   +---index.blade.php
+|       |   +---invoice
+|       |   |   +---.gitkeep
+|       |   +---jasa
+|       |   |   +---.gitkeep
+|       |   |   +---create.blade.php
+|       |   |   +---edit.blade.php
+|       |   |   +---index.blade.php
+|       |   |   +---show.blade.php
+|       |   +---kategori-barang
+|       |   |   +---.gitkeep
+|       |   |   +---create.blade.php
+|       |   |   +---edit.blade.php
+|       |   |   +---index.blade.php
+|       |   +---kategori-jasa
+|       |   |   +---create.blade.php
+|       |   |   +---edit.blade.php
+|       |   |   +---index.blade.php
+|       |   +---kategori-paket
+|       |   |   +---create.blade.php
+|       |   |   +---edit.blade.php
+|       |   |   +---index.blade.php
+|       |   +---laporan
+|       |   |   +---.gitkeep
+|       |   |   +---index.blade.php
+|       |   +---layouts
+|       |   |   +---app.blade.php
+|       |   |   +---sidebar.blade.php
+|       |   +---paket
+|       |   |   +---.gitkeep
+|       |   |   +---create.blade.php
+|       |   |   +---edit.blade.php
+|       |   |   +---index.blade.php
+|       |   |   +---show.blade.php
+|       |   +---pelanggan
+|       |   |   +---index.blade.php
+|       |   +---pembatalan
+|       |   |   +---index.blade.php
+|       |   |   +---show.blade.php
+|       |   +---pembayaran
+|       |   |   +---.gitkeep
+|       |   |   +---index.blade.php
+|       |   |   +---show.blade.php
+|       |   +---pemesanan
+|       |   |   +---.gitkeep
+|       |   |   +---index.blade.php
+|       |   |   +---show.blade.php
+|       |   +---pengembalian
+|       |   |   +---.gitkeep
+|       |   |   +---index.blade.php
+|       |   |   +---show.blade.php
+|       |   +---testimoni
+|       |   |   +---.gitkeep
+|       |   |   +---index.blade.php
+|       |   +---zona-lokasi
+|       |   |   +---.gitkeep
+|       |   |   +---create.blade.php
+|       |   |   +---edit.blade.php
+|       |   |   +---index.blade.php
+|       |   +---.gitkeep
+|       +---auth
+|       |   +---.gitkeep
+|       |   +---forgot-password.blade.php
+|       |   +---login.blade.php
+|       |   +---register.blade.php
+|       |   +---register-success.blade.php
+|       |   +---reset-password.blade.php
+|       |   +---verify-otp.blade.php
+|       +---mail
+|       |   +---invoice.blade.php
+|       |   +---otp.blade.php
+|       |   +---pembatalan-disetujui.blade.php
+|       |   +---pembatalan-ditolak.blade.php
+|       |   +---pembayaran-berhasil.blade.php
+|       |   +---reminder-pengembalian.blade.php
+|       |   +---tagihan-pelunasan.blade.php
+|       +---public
+|       |   +---barang
+|       |   |   +---.gitkeep
+|       |   +---galeri
+|       |   |   +---.gitkeep
+|       |   |   +---index.blade.php
+|       |   +---katalog
+|       |   |   +---.gitkeep
+|       |   |   +---index.blade.php
+|       |   |   +---show.blade.php
+|       |   +---layouts
+|       |   |   +---.gitkeep
+|       |   |   +---app.blade.php
+|       |   |   +---footer.blade.php
+|       |   |   +---navbar.blade.php
+|       |   +---tentang
+|       |   |   +---.gitkeep
+|       |   |   +---index.blade.php
+|       |   +---testimoni
+|       |   |   +---.gitkeep
+|       |   +---.gitkeep
+|       |   +---Beranda.blade.php
+|       +---user
+|       |   +---dashboard
+|       |   |   +---index.blade.php
+|       |   +---invoice
+|       |   |   +---pdf.blade.php
+|       |   |   +---show.blade.php
+|       |   +---layouts
+|       |   |   +---.gitkeep
+|       |   |   +---app.blade.php
+|       |   |   +---sidebar.blade.php
+|       |   +---pemesanan
+|       |   |   +---createacara.blade.php
+|       |   |   +---createsewa.blade.php
+|       |   |   +---index.blade.php
+|       |   |   +---pilih-pembayaran.blade.php
+|       |   |   +---show.blade.php
+|       |   |   +---snap-payment.blade.php
+|       |   |   +---submitted.blade.php
+|       |   +---profile
+|       |   |   +---index.blade.php
+|       |   +---testimoni
+|       |   |   +---.gitkeep
+|       |   |   +---create.blade.php
+|       |   +---.gitkeep
+|       +---.gitkeep
++---routes
+|   +---console.php
+|   +---web.php
++---tests
+|   +---Feature
+|   |   +---Admin
+|   |   |   +---AdminAuthorizationTest.php
+|   |   |   +---AdminDashboardTest.php
+|   |   |   +---AdminLaporanTest.php
+|   |   |   +---AdminPelangganTest.php
+|   |   |   +---AdminPembatalanTest.php
+|   |   |   +---AdminPemesananTest.php
+|   |   |   +---AdminPengembalianBarangTest.php
+|   |   |   +---AdminProfileTest.php
+|   |   |   +---AdminTestimoniTest.php
+|   |   |   +---BarangCrudTest.php
+|   |   |   +---BlokirTanggalCrudTest.php
+|   |   |   +---GalleryCrudTest.php
+|   |   |   +---JasaCrudTest.php
+|   |   |   +---KategoriCrudTest.php
+|   |   |   +---PaketCrudTest.php
+|   |   |   +---ZonaLokasiCrudTest.php
+|   |   +---Auth
+|   |   |   +---ForgotPasswordTest.php
+|   |   |   +---LoginTest.php
+|   |   |   +---LogoutTest.php
+|   |   |   +---RegisterTest.php
+|   |   |   +---ResetPasswordTest.php
+|   |   +---Booking
+|   |   |   +---BookingCancelTest.php
+|   |   |   +---BookingCreateTest.php
+|   |   |   +---BookingTest.php
+|   |   |   +---BookingValidationTest.php
+|   |   +---Payment
+|   |   |   +---PaymentTest.php
+|   |   |   +---PaymentUploadTest.php
+|   |   |   +---PaymentValidationTest.php
+|   |   +---Public
+|   |   |   +---PublicPageTest.php
+|   |   +---Scheduler
+|   |   |   +---AutoCancelTest.php
+|   |   |   +---AutoUpdateStatusTest.php
+|   |   |   +---KirimReminderTest.php
+|   |   |   +---SchedulerRegistrationTest.php
+|   |   +---User
+|   |       +---UserDashboardTest.php
+|   |       +---UserPemesananHistoryTest.php
+|   |       +---UserProfileTest.php
+|   |       +---UserTestimoniTest.php
+|   +---Unit
+|   |   +---Pricing
+|   |   |   +---PriceCalculatorTest.php
+|   |   +---UserRoleTest.php
+|   +---TestCase.php
++---.editorconfig
++---.env
++---.env.example
++---.gitattributes
++---.gitignore
++---.npmrc
++---artisan
++---build_report.py
++---CHANGELOG.md
++---composer.json
++---composer.lock
++---db_rantiang_tagok
++---et --hard 19fa29c
++---package.json
++---package-lock.json
++---phpunit.xml
++---README.md
++---struktur.txt
++---struktur_direktori.txt
++---tahap2_table.md
++---vite.config.js

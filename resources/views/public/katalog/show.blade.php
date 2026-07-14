@@ -142,15 +142,17 @@
 
                 {{-- Rating --}}
                 @php
-                    $rating = $item->rating ?? 4.8;
+                    $rating = $item->rating ?? 0;
                     $ulasan = $item->ulasan ?? 0;
                 @endphp
                 <div class="flex items-center gap-1.5">
                     @for ($s = 1; $s <= 5; $s++)
                         <i data-lucide="star"
-                           class="h-4 w-4 text-[#C8A84B] {{ $s <= floor($rating) ? 'fill-current' : 'opacity-25' }}"></i>
+                           class="h-4 w-4 text-[#C8A84B] {{ $ulasan > 0 && $s <= floor($rating) ? 'fill-current' : 'opacity-25' }}"></i>
                     @endfor
-                    <span class="ml-1 text-sm font-semibold text-[#4A0F1A]">{{ number_format($rating, 1) }}</span>
+                    @if($ulasan > 0)
+                        <span class="ml-1 text-sm font-semibold text-[#4A0F1A]">{{ number_format($rating, 1) }}</span>
+                    @endif
                     <span class="text-sm text-[#4A2E28]">
                         ({{ $ulasan > 0 ? $ulasan . ' ulasan' : 'Belum ada ulasan' }})
                     </span>
@@ -378,6 +380,8 @@
 
                 @if($total > 0)
 
+                    <div x-data="{ filterBintang: 0, dist: {{ \Illuminate\Support\Js::from($dist) }} }">
+
                     {{-- Ringkasan rating (Shopee style) --}}
                     <div class="mb-8 flex flex-col sm:flex-row items-center gap-8 rounded-2xl card-fade-border bg-[#FFFDF7] p-6 scroll-fade">
                         {{-- Angka besar --}}
@@ -392,14 +396,15 @@
                             <p class="mt-1 text-xs text-[#4A2E28]">{{ $total }} ulasan</p>
                         </div>
 
-                        {{-- Bar distribusi --}}
+                        {{-- Bar distribusi (ikut menyala sesuai dropdown filter) --}}
                         <div class="flex-1 w-full space-y-2.5">
                             @foreach ([5, 4, 3, 2, 1] as $star)
                                 @php
                                     $count = $dist[$star] ?? 0;
                                     $pct   = $total > 0 ? round($count / $total * 100) : 0;
                                 @endphp
-                                <div class="flex items-center gap-3 text-xs">
+                                <div x-bind:class="filterBintang === {{ $star }} ? 'bg-[#F5E9C8]' : ''"
+                                     class="flex w-full items-center gap-3 rounded-lg px-1.5 py-0.5 text-xs transition-colors {{ $count === 0 ? 'opacity-40' : '' }}">
                                     <span class="shrink-0 w-3 text-right text-[#4A2E28] font-medium">{{ $star }}</span>
                                     <i data-lucide="star" class="h-3 w-3 shrink-0 text-[#C8A84B] fill-current"></i>
                                     <div class="flex-1 h-2 rounded-full bg-[#E2D4C0] overflow-hidden">
@@ -411,6 +416,64 @@
                                 </div>
                             @endforeach
                         </div>
+                    </div>
+
+                    {{-- Dropdown filter ala Shopee (custom, biar ikon bintang bisa tampil) --}}
+                    <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+                        <div class="flex items-center gap-2">
+                            <label class="text-xs font-medium text-[#4A2E28]">Filter ulasan:</label>
+                            <div class="relative" x-data="{ open: false }" x-on:click.outside="open = false">
+                                <button type="button" x-on:click="open = !open"
+                                        class="flex items-center gap-2 rounded-full card-fade-border bg-[#FFFDF7] pl-4 pr-3 py-1.5 text-sm text-[#4A0F1A] focus:outline-none">
+                                    <span class="flex items-center gap-1.5">
+                                        <template x-if="filterBintang === 0">
+                                            <span>Semua Bintang ({{ $total }})</span>
+                                        </template>
+                                        @for ($s = 1; $s <= 5; $s++)
+                                            <span x-show="filterBintang === {{ $s }}" x-cloak class="flex items-center gap-1.5">
+                                                <span class="flex items-center gap-0.5">
+                                                    @for ($k = 1; $k <= 5; $k++)
+                                                        <i data-lucide="star" class="h-3 w-3 {{ $k <= $s ? 'text-[#C8A84B] fill-current' : 'text-[#E2D4C0]' }}"></i>
+                                                    @endfor
+                                                </span>
+                                                <span>{{ $s }} Bintang (<span x-text="dist[{{ $s }}] ?? 0"></span>)</span>
+                                            </span>
+                                        @endfor
+                                    </span>
+                                    <i data-lucide="chevron-down" class="h-4 w-4 shrink-0 text-[#C8A84B] transition-transform"
+                                       x-bind:class="open ? 'rotate-180' : ''"></i>
+                                </button>
+
+                                <div x-show="open" x-cloak x-transition.opacity.duration.150ms
+                                     class="absolute z-20 mt-2 w-56 overflow-hidden rounded-xl card-fade-border bg-[#FFFDF7] shadow-lg">
+                                    <button type="button" x-on:click="filterBintang = 0; open = false"
+                                            x-bind:class="filterBintang === 0 ? 'bg-[#F5E9C8]' : 'hover:bg-[#F5E9C8]/50'"
+                                            class="flex w-full items-center px-4 py-2 text-left text-sm text-[#4A0F1A] transition-colors">
+                                        Semua Bintang <span class="ml-1 text-[#4A2E28]/60">({{ $total }})</span>
+                                    </button>
+                                    @foreach ([5, 4, 3, 2, 1] as $star)
+                                        @php $count = $dist[$star] ?? 0; @endphp
+                                        <button type="button"
+                                                x-on:click="if ({{ $count }} > 0) { filterBintang = {{ $star }}; open = false }"
+                                                x-bind:class="filterBintang === {{ $star }} ? 'bg-[#F5E9C8]' : ({{ $count }} > 0 ? 'hover:bg-[#F5E9C8]/50' : '')"
+                                                class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm transition-colors {{ $count === 0 ? 'opacity-40 cursor-not-allowed text-[#4A2E28]' : 'text-[#4A0F1A]' }}">
+                                            <span class="flex items-center gap-0.5">
+                                                @for ($k = 1; $k <= 5; $k++)
+                                                    <i data-lucide="star" class="h-3 w-3 {{ $k <= $star ? 'text-[#C8A84B] fill-current' : 'text-[#E2D4C0]' }}"></i>
+                                                @endfor
+                                            </span>
+                                            <span>{{ $star }} Bintang <span class="text-[#4A2E28]/60">({{ $count }})</span></span>
+                                        </button>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Indikator filter aktif --}}
+                        <button type="button" x-show="filterBintang !== 0" x-cloak x-on:click="filterBintang = 0"
+                                class="inline-flex items-center gap-1 rounded-full bg-[#E2D4C0] px-2.5 py-1 text-xs font-medium text-[#4A0F1A] hover:bg-[#D6C4A8]">
+                            <i data-lucide="x" class="h-3 w-3"></i> Hapus filter
+                        </button>
                     </div>
 
                     {{-- Kartu ulasan individual --}}
@@ -427,7 +490,8 @@
                                 $avatarBg    = $bgColors[$idx % count($bgColors)];
                                 $hasFoto     = $t->fotos->isNotEmpty();
                             @endphp
-                            <div class="rounded-2xl card-fade-border bg-[#FFFDF7] p-5 scroll-fade scroll-delay-{{ ($idx % 4) + 1 }} {{ $hasFoto ? 'cursor-pointer hover:shadow-md hover:border-[#C8A84B] transition-all duration-200' : '' }}"
+                            <div x-show="filterBintang === 0 || filterBintang === {{ $t->rating }}" x-cloak
+                                 class="rounded-2xl card-fade-border bg-[#FFFDF7] p-5 scroll-fade scroll-delay-{{ ($idx % 4) + 1 }} {{ $hasFoto ? 'cursor-pointer hover:shadow-md hover:border-[#C8A84B] transition-all duration-200' : '' }}"
                                  @if($hasFoto) onclick="bukaModalTestimoni({{ $t->id }})" @endif>
                                 <div class="flex items-start gap-3">
                                     {{-- Avatar --}}
@@ -520,6 +584,14 @@
                             @endif
                         @endforeach
                     </div>
+
+                    {{-- Kosong: filter bintang dipilih tapi tidak ada ulasan yang cocok --}}
+                    <div x-show="filterBintang !== 0 && dist[filterBintang] === 0" x-cloak
+                         class="py-12 text-center rounded-2xl card-fade-border bg-[#FFFDF7]">
+                        <p class="text-sm text-[#4A2E28]">Tidak ada ulasan dengan <span x-text="filterBintang"></span> bintang.</p>
+                    </div>
+
+                    </div>{{-- /x-data filterBintang --}}
 
                     <script>
                         function bukaModalTestimoni(id) {
