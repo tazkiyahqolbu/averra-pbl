@@ -18,6 +18,10 @@ class KatalogController extends Controller
         $category = $request->query('category', 'Semua');
         $sort = $request->query('sort', 'terbaru');
 
+        $jasaUlasan   = $this->ulasanStats('jasa', 'jasa_id');
+        $paketUlasan  = $this->ulasanStats('paket', 'paket_id');
+        $barangUlasan = $this->ulasanStats('barang', 'barang_id');
+
         $jasaItems = Jasa::where('aktif', true)->get()->map(fn($j) => (object)[
             'id'       => 'jasa-' . $j->id,
             'type'     => 'jasa',
@@ -27,8 +31,8 @@ class KatalogController extends Controller
             'price'    => (float) $j->harga,
             'desc'     => $j->deskripsi,
             'available' => true,
-            'rating'   => 4.8,
-            'ulasan'   => 0,
+            'rating'   => $jasaUlasan->get($j->id)['avg'] ?? 0,
+            'ulasan'   => $jasaUlasan->get($j->id)['count'] ?? 0,
             'color'    => null,
             'material' => null,
             'stok'     => null,
@@ -43,8 +47,8 @@ class KatalogController extends Controller
             'price'    => (float) $p->harga,
             'desc'     => $p->deskripsi,
             'available' => true,
-            'rating'   => 4.8,
-            'ulasan'   => 0,
+            'rating'   => $paketUlasan->get($p->id)['avg'] ?? 0,
+            'ulasan'   => $paketUlasan->get($p->id)['count'] ?? 0,
             'color'    => null,
             'material' => null,
             'stok'     => null,
@@ -59,8 +63,8 @@ class KatalogController extends Controller
             'price'    => (float) $b->harga,
             'desc'     => $b->deskripsi,
             'available' => $b->stok > 0,
-            'rating'   => 4.8,
-            'ulasan'   => 0,
+            'rating'   => $barangUlasan->get($b->id)['avg'] ?? 0,
+            'ulasan'   => $barangUlasan->get($b->id)['count'] ?? 0,
             'color'    => null,
             'material' => null,
             'stok'     => $b->stok,
@@ -84,9 +88,35 @@ class KatalogController extends Controller
             $katalogs = $katalogs->sortBy('price')->values();
         } elseif ($sort === 'termahal') {
             $katalogs = $katalogs->sortByDesc('price')->values();
+        } elseif ($sort === 'testimoni_terbanyak') {
+            $katalogs = $katalogs->sortByDesc('ulasan')->values();
         }
 
         return view('public.katalog.index', compact('katalogs', 'sort'));
+    }
+
+    /**
+     * Hitung jumlah & rata-rata rating testimoni terpublikasi per item
+     * (jasa/paket/barang), dikelompokkan berdasarkan id item. Dihitung
+     * sekali per batch agar tidak query N+1 di dalam loop map() item katalog.
+     *
+     * @return \Illuminate\Support\Collection<int, array{count:int, avg:float}>
+     */
+    private function ulasanStats(string $jenisItem, string $idColumn): \Illuminate\Support\Collection
+    {
+        return Testimoni::where('dipublikasikan', true)
+            ->whereHas('pemesanan.detailPemesanans', fn($q) => $q->where('jenis_item', $jenisItem))
+            ->with(['pemesanan.detailPemesanans' => fn($q) => $q->where('jenis_item', $jenisItem)])
+            ->get()
+            ->flatMap(fn($t) => $t->pemesanan->detailPemesanans->pluck($idColumn)->map(fn($id) => [
+                'id'     => $id,
+                'rating' => $t->rating,
+            ]))
+            ->groupBy('id')
+            ->map(fn($group) => [
+                'count' => $group->count(),
+                'avg'   => round($group->avg('rating'), 1),
+            ]);
     }
 
     public function show(string $slug)
@@ -114,7 +144,7 @@ class KatalogController extends Controller
 
             $avgRating = $testimonis->isNotEmpty()
                 ? round($testimonis->avg('rating'), 1)
-                : 4.8;
+                : 0;
 
             $item = (object)[
                 'id'        => $slug,
@@ -144,7 +174,7 @@ class KatalogController extends Controller
                 ->latest()
                 ->get();
 
-            $avgRating = $testimonis->isNotEmpty() ? round($testimonis->avg('rating'), 1) : 4.8;
+            $avgRating = $testimonis->isNotEmpty() ? round($testimonis->avg('rating'), 1) : 0;
 
             $item  = (object)[
                 'id'        => $slug,
@@ -176,7 +206,7 @@ class KatalogController extends Controller
                 ->latest()
                 ->get();
 
-            $avgRating = $testimonis->isNotEmpty() ? round($testimonis->avg('rating'), 1) : 4.8;
+            $avgRating = $testimonis->isNotEmpty() ? round($testimonis->avg('rating'), 1) : 0;
 
             $item  = (object)[
                 'id'        => $slug,
